@@ -178,6 +178,9 @@ require("formatter").setup {
     yaml = {
       require("formatter.filetypes.yaml").prettier,
     },
+    markdown = {
+      require("formatter.filetypes.markdown").prettier,
+    },
     ["*"] = {
       require("formatter.filetypes.any").remove_trailing_whitespace,
     },
