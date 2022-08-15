@@ -1,4 +1,5 @@
 *
-!.config/nvim/
-!.config/tmux/
 !.gitignore
+!.config
+!.config/nvim
+!.config/tmux
