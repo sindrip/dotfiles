@@ -2,4 +2,8 @@
 !.gitignore
 !.config
 !.config/nvim
+!.config/nvim/*
 !.config/tmux
+!.config/tmux/*
+!.config/nix
+!.config/nix/*
