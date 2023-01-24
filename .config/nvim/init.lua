@@ -1,5 +1,6 @@
 require "sindrip.packer"(function(use)
   use "wbthomason/packer.nvim"
+  use "nvim-treesitter/nvim-treesitter"
   use "neovim/nvim-lspconfig"
   use "williamboman/mason.nvim"
   use "williamboman/mason-lspconfig.nvim"
@@ -220,3 +221,10 @@ vim.keymap.set(
   require("telescope.builtin").help_tags,
   { noremap = true }
 )
+
+require("nvim-treesitter.configs").setup {
+  ensure_installed = { "elixir" },
+  highlight = {
+    enable = true,
+  },
+}
