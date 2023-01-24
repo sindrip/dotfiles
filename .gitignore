@@ -6,4 +6,4 @@
 !.config/tmux
 !.config/tmux/*
 !.config/nix
-!.config/nix/*
+!.config/nix/nix.conf
