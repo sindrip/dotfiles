@@ -22,6 +22,12 @@
 	    pkgs.fd
 	    pkgs.neovim
 
+	    pkgs.kubectl
+	    pkgs.kubelogin
+	    pkgs.kubernetes-helm
+	    pkgs.tilt
+	    pkgs.kind
+
 	    pkgs.beam.packages.erlangR25.elixir_1_14
 
 	    (pkgs.writeScriptBin "upgrade-profile" ''
