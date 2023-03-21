@@ -27,6 +27,7 @@
 	    pkgs.kubernetes-helm
 	    pkgs.tilt
 	    pkgs.kind
+	    pkgs.ctlptl
 
 	    pkgs.beam.packages.erlangR25.elixir_1_14
 
