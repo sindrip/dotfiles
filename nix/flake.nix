@@ -28,6 +28,7 @@
 	    pkgs.tilt
 	    pkgs.kind
 	    pkgs.ctlptl
+	    pkgs.kustomize
 
 	    pkgs.beam.packages.erlangR25.elixir_1_14
 
