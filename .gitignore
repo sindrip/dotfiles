@@ -7,3 +7,4 @@
 !.config/tmux/*
 !.config/nix
 !.config/nix/nix.conf
+!nix/
