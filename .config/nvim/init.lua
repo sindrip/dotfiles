@@ -73,6 +73,7 @@ vim.opt.smartcase = true
 vim.opt.shiftwidth = 2
 vim.opt.softtabstop = -1
 vim.opt.shiftround = true
+vim.opt.expandtab = true
 vim.opt.smartindent = true
 --vim.opt.clipboard = "unnamedplus"
 vim.opt.hidden = true
