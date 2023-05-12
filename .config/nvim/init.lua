@@ -1,53 +1,3 @@
-require "sindrip.packer"(function(use)
-  use "wbthomason/packer.nvim"
-  use "nvim-treesitter/nvim-treesitter"
-  use "neovim/nvim-lspconfig"
-  use "williamboman/mason.nvim"
-  use "williamboman/mason-lspconfig.nvim"
-  use "mhartington/formatter.nvim"
-  use "shaunsingh/nord.nvim"
-  use "lewis6991/gitsigns.nvim"
-  use {
-    "nvim-telescope/telescope.nvim",
-    tag = "0.1.0",
-    requires = { { "nvim-lua/plenary.nvim" } },
-  }
-  use "hrsh7th/nvim-cmp"
-  use "hrsh7th/cmp-nvim-lsp"
-  use "L3MON4D3/LuaSnip"
-  use "saadparwaiz1/cmp_luasnip"
-end)
-
-local cmp = require "cmp"
-cmp.setup {
-  snippet = {
-    expand = function(args)
-      require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
-    end,
-  },
-
-  window = {
-    --completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
-  },
-  mapping = cmp.mapping.preset.insert {
-    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-    ["<C-f>"] = cmp.mapping.scroll_docs(4),
-    ["<C-Space>"] = cmp.mapping.complete(),
-    ["<C-e>"] = cmp.mapping.abort(),
-    ["<CR>"] = cmp.mapping.confirm { select = true }, -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-  },
-  sources = cmp.config.sources({
-    { name = "nvim_lsp" },
-    --{ name = 'vsnip' }, -- For vsnip users.
-    { name = "luasnip" }, -- For luasnip users.
-    -- { name = 'ultisnips' }, -- For ultisnips users.
-    -- { name = 'snippy' }, -- For snippy users.
-  }, {
-    { name = "buffer" },
-  }),
-}
-
 -- Basic Settings
 vim.g.mapleader = " "
 
@@ -81,7 +31,92 @@ vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.signcolumn = "number"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
-vim.cmd [[colorscheme nord]]
+--vim.cmd [[colorscheme nord]]
+
+--require "plugins"
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system {
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  }
+end
+vim.opt.rtp:prepend(lazypath)
+
+--require("lazy").setup("plugins", {})
+require("lazy").setup({
+  {
+    "shaunsingh/nord.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      vim.cmd [[colorscheme nord]]
+    end,
+  },
+  "nvim-treesitter/nvim-treesitter",
+  "neovim/nvim-lspconfig",
+  "mhartington/formatter.nvim",
+  "williamboman/mason.nvim",
+  "williamboman/mason-lspconfig.nvim",
+  "lewis6991/gitsigns.nvim",
+  {
+    "nvim-telescope/telescope.nvim",
+    tag = "0.1.0",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+  },
+  {
+    "hrsh7th/nvim-cmp",
+    -- load cmp on InsertEnter
+    event = "InsertEnter",
+    -- these dependencies will only be loaded when cmp loads
+    -- dependencies are always lazy-loaded unless specified otherwise
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+    },
+    opts = function()
+      local cmp = require "cmp"
+      cmp.setup {
+        snippet = {
+          expand = function(args)
+            require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+          end,
+        },
+
+        window = {
+          --completion = cmp.config.window.bordered(),
+          -- documentation = cmp.config.window.bordered(),
+        },
+        mapping = cmp.mapping.preset.insert {
+          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+          ["<C-f>"] = cmp.mapping.scroll_docs(4),
+          ["<C-Space>"] = cmp.mapping.complete(),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping.confirm { select = true }, -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+        },
+        sources = cmp.config.sources({
+          { name = "nvim_lsp" },
+          --{ name = 'vsnip' }, -- For vsnip users.
+          { name = "luasnip" }, -- For luasnip users.
+          -- { name = 'ultisnips' }, -- For ultisnips users.
+          -- { name = 'snippy' }, -- For snippy users.
+        }, {
+          { name = "buffer" },
+        }),
+      }
+    end,
+    config = function()
+      -- ...
+    end,
+  },
+}, {})
 
 require("gitsigns").setup()
 require("mason").setup()
@@ -151,10 +186,10 @@ require("lspconfig").elixirls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
 }
-require("lspconfig").yamlls.setup {
-  on_attach = on_attach,
-  capabilities = capabilities,
-}
+--require("lspconfig").yamlls.setup {
+--  on_attach = on_attach,
+--  capabilities = capabilities,
+--}
 require("lspconfig").lua_ls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
