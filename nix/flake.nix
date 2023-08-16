@@ -49,7 +49,10 @@
         packages.bootstrap = pkgs.writeScriptBin "bootstrap" ''
           #!${pkgs.stdenv.shell}
           DOT_DIR=$HOME/.dotfiles
-          nix shell nixpkgs#git --command \
+          nix shell nixpkgs#git \
+            --extra-experimental-features nix-command \
+            --extra-experimental-features flakes \
+            --command \
             echo "Initializing dotfiles repo: $DOT_DIR" && \
             git clone --bare https://github.com/sindrip/dotfiles.git $DOT_DIR && \
             git --git-dir $DOT_DIR --work-tree=$HOME checkout && \
