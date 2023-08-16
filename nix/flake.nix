@@ -22,6 +22,7 @@
             pkgs.ripgrep
             pkgs.fd
             pkgs.neovim
+            pkgs.tmux
 
             pkgs.kubectl
             pkgs.kubelogin
