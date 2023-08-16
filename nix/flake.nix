@@ -31,7 +31,7 @@
             pkgs.ctlptl
             pkgs.kustomize
 
-            pkgs.beam.packages.erlangR25.elixir_1_14
+            pkgs.beam.packages.erlangR25.elixir_1_15
 
             (pkgs.writeScriptBin "update-profile" ''
               #!${pkgs.stdenv.shell}
