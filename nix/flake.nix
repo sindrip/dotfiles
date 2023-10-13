@@ -17,7 +17,6 @@
         packages.default = pkgs.buildEnv {
           name = "Home";
           paths = [
-            #pkgs.glibcLocales
             pkgs.git
             pkgs.ripgrep
             pkgs.fd
@@ -32,7 +31,7 @@
             pkgs.ctlptl
             pkgs.kustomize
 
-            pkgs.beam.packages.erlangR25.elixir_1_15
+            pkgs.beam.packages.erlangR26.elixir_1_15
 
             (pkgs.writeScriptBin "update-profile" ''
               #!${pkgs.stdenv.shell}
