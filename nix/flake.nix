@@ -20,7 +20,7 @@
             pkgs.git
             pkgs.ripgrep
             pkgs.fd
-            pkgs.neovim
+            pkgs.emacs
             pkgs.tmux
 
             pkgs.kubectl
