@@ -31,7 +31,6 @@ vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.signcolumn = "number"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
---vim.cmd [[colorscheme nord]]
 
 --require "plugins"
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
@@ -65,7 +64,7 @@ require("lazy").setup({
   "lewis6991/gitsigns.nvim",
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.0",
+    tag = "0.1.4",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
@@ -222,9 +221,9 @@ require("formatter").setup {
     elixir = {
       require("formatter.filetypes.elixir").mixformat,
     },
-    yaml = {
-      require("formatter.filetypes.yaml").prettier,
-    },
+    --yaml = {
+    --  require("formatter.filetypes.yaml").prettier,
+    --},
     markdown = {
       require("formatter.filetypes.markdown").prettier,
     },
@@ -269,7 +268,7 @@ vim.keymap.set(
 )
 
 require("nvim-treesitter.configs").setup {
-  ensure_installed = { "elixir" },
+  ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir" },
   highlight = {
     enable = true,
   },
