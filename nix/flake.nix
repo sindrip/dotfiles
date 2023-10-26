@@ -8,11 +8,16 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, flake-utils, ... }:
+  # Easily find versions to pin: https://lazamar.co.uk/nix-versions/
+  # Pin to 0.33.5 until 0.33.6 is merged: https://github.com/NixOS/nixpkgs/issues/260411
+  inputs.tilt-pin-pkgs.url = "https://github.com/NixOS/nixpkgs/archive/e1ee359d16a1886f0771cc433a00827da98d861c.tar.gz";
+
+  outputs = { self, nixpkgs, flake-utils, ... }@inputs:
     flake-utils.lib.eachDefaultSystem (system:
       let
         inherit (nixpkgs.lib) optional;
         pkgs = import nixpkgs { inherit system; };
+        tilt-pkgs = import inputs.tilt-pin-pkgs { inherit system; };
       in {
         packages.default = pkgs.buildEnv {
           name = "Home";
@@ -26,7 +31,7 @@
             pkgs.kubectl
             pkgs.kubelogin
             pkgs.kubernetes-helm
-            pkgs.tilt
+            tilt-pkgs.tilt
             pkgs.kind
             pkgs.ctlptl
             pkgs.kustomize
