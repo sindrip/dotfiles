@@ -1,10 +1,13 @@
 *
 !.gitignore
 !.config
+!.config/nix
+!.config/nix/nix.conf
 !.config/nvim
 !.config/nvim/*
 !.config/tmux
 !.config/tmux/*
-!.config/nix
-!.config/nix/nix.conf
+!.config/fontconfig/
+!.config/fontconfig/*
+!.config/fontconfig/*/*
 !nix/

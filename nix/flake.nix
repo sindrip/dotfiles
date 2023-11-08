@@ -22,12 +22,16 @@
         packages.default = pkgs.buildEnv {
           name = "Home";
           paths = [
+            # Misc
+            pkgs.iosevka
+            pkgs.tree
             pkgs.git
             pkgs.ripgrep
             pkgs.fd
             pkgs.neovim
             pkgs.tmux
 
+            # Kubernetes
             pkgs.kubectl
             pkgs.kubelogin
             pkgs.kubernetes-helm
@@ -36,8 +40,11 @@
             pkgs.ctlptl
             pkgs.kustomize
 
+            # Languages
             pkgs.beam.packages.erlangR26.elixir_1_15
+            pkgs.rustup
 
+            # Scripts
             (pkgs.writeScriptBin "update-profile" ''
               #!${pkgs.stdenv.shell}
               nix profile upgrade '.*'
