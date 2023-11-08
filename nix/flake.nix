@@ -22,14 +22,17 @@
         packages.default = pkgs.buildEnv {
           name = "Home";
           paths = [
-            # Misc
-            pkgs.iosevka
+            # Core
             pkgs.tree
             pkgs.git
             pkgs.ripgrep
             pkgs.fd
             pkgs.neovim
             pkgs.tmux
+
+            # Misc
+            pkgs.iosevka
+            (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly"]; })
 
             # Kubernetes
             pkgs.kubectl
