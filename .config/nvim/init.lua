@@ -221,6 +221,9 @@ require("formatter").setup {
     elixir = {
       require("formatter.filetypes.elixir").mixformat,
     },
+    nix = {
+      require("formatter.filetypes.nix").nixfmt,
+    },
     --yaml = {
     --  require("formatter.filetypes.yaml").prettier,
     --},

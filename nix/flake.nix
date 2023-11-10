@@ -32,7 +32,7 @@
 
             # Misc
             pkgs.iosevka
-            (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly"]; })
+            (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
 
             # Kubernetes
             pkgs.kubectl
@@ -46,6 +46,7 @@
             # Languages
             pkgs.beam.packages.erlangR26.elixir_1_15
             pkgs.rustup
+            pkgs.nixfmt
 
             # Scripts
             (pkgs.writeScriptBin "update-profile" ''
@@ -74,5 +75,7 @@
             cd $HOME/nix && \
             nix profile install
         '';
+
+        #formatter = pkgs.nixfmt;
       });
 }
