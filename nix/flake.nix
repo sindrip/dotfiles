@@ -23,6 +23,8 @@
           name = "Home";
           paths = [
             # Core
+            pkgs.gnumake
+            pkgs.gcc
             pkgs.tree
             pkgs.git
             pkgs.ripgrep
