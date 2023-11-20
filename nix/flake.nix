@@ -29,6 +29,7 @@
             pkgs.fd
             pkgs.neovim
             pkgs.tmux
+            pkgs.gh
 
             # Misc
             pkgs.iosevka
@@ -69,11 +70,11 @@
             --extra-experimental-features nix-command \
             --extra-experimental-features flakes \
             --command \
-            echo "Initializing dotfiles repo: $DOT_DIR" && \
-            git clone --bare https://github.com/sindrip/dotfiles.git $DOT_DIR && \
-            git --git-dir $DOT_DIR --work-tree=$HOME checkout && \
-            cd $HOME/nix && \
-            nix profile install
+              echo "Initializing dotfiles repo: $DOT_DIR" && \
+              git clone --bare https://github.com/sindrip/dotfiles.git $DOT_DIR && \
+              git --git-dir $DOT_DIR --work-tree=$HOME checkout && \
+              cd $HOME/nix && \
+              nix profile install
         '';
 
         #formatter = pkgs.nixfmt;
