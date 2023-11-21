@@ -25,6 +25,7 @@
             # Core
             pkgs.gnumake
             pkgs.gcc
+            pkgs.protobuf
             pkgs.tree
             pkgs.git
             pkgs.ripgrep
@@ -45,6 +46,7 @@
             pkgs.kind
             pkgs.ctlptl
             pkgs.kustomize
+            pkgs.azure-cli
 
             # Languages
             pkgs.beam.packages.erlangR26.elixir_1_15
