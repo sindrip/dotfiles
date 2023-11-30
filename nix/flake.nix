@@ -67,19 +67,17 @@
           extraOutputsToInstall = [ "man" "doc" ];
         };
 
-        packages.bootstrap = pkgs.writeScriptBin "bootstrap" ''
-          #!${pkgs.stdenv.shell}
-          DOT_DIR=$HOME/.dotfiles
-          nix shell nixpkgs#git \
-            --extra-experimental-features nix-command \
-            --extra-experimental-features flakes \
-            --command \
-              echo "Initializing dotfiles repo: $DOT_DIR" && \
-              git clone --bare https://github.com/sindrip/dotfiles.git $DOT_DIR && \
-              git --git-dir $DOT_DIR --work-tree=$HOME checkout && \
-              cd $HOME/nix && \
-              nix profile install
-        '';
+        packages.bootstrap = pkgs.writeShellApplication {
+          name = "bootstrap";
+          runtimeInputs = [ pkgs.git ];
+          text = ''
+            echo "Initializing dotfiles repo: $DOT_DIR" && \
+            git clone --bare https://github.com/sindrip/dotfiles.git $DOT_DIR && \
+            git --git-dir $DOT_DIR --work-tree=$HOME checkout && \
+            cd $HOME/nix && \
+            nix profile install
+          '';
+        };
 
         #formatter = pkgs.nixfmt;
       });
