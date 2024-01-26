@@ -24,12 +24,12 @@
           paths = [
             # Core
             pkgs.gnumake
-            pkgs.gcc
             pkgs.protobuf
             pkgs.tree
             pkgs.git
             pkgs.ripgrep
             pkgs.fd
+            pkgs.jq
             pkgs.neovim
             pkgs.tmux
             pkgs.gh
@@ -50,6 +50,7 @@
 
             # Languages
             pkgs.beam.packages.erlangR26.elixir_1_15
+            pkgs.rebar3
             pkgs.rustup
             pkgs.nixfmt
 
