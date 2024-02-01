@@ -24,7 +24,10 @@
           paths = [
             # Core
             pkgs.gnumake
+            pkgs.gcc
             pkgs.protobuf
+            pkgs.srtp
+            pkgs.openssl
             pkgs.tree
             pkgs.git
             pkgs.ripgrep
