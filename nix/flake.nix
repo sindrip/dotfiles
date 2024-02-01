@@ -49,7 +49,8 @@
             pkgs.azure-cli
 
             # Languages
-            pkgs.beam.packages.erlangR26.elixir_1_15
+            pkgs.beam.packages.erlang_26.elixir_1_15
+            pkgs.beam.interpreters.erlang_26
             pkgs.rebar3
             pkgs.rustup
             pkgs.nixfmt
