@@ -24,10 +24,9 @@
           paths = [
             # Core
             pkgs.gnumake
-            pkgs.gcc
             pkgs.protobuf
-            pkgs.srtp
-            pkgs.openssl
+            pkgs.direnv
+            pkgs.nix-direnv
             pkgs.tree
             pkgs.git
             pkgs.ripgrep
@@ -52,7 +51,7 @@
             pkgs.azure-cli
 
             # Languages
-            pkgs.beam.packages.erlang_26.elixir_1_15
+            pkgs.beam.packages.erlang_26.elixir_1_16
             pkgs.beam.interpreters.erlang_26
             pkgs.rebar3
             pkgs.rustup
