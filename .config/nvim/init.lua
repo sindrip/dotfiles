@@ -245,12 +245,12 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 })
 
 -- Telescope
-vim.keymap.set(
-  "n",
-  "<leader>ff",
-  require("telescope.builtin").find_files,
-  { noremap = true }
-)
+vim.keymap.set("n", "<leader>ff", function()
+  local ok = pcall(require("telescope.builtin").git_files)
+  if not ok then
+    require("telescope.builtin").find_files()
+  end
+end, { noremap = true })
 vim.keymap.set(
   "n",
   "<leader>fg",
