@@ -64,7 +64,7 @@ require("lazy").setup({
   "lewis6991/gitsigns.nvim",
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.4",
+    tag = "0.1.6",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
@@ -77,15 +77,13 @@ require("lazy").setup({
     -- dependencies are always lazy-loaded unless specified otherwise
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
     },
     opts = function()
       local cmp = require "cmp"
       cmp.setup {
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+            vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
           end,
         },
 
@@ -102,10 +100,6 @@ require("lazy").setup({
         },
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          --{ name = 'vsnip' }, -- For vsnip users.
-          { name = "luasnip" }, -- For luasnip users.
-          -- { name = 'ultisnips' }, -- For ultisnips users.
-          -- { name = 'snippy' }, -- For snippy users.
         }, {
           { name = "buffer" },
         }),
@@ -126,24 +120,6 @@ require("mason-lspconfig").setup {
 
 vim.keymap.set(
   "n",
-  "<leader>e",
-  vim.diagnostic.open_float,
-  { noremap = true, silent = true }
-)
-vim.keymap.set(
-  "n",
-  "[d",
-  vim.diagnostic.goto_prev,
-  { noremap = true, silent = true }
-)
-vim.keymap.set(
-  "n",
-  "]d",
-  vim.diagnostic.goto_next,
-  { noremap = true, silent = true }
-)
-vim.keymap.set(
-  "n",
   "<leader>q",
   vim.diagnostic.setloclist,
   { noremap = true, silent = true }
@@ -158,7 +134,7 @@ local on_attach = function(_, bufnr)
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
   --vim.keymap.set("n", "gD", vim.lsp.buf.declaration, bufopts)
   vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts)
-  vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
+  --vim.keymap.set("n", "K", vim.lsp.buf.hover, bufopts)
   --vim.keymap.set("n", "gi", vim.lsp.buf.implementation, bufopts)
   vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
   --vim.keymap.set("n", "<space>wa", vim.lsp.buf.add_workspace_folder, bufopts)
@@ -173,9 +149,7 @@ local on_attach = function(_, bufnr)
   --vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting, bufopts)
 end
 
-local capabilities = require("cmp_nvim_lsp").default_capabilities(
-  vim.lsp.protocol.make_client_capabilities()
-)
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 require("lspconfig").rust_analyzer.setup {
   on_attach = on_attach,
@@ -271,7 +245,7 @@ vim.keymap.set(
 )
 
 require("nvim-treesitter.configs").setup {
-  ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir" },
+  ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "rust" },
   highlight = {
     enable = true,
   },
