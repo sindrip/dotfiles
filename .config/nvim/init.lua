@@ -56,9 +56,43 @@ require("lazy").setup({
       vim.cmd [[colorscheme nord]]
     end,
   },
-  "nvim-treesitter/nvim-treesitter",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup {
+        ensure_installed = {
+          "c",
+          "lua",
+          "vim",
+          "vimdoc",
+          "query",
+          "elixir",
+          "rust",
+        },
+        highlight = {
+          enable = true,
+        },
+      }
+    end,
+  },
+  {
+    "stevearc/conform.nvim",
+    -- Everything in opts will be passed to setup()
+    opts = {
+      --  -- Define your formatters
+      formatters_by_ft = {
+        lua = { "stylua" },
+        --rust = { "rustfmt" },
+        -- Super slow on my old laptop... lsp causes desync if saving too early
+        -- elixir = { "mix" },
+        nix = { "nixfmt" },
+      },
+      --  -- Set up format-on-save
+      format_on_save = { timeout_ms = 500, lsp_fallback = true },
+    },
+  },
   "neovim/nvim-lspconfig",
-  "mhartington/formatter.nvim",
   "williamboman/mason.nvim",
   "williamboman/mason-lspconfig.nvim",
   "lewis6991/gitsigns.nvim",
@@ -173,6 +207,7 @@ require("lspconfig").lua_ls.setup {
       },
       diagnostics = {
         globals = { "vim" },
+        disable = { "missing-fields" },
       },
       workspace = {
         library = vim.api.nvim_get_runtime_file("", true),
@@ -184,39 +219,15 @@ require("lspconfig").lua_ls.setup {
   },
 }
 
-require("formatter").setup {
-  filetype = {
-    lua = {
-      require("formatter.filetypes.lua").stylua,
-    },
-    rust = {
-      require("formatter.filetypes.rust").rustfmt,
-    },
-    elixir = {
-      require("formatter.filetypes.elixir").mixformat,
-    },
-    nix = {
-      require("formatter.filetypes.nix").nixfmt,
-    },
-    --yaml = {
-    --  require("formatter.filetypes.yaml").prettier,
-    --},
-    markdown = {
-      require("formatter.filetypes.markdown").prettier,
-    },
-    ["*"] = {
-      require("formatter.filetypes.any").remove_trailing_whitespace,
-    },
-  },
-}
-
-local formatGroup =
-  vim.api.nvim_create_augroup("FormatAutogroup", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePost", {
-  command = ":silent FormatWrite",
-  pattern = "*",
-  group = formatGroup,
-})
+-- require("formatter").setup {
+--     --yaml = {
+--     --  require("formatter.filetypes.yaml").prettier,
+--     --},
+--     markdown = {
+--       require("formatter.filetypes.markdown").prettier,
+--     },
+--   },
+-- }
 
 -- Telescope
 vim.keymap.set("n", "<leader>ff", function()
@@ -243,10 +254,3 @@ vim.keymap.set(
   require("telescope.builtin").help_tags,
   { noremap = true }
 )
-
-require("nvim-treesitter.configs").setup {
-  ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir", "rust" },
-  highlight = {
-    enable = true,
-  },
-}
