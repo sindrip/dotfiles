@@ -78,17 +78,11 @@ require("lazy").setup({
   },
   {
     "stevearc/conform.nvim",
-    -- Everything in opts will be passed to setup()
     opts = {
-      --  -- Define your formatters
       formatters_by_ft = {
         lua = { "stylua" },
-        --rust = { "rustfmt" },
-        -- Super slow on my old laptop... lsp causes desync if saving too early
-        -- elixir = { "mix" },
         nix = { "nixfmt" },
       },
-      --  -- Set up format-on-save
       format_on_save = { timeout_ms = 500, lsp_fallback = true },
     },
   },
@@ -120,7 +114,6 @@ require("lazy").setup({
             vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
           end,
         },
-
         window = {
           --completion = cmp.config.window.bordered(),
           -- documentation = cmp.config.window.bordered(),
@@ -160,9 +153,6 @@ vim.keymap.set(
 )
 
 local on_attach = function(_, bufnr)
-  -- Enable completion triggered by <c-x><c-o>
-  --vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
-
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap = true, silent = true, buffer = bufnr }
@@ -193,10 +183,6 @@ require("lspconfig").elixirls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
 }
---require("lspconfig").yamlls.setup {
---  on_attach = on_attach,
---  capabilities = capabilities,
---}
 require("lspconfig").lua_ls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
@@ -218,16 +204,6 @@ require("lspconfig").lua_ls.setup {
     },
   },
 }
-
--- require("formatter").setup {
---     --yaml = {
---     --  require("formatter.filetypes.yaml").prettier,
---     --},
---     markdown = {
---       require("formatter.filetypes.markdown").prettier,
---     },
---   },
--- }
 
 -- Telescope
 vim.keymap.set("n", "<leader>ff", function()
