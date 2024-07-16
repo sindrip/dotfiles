@@ -4,7 +4,9 @@
   # A flake in some other directory.
   # inputs.otherDir.url = "/home/alice/src/patchelf";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  #inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url =
+    "github:NixOS/nixpkgs/b3f3c1b13fb08f3828442ee86630362e81136bbc";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
   # Easily find versions to pin: https://lazamar.co.uk/nix-versions/
@@ -60,7 +62,7 @@
             pkgs.azure-cli
 
             # Languages
-            pkgs.beam.packages.erlang_26.elixir_1_16
+            pkgs.beam.packages.erlang_27.elixir_1_17
             pkgs.beam.interpreters.erlang_26
             pkgs.rebar3
             pkgs.rustup
