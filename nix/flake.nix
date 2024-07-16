@@ -4,8 +4,7 @@
   # A flake in some other directory.
   # inputs.otherDir.url = "/home/alice/src/patchelf";
 
-  # The master branch of the NixOS/nixpkgs repository on GitHub.
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
   # Easily find versions to pin: https://lazamar.co.uk/nix-versions/
@@ -17,6 +16,16 @@
       let
         inherit (nixpkgs.lib) optional;
         pkgs = import nixpkgs { inherit system; };
+        wrapped-neovim = let neovim-extra = [ pkgs.stylua pkgs.nixfmt ];
+        in pkgs.symlinkJoin {
+          name = "nvim";
+          paths = [ pkgs.neovim ];
+          buildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/nvim \
+              --prefix PATH : ${pkgs.lib.makeBinPath neovim-extra}
+          '';
+        };
         #tilt-pkgs = import inputs.tilt-pin-pkgs { inherit system; };
       in {
         packages.default = pkgs.buildEnv {
@@ -32,9 +41,9 @@
             pkgs.ripgrep
             pkgs.fd
             pkgs.jq
-            pkgs.neovim
             pkgs.tmux
             pkgs.gh
+            wrapped-neovim
 
             # Misc
             pkgs.iosevka
@@ -55,7 +64,6 @@
             pkgs.beam.interpreters.erlang_26
             pkgs.rebar3
             pkgs.rustup
-            pkgs.nixfmt
 
             # Scripts
             (pkgs.writeScriptBin "update-profile" ''

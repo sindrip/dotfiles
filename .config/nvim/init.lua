@@ -119,7 +119,6 @@ require("lazy").setup({
 
 require("gitsigns").setup()
 require("mason").setup()
--- prettier, stylua manually
 require("mason-lspconfig").setup {
   automatic_installation = true,
 }
@@ -246,10 +245,10 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 
 -- Telescope
 vim.keymap.set("n", "<leader>ff", function()
-  local ok = pcall(require("telescope.builtin").git_files)
-  if not ok then
-    require("telescope.builtin").find_files()
-  end
+  --local ok = pcall(require("telescope.builtin").git_files)
+  --if not ok then
+  require("telescope.builtin").find_files()
+  --end
 end, { noremap = true })
 vim.keymap.set(
   "n",
