@@ -66,6 +66,7 @@
             pkgs.beam.interpreters.erlang_26
             pkgs.rebar3
             pkgs.rustup
+            pkgs.nodejs
 
             # Scripts
             (pkgs.writeScriptBin "update-profile" ''
