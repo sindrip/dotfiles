@@ -62,7 +62,7 @@ require("lazy").setup({
     lazy = false,
     priority = 1000,
     config = function()
-      vim.cmd [[colorscheme nord]]
+      vim.cmd.colorscheme "nord"
     end,
   },
   {
@@ -85,8 +85,20 @@ require("lazy").setup({
       }
     end,
   },
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        lua = { "stylua" },
+        nix = { "nixfmt" },
+        elixir = { "mix" },
+      },
+      format_after_save = {
+        lsp_format = "fallback",
+      },
+    },
+  },
   "neovim/nvim-lspconfig",
-  "mhartington/formatter.nvim",
   "williamboman/mason.nvim",
   "williamboman/mason-lspconfig.nvim",
   "lewis6991/gitsigns.nvim",
@@ -213,40 +225,6 @@ require("lspconfig").lua_ls.setup {
     },
   },
 }
-
-require("formatter").setup {
-  filetype = {
-    lua = {
-      require("formatter.filetypes.lua").stylua,
-    },
-    rust = {
-      require("formatter.filetypes.rust").rustfmt,
-    },
-    elixir = {
-      require("formatter.filetypes.elixir").mixformat,
-    },
-    nix = {
-      require("formatter.filetypes.nix").nixfmt,
-    },
-    --yaml = {
-    --  require("formatter.filetypes.yaml").prettier,
-    --},
-    markdown = {
-      require("formatter.filetypes.markdown").prettier,
-    },
-    ["*"] = {
-      require("formatter.filetypes.any").remove_trailing_whitespace,
-    },
-  },
-}
-
-local formatGroup =
-  vim.api.nvim_create_augroup("FormatAutogroup", { clear = true })
-vim.api.nvim_create_autocmd("BufWritePost", {
-  command = ":silent FormatWrite",
-  pattern = "*",
-  group = formatGroup,
-})
 
 -- Telescope
 vim.keymap.set("n", "<leader>ff", function()
