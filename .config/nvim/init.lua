@@ -32,17 +32,26 @@ vim.opt.undofile = true
 vim.opt.signcolumn = "number"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
---require "plugins"
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system {
+if not vim.uv.fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system {
     "git",
     "clone",
     "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    "--branch=stable",
+    lazyrepo,
     lazypath,
   }
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -56,7 +65,26 @@ require("lazy").setup({
       vim.cmd [[colorscheme nord]]
     end,
   },
-  "nvim-treesitter/nvim-treesitter",
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    config = function()
+      require("nvim-treesitter.configs").setup {
+        ensure_installed = {
+          "c",
+          "lua",
+          "vim",
+          "vimdoc",
+          "query",
+          "elixir",
+          "rust",
+        },
+        highlight = {
+          enable = true,
+        },
+      }
+    end,
+  },
   "neovim/nvim-lspconfig",
   "mhartington/formatter.nvim",
   "williamboman/mason.nvim",
@@ -102,10 +130,7 @@ require("lazy").setup({
         },
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          --{ name = 'vsnip' }, -- For vsnip users.
           { name = "luasnip" }, -- For luasnip users.
-          -- { name = 'ultisnips' }, -- For ultisnips users.
-          -- { name = 'snippy' }, -- For snippy users.
         }, {
           { name = "buffer" },
         }),
@@ -123,24 +148,6 @@ require("mason-lspconfig").setup {
   automatic_installation = true,
 }
 
-vim.keymap.set(
-  "n",
-  "<leader>e",
-  vim.diagnostic.open_float,
-  { noremap = true, silent = true }
-)
-vim.keymap.set(
-  "n",
-  "[d",
-  vim.diagnostic.goto_prev,
-  { noremap = true, silent = true }
-)
-vim.keymap.set(
-  "n",
-  "]d",
-  vim.diagnostic.goto_next,
-  { noremap = true, silent = true }
-)
 vim.keymap.set(
   "n",
   "<leader>q",
@@ -172,9 +179,7 @@ local on_attach = function(_, bufnr)
   --vim.keymap.set("n", "<space>f", vim.lsp.buf.formatting, bufopts)
 end
 
-local capabilities = require("cmp_nvim_lsp").default_capabilities(
-  vim.lsp.protocol.make_client_capabilities()
-)
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
 require("lspconfig").rust_analyzer.setup {
   on_attach = on_attach,
@@ -184,10 +189,6 @@ require("lspconfig").elixirls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
 }
---require("lspconfig").yamlls.setup {
---  on_attach = on_attach,
---  capabilities = capabilities,
---}
 require("lspconfig").lua_ls.setup {
   on_attach = on_attach,
   capabilities = capabilities,
@@ -197,10 +198,14 @@ require("lspconfig").lua_ls.setup {
         version = "LuaJIT",
       },
       diagnostics = {
-        globals = { "vim" },
+        disable = { "missings-fields" },
       },
       workspace = {
-        library = vim.api.nvim_get_runtime_file("", true),
+        checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME,
+          "${3rd}/luv/library",
+        },
       },
       telemetry = {
         enable = false,
@@ -245,10 +250,7 @@ vim.api.nvim_create_autocmd("BufWritePost", {
 
 -- Telescope
 vim.keymap.set("n", "<leader>ff", function()
-  --local ok = pcall(require("telescope.builtin").git_files)
-  --if not ok then
   require("telescope.builtin").find_files()
-  --end
 end, { noremap = true })
 vim.keymap.set(
   "n",
@@ -268,10 +270,3 @@ vim.keymap.set(
   require("telescope.builtin").help_tags,
   { noremap = true }
 )
-
-require("nvim-treesitter.configs").setup {
-  ensure_installed = { "c", "lua", "vim", "vimdoc", "query", "elixir" },
-  highlight = {
-    enable = true,
-  },
-}
