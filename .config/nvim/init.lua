@@ -24,12 +24,13 @@ vim.opt.softtabstop = -1
 vim.opt.shiftround = true
 vim.opt.expandtab = true
 vim.opt.smartindent = true
---vim.opt.clipboard = "unnamedplus"
 vim.opt.hidden = true
 vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.signcolumn = "number"
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
+-- Consider
+-- vim.opt.laststatus = 3
 
 local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
 if not vim.uv.fs_stat(lazypath) then
@@ -91,6 +92,7 @@ require("lazy").setup({
         lua = { "stylua" },
         nix = { "nixfmt" },
         elixir = { "mix" },
+        ["*"] = { "trim_whitespace", "trim_newlines" },
       },
       format_after_save = {
         lsp_format = "fallback",
