@@ -8,8 +8,7 @@ vim.opt.listchars = {
   tab = "→ ",
   nbsp = "␣",
   trail = "·",
-  -- Cursor disappears with nord
-  --space = "·",
+  space = "·",
   extends = "⟩",
   precedes = "⟨",
 }
