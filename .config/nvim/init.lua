@@ -58,11 +58,11 @@ vim.opt.rtp:prepend(lazypath)
 --require("lazy").setup("plugins", {})
 require("lazy").setup({
   {
-    "shaunsingh/nord.nvim",
-    lazy = false,
-    priority = 1000,
+    "fcancelinha/nordern.nvim",
+    -- "shaunsingh/nord.nvim",
+    branch = "master",
     config = function()
-      vim.cmd.colorscheme "nord"
+      vim.cmd.colorscheme "nordern"
     end,
   },
   {
