@@ -104,7 +104,7 @@ require("lazy").setup({
   "lewis6991/gitsigns.nvim",
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.4",
+    tag = "0.1.8",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
@@ -117,15 +117,13 @@ require("lazy").setup({
     -- dependencies are always lazy-loaded unless specified otherwise
     dependencies = {
       "hrsh7th/cmp-nvim-lsp",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
     },
     opts = function()
       local cmp = require "cmp"
       cmp.setup {
         snippet = {
           expand = function(args)
-            require("luasnip").lsp_expand(args.body) -- For `luasnip` users.
+            vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
           end,
         },
 
@@ -139,10 +137,23 @@ require("lazy").setup({
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
           ["<CR>"] = cmp.mapping.confirm { select = true }, -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+          ["<Tab>"] = cmp.mapping(function(fallback)
+            if vim.snippet.active { direction = 1 } then
+              vim.snippet.jump(1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
+          ["<S-Tab>"] = cmp.mapping(function(fallback)
+            if vim.snippet.active { direction = -1 } then
+              vim.snippet.jump(-1)
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
         },
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          { name = "luasnip" }, -- For luasnip users.
         }, {
           { name = "buffer" },
         }),
