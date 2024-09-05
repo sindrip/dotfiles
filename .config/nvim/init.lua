@@ -34,6 +34,14 @@ vim.opt.completeopt = { "menu", "menuone", "noselect" }
 
 require "config.lazy"
 
+-- Diagnostic
+vim.keymap.set("n", "[d", vim.diagnostic.goto_next)
+vim.keymap.set("n", "]d", vim.diagnostic.goto_prev)
+-- NOTE: Once the jump options is released, we can remove the above remap
+-- vim.diagnostic.config {
+--   jump = { float = true },
+-- }
+
 vim.keymap.set(
   "n",
   "<leader>q",

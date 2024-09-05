@@ -5,6 +5,7 @@ return {
       lua = { "stylua" },
       nix = { "nixfmt" },
       elixir = { "mix" },
+      rust = { "rustfmt" },
       ["*"] = { "trim_whitespace", "trim_newlines" },
     },
     format_after_save = {
