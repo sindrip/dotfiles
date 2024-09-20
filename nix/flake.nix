@@ -4,9 +4,7 @@
   # A flake in some other directory.
   # inputs.otherDir.url = "/home/alice/src/patchelf";
 
-  #inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.nixpkgs.url =
-    "github:NixOS/nixpkgs/b3f3c1b13fb08f3828442ee86630362e81136bbc";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
   # Easily find versions to pin: https://lazamar.co.uk/nix-versions/
@@ -18,17 +16,23 @@
       let
         inherit (nixpkgs.lib) optional;
         pkgs = import nixpkgs { inherit system; };
-        wrapped-neovim =
-          let neovim-extra = [ pkgs.stylua pkgs.nixfmt pkgs.shellcheck ];
-          in pkgs.symlinkJoin {
-            name = "nvim";
-            paths = [ pkgs.neovim ];
-            buildInputs = [ pkgs.makeWrapper ];
-            postBuild = ''
-              wrapProgram $out/bin/nvim \
-                --prefix PATH : ${pkgs.lib.makeBinPath neovim-extra}
-            '';
-          };
+        wrapped-neovim = let
+          neovim-extra = [
+            pkgs.stylua
+            pkgs.nixfmt
+            pkgs.shellcheck
+            pkgs.pgformatter
+            pkgs.sqlfluff
+          ];
+        in pkgs.symlinkJoin {
+          name = "nvim";
+          paths = [ pkgs.neovim ];
+          buildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/nvim \
+              --prefix PATH : ${pkgs.lib.makeBinPath neovim-extra}
+          '';
+        };
         #tilt-pkgs = import inputs.tilt-pin-pkgs { inherit system; };
       in {
         packages.default = pkgs.buildEnv {
