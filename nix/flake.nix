@@ -16,17 +16,23 @@
       let
         inherit (nixpkgs.lib) optional;
         pkgs = import nixpkgs { inherit system; };
-        wrapped-neovim =
-          let neovim-extra = [ pkgs.stylua pkgs.nixfmt pkgs.shellcheck ];
-          in pkgs.symlinkJoin {
-            name = "nvim";
-            paths = [ pkgs.neovim ];
-            buildInputs = [ pkgs.makeWrapper ];
-            postBuild = ''
-              wrapProgram $out/bin/nvim \
-                --prefix PATH : ${pkgs.lib.makeBinPath neovim-extra}
-            '';
-          };
+        wrapped-neovim = let
+          neovim-extra = [
+            pkgs.stylua
+            pkgs.nixfmt
+            pkgs.shellcheck
+            pkgs.pgformatter
+            pkgs.sqlfluff
+          ];
+        in pkgs.symlinkJoin {
+          name = "nvim";
+          paths = [ pkgs.neovim ];
+          buildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/nvim \
+              --prefix PATH : ${pkgs.lib.makeBinPath neovim-extra}
+          '';
+        };
         #tilt-pkgs = import inputs.tilt-pin-pkgs { inherit system; };
       in {
         packages.default = pkgs.buildEnv {

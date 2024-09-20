@@ -6,6 +6,7 @@ return {
       nix = { "nixfmt" },
       elixir = { "mix" },
       rust = { "rustfmt" },
+      sql = { "pg_format" },
       ["*"] = { "trim_whitespace", "trim_newlines" },
     },
     format_after_save = {
