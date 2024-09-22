@@ -66,6 +66,7 @@
             pkgs.ctlptl
             pkgs.kustomize
             pkgs.azure-cli
+            pkgs.argocd
 
             # Languages
             pkgs.beam.packages.erlang_27.elixir_1_17
