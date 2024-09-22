@@ -18,6 +18,7 @@
         pkgs = import nixpkgs { inherit system; };
         wrapped-neovim = let
           neovim-extra = [
+            pkgs.gcc
             pkgs.stylua
             pkgs.nixfmt
             pkgs.shellcheck
@@ -93,9 +94,9 @@
           text = ''
             DOT_DIR=$HOME/.dotfiles
             echo "Initializing dotfiles repo: $DOT_DIR" && \
-            git clone --bare https://github.com/sindrip/dotfiles.git $DOT_DIR && \
-            git --git-dir $DOT_DIR --work-tree=$HOME checkout && \
-            cd $HOME/nix && \
+            git clone --bare https://github.com/sindrip/dotfiles.git "$DOT_DIR" && \
+            git --git-dir "$DOT_DIR" --work-tree="$HOME" checkout && \
+            cd "$HOME"/nix && \
             nix profile install
           '';
         };
