@@ -78,7 +78,7 @@
             # Scripts
             (pkgs.writeScriptBin "update-profile" ''
               #!${pkgs.stdenv.shell}
-              nix profile upgrade '.*'
+              nix profile upgrade --all
             '')
             (pkgs.writeScriptBin "dotfiles" ''
               #!${pkgs.stdenv.shell}
