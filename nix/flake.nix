@@ -55,7 +55,8 @@
 
             # Misc
             pkgs.iosevka
-            (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+            pkgs.nerd-fonts.symbols-only
+            # (pkgs.nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
 
             # Kubernetes
             pkgs.kubectl
@@ -70,7 +71,7 @@
 
             # Languages
             pkgs.beam.packages.erlang_27.elixir_1_17
-            pkgs.beam.interpreters.erlang_26
+            pkgs.beam.interpreters.erlang_27
             pkgs.rebar3
             pkgs.rustup
             pkgs.nodejs

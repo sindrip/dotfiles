@@ -28,7 +28,7 @@ vim.opt.hidden = true
 vim.opt.swapfile = false
 vim.opt.undofile = true
 vim.opt.signcolumn = "number"
-vim.opt.completeopt = { "menu", "menuone", "noselect" }
+vim.opt.completeopt = { "menu", "menuone", "noinsert", "noselect" }
 -- Consider
 -- vim.opt.laststatus = 3
 
