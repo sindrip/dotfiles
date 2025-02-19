@@ -5,7 +5,7 @@ return {
       lua = { "stylua" },
       nix = { "nixfmt" },
       elixir = { "mix" },
-      rust = { "rustfmt" },
+      -- rust = { "rustfmt" },
       sql = { "pg_format" },
       ["*"] = { "trim_whitespace", "trim_newlines" },
     },
