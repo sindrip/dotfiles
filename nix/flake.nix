@@ -5,7 +5,6 @@
   # inputs.otherDir.url = "/home/alice/src/patchelf";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  inputs.nixpkgs-elixir.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
   # Easily find versions to pin: https://lazamar.co.uk/nix-versions/
@@ -17,7 +16,6 @@
       let
         inherit (nixpkgs.lib) optional;
         pkgs = import nixpkgs { inherit system; };
-        pkgs-elixir = import inputs.nixpkgs-elixir { inherit system; };
         wrapped-neovim = let
           neovim-extra = [
             pkgs.gcc
@@ -72,7 +70,7 @@
             pkgs.argocd
 
             # Languages
-            pkgs-elixir.beam.packages.erlang_27.elixir_1_18
+            pkgs.beam.packages.erlang_27.elixir_1_18
             pkgs.beam.interpreters.erlang_27
             pkgs.rebar3
             pkgs.rustup
