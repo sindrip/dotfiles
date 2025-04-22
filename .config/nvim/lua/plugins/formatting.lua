@@ -4,9 +4,8 @@ return {
     formatters_by_ft = {
       lua = { "stylua" },
       nix = { "nixfmt" },
-      elixir = { "mix" },
+      -- elixir = { "mix" },
       -- rust = { "rustfmt" },
-      sql = { "pg_format" },
       ["*"] = { "trim_whitespace", "trim_newlines" },
     },
     format_after_save = {

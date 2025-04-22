@@ -1,17 +1,8 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
-    },
     config = function()
-      require("mason").setup()
-      require("mason-lspconfig").setup {
-        automatic_installation = true,
-      }
-
-      local capabilities = require("blink.cmp").get_lsp_capabilities()
+      -- local capabilities = require("blink.cmp").get_lsp_capabilities()
 
       local on_attach = function(_, bufnr)
         -- Enable completion triggered by <c-x><c-o>
@@ -42,6 +33,11 @@ return {
         capabilities = capabilities,
       }
       require("lspconfig").elixirls.setup {
+        on_attach = on_attach,
+        capabilities = capabilities,
+      }
+
+      require("lspconfig").nixd.setup {
         on_attach = on_attach,
         capabilities = capabilities,
       }

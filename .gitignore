@@ -13,3 +13,9 @@
 !.config/fontconfig/*
 !.config/fontconfig/*/*
 !nix/
+!nix/old
+!nix/old/*
+!nix/neovim
+!nix/neovim/*
+!nix/core
+!nix/core/*
