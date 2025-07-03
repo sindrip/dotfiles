@@ -10,7 +10,7 @@
       wrapped-neovim =
         let
           neovim-extra = [
-            # pkgs.gcc
+            pkgs.git
             pkgs.ripgrep
             pkgs.fd
 

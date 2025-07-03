@@ -11,6 +11,7 @@ return {
         "query",
         "elixir",
         "rust",
+        "nix",
       },
       highlight = {
         enable = true,

@@ -4,15 +4,15 @@ return {
     -- "shaunsingh/nord.nvim",
     branch = "master",
     config = function()
-      -- vim.cmd.colorscheme "nordern"
+      vim.cmd.colorscheme "nordern"
     end,
   },
   {
-    "alexxGmZ/e-ink.nvim",
+    "e-ink-colorscheme/e-ink.nvim",
     priority = 1000,
     config = function()
       require("e-ink").setup()
-      vim.cmd.colorscheme "e-ink"
+      -- vim.cmd.colorscheme "e-ink"
 
       -- choose light mode or dark mode
       -- vim.opt.background = "dark"
