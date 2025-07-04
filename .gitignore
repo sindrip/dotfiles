@@ -5,6 +5,7 @@
 !.config/nix/nix.conf
 !.config/nvim
 !.config/nvim/*
+!.config/nvim/lsp/*
 !.config/nvim/lua/*
 !.config/nvim/lua/*/*
 !.config/tmux

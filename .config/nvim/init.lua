@@ -34,6 +34,8 @@ vim.opt.completeopt = { "menu", "menuone", "noinsert", "noselect" }
 
 require "config.lazy"
 
+vim.lsp.enable { "elixirls", "rust_analyzer", "nixd", "lua_ls" }
+
 -- Diagnostic
 vim.diagnostic.config {
   jump = { float = true },
