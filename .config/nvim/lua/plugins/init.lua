@@ -8,7 +8,7 @@ return {
     end,
   },
   {
-    "alexxGmZ/e-ink.nvim",
+    "e-ink-colorscheme/e-ink.nvim",
     priority = 1000,
     config = function()
       require("e-ink").setup()
@@ -29,7 +29,7 @@ return {
   },
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.8",
+    -- tag = "0.1.8",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },
