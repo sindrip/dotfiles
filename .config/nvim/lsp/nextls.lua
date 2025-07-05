@@ -1,3 +1,3 @@
 return {
-  cmd = { "nextls" },
+  cmd = { "nextls", "--stdio" },
 }

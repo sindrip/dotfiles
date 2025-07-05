@@ -34,7 +34,8 @@ vim.opt.completeopt = { "menu", "menuone", "noinsert", "noselect" }
 
 require "config.lazy"
 
-vim.lsp.enable { "elixirls", "rust_analyzer", "nixd", "lua_ls" }
+-- vim.lsp.enable { "elixirls", "rust_analyzer", "nixd", "lua_ls" }
+vim.lsp.enable { "lexical", "rust_analyzer", "nixd", "lua_ls" }
 
 -- Diagnostic
 vim.diagnostic.config {
