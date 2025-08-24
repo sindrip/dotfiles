@@ -10,8 +10,6 @@
       system:
       let
         pkgs = import nixpkgs { inherit system; };
-        # let
-        # pkgs = import nixpkgs { system = "aarch64-darwin"; };
         wrapped-neovim =
           let
             neovim-extra = [
@@ -27,6 +25,8 @@
               pkgs.shellcheck
               pkgs.lua-language-server
               pkgs.nixd
+              pkgs.tofu-ls
+              pkgs.gopls
 
               pkgs.next-ls
               pkgs.lexical

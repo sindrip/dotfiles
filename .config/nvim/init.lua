@@ -37,8 +37,19 @@ vim.g.netrw_browse_split = 4
 
 require "config.lazy"
 
--- vim.lsp.enable { "elixirls", "rust_analyzer", "nixd", "lua_ls" }
-vim.lsp.enable { "lexical", "rust_analyzer", "nixd", "lua_ls" }
+vim.lsp.enable {
+  "elixir_ls",
+  "rust_analyzer",
+  "nixd",
+  "lua_ls",
+  "tofu_ls",
+  "gopls",
+}
+vim.filetype.add {
+  extension = {
+    tofu = "opentofu",
+  },
+}
 
 -- Diagnostic
 vim.diagnostic.config {

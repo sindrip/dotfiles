@@ -20,3 +20,5 @@
 !nix/neovim/*
 !nix/core
 !nix/core/*
+!nix/mac
+!nix/mac/*
