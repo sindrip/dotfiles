@@ -13,6 +13,8 @@
 !.config/fontconfig/
 !.config/fontconfig/*
 !.config/fontconfig/*/*
+!.config/fish
+!.config/fish/config.fish
 !nix/
 !nix/old
 !nix/old/*
