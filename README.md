@@ -1,19 +1,31 @@
-# Dotfiles
+# Documenting everything I do to set up my Mac
 
-Install [nix](https://nixos.org/download.html)
-```sh
-sh <(curl -L https://nixos.org/nix/install) --daemon
-```
+`xcode-select --install`
 
-Run the bootstrap script
-```sh
-nix run github:sindrip/dotfiles?dir=nix#bootstrap \
-    --extra-experimental-features nix-command \
-    --extra-experimental-features flakes
+Install [Homebrew](https://brew.sh)
 
-```
+# System Settings
 
-[Locale issues on non-NixOS](https://nixos.wiki/wiki/Locales)
-```
-export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
-```
+Desktop & Dock
+- Automatically hide and show the dock -> true
+- Show suggested and recent apps in Dock -> false
+- Mission Control / Automatically rearrange Spaces based on most recent use -> false
+
+Also remove applications from the dock
+
+Accessibility
+- Pointer Control / Trackpad Options / Use trackpad for dragging -> Three finger drag
+
+Keyboard
+- Key repeat rate -> Fast
+- Delay until repeat -> Short
+- Press Globe key to -> Do Nothing
+- Text Input / Text Replacements -> Delete
+- Keyboard Shortcuts / Dock / Turn Dock hiding on/off -> false
+- Keyboard Shortcuts / Spotlight / Show Spotlight search -> false
+- Keyboard Shortcuts / Spotlight / Show Finder search search -> false
+- Keyboard Shortcuts / Modifier Keys / Caps Lock key -> Control
+
+# Zsh
+
+
