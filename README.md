@@ -1,19 +1,27 @@
-# Dotfiles
+# Darwin Dotfiles
 
-Install [nix](https://nixos.org/download.html)
+Install RayCast and set it as the default launcher.
+- [] Disable Spotlight shortcut (Cmd + Space) in settings (or use the command below)
+- [] Change RayCast shortcut to Cmd + Space in RayCast settings
+- [] Add favorite apps to RayCast for quick access
+
+To programatically disable the Spotlight shortcut (Cmd + Space), and Finder Search (Cmd + Option + Space), you can run the following command in the terminal:
 ```sh
-sh <(curl -L https://nixos.org/nix/install) --daemon
+$ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 64 "<dict><key>enabled</key><false/></dict>"
+$ defaults write com.apple.symbolichotkeys AppleSymbolicHotKeys -dict-add 65 "<dict><key>enabled</key><false/></dict>"
 ```
 
-Run the bootstrap script
 ```sh
-nix run github:sindrip/dotfiles?dir=nix#bootstrap \
-    --extra-experimental-features nix-command \
-    --extra-experimental-features flakes
-
+# Set the GLobe key to do nothing
+$ defaults write com.apple.HIToolbox AppleFnUsageType -int 0
 ```
 
-[Locale issues on non-NixOS](https://nixos.wiki/wiki/Locales)
+And to avoid having to login and out for the changes to take effect, you can run this command to activate the new settings immediately:
+```sh
+$ /System/Library/PrivateFrameworks/SystemAdministration.framework/Resources/activateSettings -u
 ```
-export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
+
+Install AeroSpace to manage window snapping and layouts:
+```sh
+$ brew install --cask nikitabobko/tap/aerospace
 ```
