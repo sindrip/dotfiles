@@ -4,6 +4,7 @@ DOTFILES=$(realpath $(dirname $0))
 
 mkdir -p ~/.{config,cache,local/share,local/state}
 mkdir -p ~/.config/zsh
+mkdir -p ~/.config/git
 
 link() {
   if [ -e "$2" ] && [ ! -L "$2" ]; then
@@ -16,4 +17,4 @@ link() {
 link "$DOTFILES/zshenv" ~/.zshenv
 link "$DOTFILES/config/zsh/.zshrc" ~/.config/zsh/.zshrc
 link "$DOTFILES/config/zsh/.zprofile" ~/.config/zsh/.zprofile
-link "$DOTFILES/config/git" ~/.config/git
+link "$DOTFILES/config/git/config" ~/.config/git/config
