@@ -1,8 +1,8 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
-DOTFILES=$(realpath $(dirname $0))
+DOTFILES=$(realpath $(dirname "$0"))
 
-mkdir -p ~/.{config,cache,local/share,local/state}
+mkdir -p ~/.{config,cache,local/bin,local/share,local/state}
 mkdir -p ~/.config/zsh
 mkdir -p ~/.config/git
 mkdir -p ~/.config/ghostty
@@ -28,3 +28,5 @@ link "$DOTFILES/config/ghostty/config" ~/.config/ghostty/config
 link "$DOTFILES/config/nvim" ~/.config/nvim
 link "$DOTFILES/config/tmux/tmux.conf" ~/.config/tmux/tmux.conf
 link "$DOTFILES/config/mise/config.toml" ~/.config/mise/config.toml
+
+link "$DOTFILES/local/bin/tmux-sessionizer" ~/.local/bin/tmux-sessionizer
