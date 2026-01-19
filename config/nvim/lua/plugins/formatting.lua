@@ -50,13 +50,11 @@ return {
       end,
       formatters_by_ft = {
         -- lua = { "stylua" },
-        -- python = { "black" },
         -- javascript = { "prettierd" },
         -- typescript = { "prettierd" },
         -- html = { "prettierd" },
         -- css = { "prettierd" },
         -- json = { "prettierd" },
-        -- markdown = { "prettierd" },
       },
     },
   },

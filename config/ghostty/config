@@ -1,1 +1,14 @@
+# theme = Gruvbox Dark Hard
 theme = Catppuccin Frappe
+window-colorspace = display-p3
+font-thicken = true
+font-thicken-strength = 127
+adjust-cell-height = 20%
+
+# Mouse
+mouse-hide-while-typing = true
+
+# # Cursor
+# cursor-style-blink = false
+# cursor-style = block
+font-family = Iosevka
