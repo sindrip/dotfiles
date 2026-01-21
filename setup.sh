@@ -26,6 +26,7 @@ link "$DOTFILES/config/zsh/.zprofile" ~/.config/zsh/.zprofile
 link "$DOTFILES/config/git/config" ~/.config/git/config
 link "$DOTFILES/config/ghostty/config" ~/.config/ghostty/config
 link "$DOTFILES/config/nvim" ~/.config/nvim
+link "$DOTFILES/config/vscode-nvim" ~/.config/vscode-nvim
 link "$DOTFILES/config/tmux/tmux.conf" ~/.config/tmux/tmux.conf
 link "$DOTFILES/config/mise/config.toml" ~/.config/mise/config.toml
 
