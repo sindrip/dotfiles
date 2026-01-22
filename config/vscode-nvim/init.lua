@@ -1,15 +1,11 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
-vim.o.undofile = true
-vim.o.autoread = true -- Is this needed?
-
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
--- Vim notifications are displayed in the VSCode notification system
 local vscode = require('vscode')
-vim.notify = vscode.notify
+vim.notify = vscode.notify -- Vim notifications are displayed in the VSCode notification system
 
 vim.keymap.set('n', '<ESC>', ':nohlsearch<CR>', { desc = 'Clear search highlighting' })
 vim.keymap.set('n', '<leader>un', function() vscode.action('notifications.clearAll') end, { desc = 'Dismiss Notifications' })
