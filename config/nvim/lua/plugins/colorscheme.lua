@@ -11,7 +11,7 @@ return {
       vim.cmd.colorscheme("catppuccin")
     end,
   },
-  "sainnhe/gruvbox-material",
-  "e-ink-colorscheme/e-ink.nvim",
-  "fcancelinha/nordern.nvim",
+  -- "sainnhe/gruvbox-material",
+  -- "e-ink-colorscheme/e-ink.nvim",
+  -- "fcancelinha/nordern.nvim",
 }

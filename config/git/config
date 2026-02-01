@@ -10,3 +10,6 @@
 
 [push]
 	autoSetupRemote = true
+
+#[core]
+#  pager = delta --side-by-side

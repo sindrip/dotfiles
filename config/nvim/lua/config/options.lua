@@ -1,6 +1,7 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+
 -- vim.opt.softtabstop = -1
 -- Options
 vim.o.swapfile = false
@@ -26,12 +27,12 @@ vim.o.signcolumn = "yes"
 vim.o.laststatus = 3
 vim.o.list = true
 vim.opt.listchars = {
-  tab = "→ ",
-  nbsp = "␣",
-  trail = "·",
-  -- space = "·",
-  extends = "⟩",
-  precedes = "⟨",
+    tab = "→ ",
+    nbsp = "␣",
+    trail = "·",
+    -- space = "·",
+    extends = "⟩",
+    precedes = "⟨",
 }
 -- vim.opt.completeopt = { "menu", "menuone", "noinsert", "noselect" }
 vim.opt.completeopt = { "menu", "menuone", "noselect" }
@@ -41,8 +42,8 @@ vim.o.wrap = false
 vim.o.inccommand = "split" -- Preview off-screen substitution
 
 vim.diagnostic.config({
-  virtual_text = true,
-  -- virtual_lines = {
-  --   current_line = false
-  -- }
+    virtual_text = true,
+    -- virtual_lines = {
+    --   current_line = false
+    -- }
 })

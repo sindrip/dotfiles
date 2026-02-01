@@ -14,3 +14,4 @@ export HISTFILE="$XDG_STATE_HOME/zsh/history"
 # Disable macOS shell sessions
 export SHELL_SESSIONS_DISABLE=1
 
+. "$HOME/.cargo/env"
