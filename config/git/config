@@ -1,0 +1,15 @@
+[user]
+	name = Sindri P. Ingimundarson
+	useConfigOnly = true
+
+[include]
+	path = user
+
+[init]
+	defaultBranch = main
+
+[push]
+	autoSetupRemote = true
+
+#[core]
+#  pager = delta --side-by-side
