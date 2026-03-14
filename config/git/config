@@ -1,0 +1,57 @@
+[user]
+	name = Sindri P. Ingimundarson
+	useConfigOnly = true # No global email — forces explicit identity per context
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[includeIf "hasconfig:remote.*.url:git@github.com:dotcom-dev/**"]
+	path = work
+[includeIf "hasconfig:remote.*.url:https://github.com/dotcom-dev/**"]
+	path = work
+[includeIf "hasconfig:remote.*.url:git@github.com:sindrip/**"]
+	path = personal
+[includeIf "hasconfig:remote.*.url:https://github.com/sindrip/**"]
+	path = personal
+
+[column]
+	ui = auto
+[branch]
+	sort = -committerdate
+[tag]
+	sort = version:refname
+[init]
+	defaultBranch = main
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	colorMovedWS = allow-indentation-change
+	mnemonicPrefix = true
+	renames = true
+[push]
+	default = simple
+	autoSetupRemote = true
+	followTags = true
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
+[help]
+	autocorrect = prompt
+[commit]
+	verbose = true
+[rerere]
+	enabled = true
+	autoupdate = true
+[rebase]
+	autoSquash = true
+	autoStash = true
+	updateRefs = true
+[merge]
+	conflictstyle = zdiff3
+[pull]
+	rebase = true
+[alias]
+	dlog = -c diff.external=difft log --ext-diff
+	dshow = -c diff.external=difft show --ext-diff
+	ddiff = -c diff.external=difft diff
+	cleanup = !git fetch --prune && git branch -vv | grep \": gone]\" | awk \"{print \\$1}\" | xargs git branch -D

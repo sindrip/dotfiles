@@ -1,0 +1,50 @@
+#!/usr/bin/env sh
+set -e
+
+usage() {
+	echo "Usage: git bare {init,clone} <args>"
+	exit 1
+}
+
+ensure_not_exists() {
+	if [ -e "$1" ]; then
+		echo "$1 already exists" >&2
+		exit 1
+	fi
+}
+
+cmd_init() {
+	NAME="${1:?Usage: git bare init <name>}"
+
+	ensure_not_exists "$NAME"
+
+	git init --bare "$NAME/.git"
+	git -C "$NAME" config core.logAllRefUpdates true
+	git -C "$NAME" config worktree.useRelativePaths true
+
+	BRANCH=$(git -C "$NAME" symbolic-ref --short HEAD)
+	git -C "$NAME" worktree add --orphan -b "$BRANCH" "$BRANCH"
+}
+
+cmd_clone() {
+	URL="${1:?Usage: git bare clone <url>}"
+	NAME="${2:-$(basename "$URL" .git)}"
+
+	ensure_not_exists "$NAME"
+
+	git clone --bare "$URL" "$NAME/.git"
+	git -C "$NAME" config core.logAllRefUpdates true
+	git -C "$NAME" config worktree.useRelativePaths true
+
+	BRANCH=$(git -C "$NAME" symbolic-ref --short HEAD)
+	git -C "$NAME" worktree add "$BRANCH"
+}
+
+COMMAND="${1:-}"
+shift || usage
+
+case "$COMMAND" in
+	init) cmd_init "$@" ;;
+	clone) cmd_clone "$@" ;;
+	*) usage ;;
+esac
