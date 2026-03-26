@@ -14,14 +14,16 @@ link() {
     return
   fi
   ln -sf "$src" "$dest"
+  info "$dest -> $src"
 }
 
 # packages
-brew bundle --file="$DOTFILES/Brewfile"
+brew bundle --verbose --file="$DOTFILES/Brewfile"
 
 # config files
 cd "$DOTFILES/config"
 find . -type f | while read -r f; do
+  f="${f#./}"
   mkdir -p "$HOME/.config/$(dirname "$f")"
   link "$DOTFILES/config/$f" "$HOME/.config/$f"
 done

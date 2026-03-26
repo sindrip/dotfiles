@@ -1,5 +1,5 @@
 brew "fish"
-brew "neovim"
+brew "neovim", args: ["HEAD"]
 brew "tmux"
 brew "ripgrep"
 brew "bat"
@@ -16,6 +16,7 @@ brew "gh"
 brew "lazydocker"
 brew "lazygit"
 brew "rustup"
+brew "tree-sitter-cli"
 brew "xdg-ninja"
 
 cask "font-iosevka"

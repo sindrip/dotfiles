@@ -3,5 +3,6 @@
 .direnv
 .env
 .env.*
+*.env
 *.pem
 *.key
