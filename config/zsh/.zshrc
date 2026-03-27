@@ -37,5 +37,8 @@ export EDITOR=nvim
 export VISUAL=nvim
 export SUDO_EDITOR=nvim
 
-# Prompt
+# Shell integrations
+(( $+commands[fzf] )) && source <(fzf --zsh)
+(( $+commands[mise] )) && eval "$(mise activate zsh)"
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 (( $+commands[starship] )) && eval "$(starship init zsh)"
