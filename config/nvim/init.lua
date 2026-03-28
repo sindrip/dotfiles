@@ -8,6 +8,7 @@ vim.o.statuscolumn = "%!v:lua.StatusColumn()"
 vim.o.pumborder = "rounded"
 vim.o.clipboard = "unnamedplus"
 vim.o.undofile = true
+vim.o.swapfile = false
 vim.o.ignorecase = true
 vim.o.smartcase = true
 vim.o.splitright = true
@@ -52,6 +53,9 @@ function _G.StatusColumn()
 		return pad
 	end
 
+	if vim.v.virtnum ~= 0 then
+		return "%C" .. cell("", "", 2) .. "%=" .. "  " .. cell("", "", 2)
+	end
 	local num = vim.v.relnum == 0 and vim.v.lnum or vim.v.relnum
 	return "%C" .. cell(diag_text, diag_hl, 2) .. "%=" .. num .. " " .. cell(git_text, git_hl, 2)
 end
@@ -60,10 +64,10 @@ vim.diagnostic.config({
 	jump = { float = true },
 	signs = {
 		text = {
-			[vim.diagnostic.severity.ERROR] = "●",
-			[vim.diagnostic.severity.WARN] = "●",
-			[vim.diagnostic.severity.INFO] = "●",
-			[vim.diagnostic.severity.HINT] = "●",
+			[vim.diagnostic.severity.ERROR] = "󰅚",
+			[vim.diagnostic.severity.WARN] = "󰀪",
+			[vim.diagnostic.severity.INFO] = "󰋽",
+			[vim.diagnostic.severity.HINT] = "󰌶",
 		},
 	},
 	status = {
@@ -109,6 +113,8 @@ vim.pack.add({
 	"https://github.com/echasnovski/mini.notify",
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/sindrets/diffview.nvim",
+	"https://github.com/folke/trouble.nvim",
+	"https://github.com/ibhagwan/fzf-lua",
 })
 
 local function pack_clean()
@@ -174,16 +180,16 @@ require("gitsigns").setup({
 	signs = {
 		add = { text = "▎" },
 		change = { text = "▎" },
-		delete = { text = "" },
-		topdelete = { text = "" },
+		delete = { text = "_" },
+		topdelete = { text = "‾" },
 		changedelete = { text = "▎" },
 		untracked = { text = "▎" },
 	},
 	signs_staged = {
 		add = { text = "▎" },
 		change = { text = "▎" },
-		delete = { text = "" },
-		topdelete = { text = "" },
+		delete = { text = "_" },
+		topdelete = { text = "‾" },
 		changedelete = { text = "▎" },
 	},
 })
@@ -260,7 +266,7 @@ vim.lsp.config.lua_ls = {
 		client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
 			runtime = {
 				version = "LuaJIT",
-				path = { "lua/?.lua", "lua/?/init.lua" },
+				path = { "lua/?.lua", "lua/?/init.lua" }
 			},
 			workspace = {
 				checkThirdParty = false,
@@ -292,7 +298,14 @@ end
 -- File tree
 
 require("mini.icons").setup()
-require("mini.notify").setup()
+require("mini.notify").setup({
+	window = {
+		config = {
+			border = "rounded",
+		},
+		winblend = 75,
+	},
+})
 require("fyler").setup({
 	views = {
 		finder = {
@@ -326,7 +339,7 @@ require("fyler").setup({
 			watcher = { enabled = true },
 			win = {
 				kinds = {
-					split_left = { width = "20%" },
+					split_left_most = { width = "20%" },
 				},
 			},
 		},
@@ -336,12 +349,28 @@ require("fyler").setup({
 -- Keymaps
 
 vim.keymap.set("n", "<leader>r", function()
+	-- Close fyler before saving session (plugin state isn't serialisable)
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.bo[buf].filetype == "fyler" then
+			vim.api.nvim_buf_delete(buf, { force = true })
+		end
+	end
 	local session = vim.fn.stdpath("state") .. "/restart.vim"
 	vim.cmd.mksession({ args = { session }, bang = true })
 	vim.cmd.restart({ args = { "source", session } })
 end, { desc = "Restart nvim with session" })
 
+require("trouble").setup()
+
+vim.keymap.set("n", "<leader>x", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+
+vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
+vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
+
+vim.keymap.set({ "n", "x" }, "j", function() return vim.v.count == 0 and "gj" or "j" end, { expr = true })
+vim.keymap.set({ "n", "x" }, "k", function() return vim.v.count == 0 and "gk" or "k" end, { expr = true })
+
 vim.keymap.set("n", "<leader>e", function()
-	require("fyler").toggle({ kind = "split_left" })
+	require("fyler").toggle({ kind = "split_left_most" })
 end, { desc = "Toggle file tree" })
 

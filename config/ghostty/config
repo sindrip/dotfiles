@@ -1,0 +1,10 @@
+theme = Catppuccin Frappe
+macos-titlebar-style = tabs
+mouse-hide-while-typing = true
+
+macos-option-as-alt = true
+key-remap = cmd=option
+key-remap = option=cmd
+
+keybind = cmd+zero=unbind
+
