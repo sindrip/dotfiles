@@ -1,30 +1,56 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
-vim.o.number = true
-vim.o.relativenumber = true
-vim.o.signcolumn = "no"
+-- UI
+vim.o.number = true                    -- Show line numbers
+vim.o.relativenumber = true            -- Relative line numbers for easy jumping
+vim.o.cursorline = true                -- Highlight the current line
+vim.o.signcolumn = "no"                -- Hide sign column (signs rendered in statuscolumn)
 vim.o.statuscolumn = "%!v:lua.StatusColumn()"
-vim.o.pumborder = "rounded"
-vim.o.clipboard = "unnamedplus"
-vim.o.undofile = true
-vim.o.ignorecase = true
-vim.o.smartcase = true
-vim.o.splitright = true
-vim.o.splitbelow = true
-vim.o.scrolloff = 8
-vim.o.updatetime = 250
-vim.o.cursorline = true
-vim.o.expandtab = true
-vim.o.shiftwidth = 2
-vim.o.tabstop = 2
-vim.o.foldlevelstart = 99
-vim.o.foldcolumn = "auto:1"
-vim.o.foldtext = ""
-vim.o.foldnestmax = 1
-vim.o.fillchars = "fold: ,foldopen:\u{f47c},foldclose:\u{f460},foldsep: ,foldinner: "
+vim.o.laststatus = 3                   -- Single global statusline
+vim.o.pumborder = "rounded"            -- Rounded borders on popup menus
+vim.o.scrolloff = 8                    -- Keep 8 lines visible above/below cursor
+vim.o.list = true                      -- Show whitespace characters
+vim.opt.listchars = { tab = "→ ", trail = "·", nbsp = "␣" }
 
-vim.o.laststatus = 3
+-- Editing
+-- vim.o.clipboard = "unnamedplus"        -- Use system clipboard
+vim.o.expandtab = true                 -- Spaces instead of tabs
+vim.o.shiftwidth = 2                   -- 2-space indentation
+vim.o.tabstop = 2                      -- 2-space tabs
+vim.o.breakindent = true               -- Wrapped lines preserve indentation
+vim.o.undofile = true                  -- Persist undo history across sessions
+vim.o.swapfile = false                 -- No swap files
+vim.o.confirm = true                   -- Prompt instead of error on :q with unsaved changes
+
+-- Search
+vim.o.ignorecase = true                -- Case-insensitive search...
+vim.o.smartcase = true                 -- ...unless search contains capitals
+vim.o.inccommand = "split"             -- Live preview of :s substitutions
+
+-- Splits
+vim.o.splitright = true                -- Vertical splits open to the right
+vim.o.splitbelow = true                -- Horizontal splits open below
+
+-- Folds
+vim.o.foldlevelstart = 99             -- Start with all folds open
+vim.o.foldtext = ""                    -- Use highlighted fold text (no summary line)
+vim.o.foldnestmax = 1                  -- Only fold one level deep
+
+-- vim.o.foldcolumn = "auto:1"
+-- vim.o.fillchars = "fold: ,foldopen: ,foldclose:\u{f460},foldsep: ,foldinner: "
+
+-- Timing
+vim.o.updatetime = 250                 -- Faster CursorHold events (default 4000ms)
+vim.o.timeoutlen = 300                 -- Time to wait for mapped sequence (default 1000ms)
+
+vim.api.nvim_create_autocmd("TextYankPost", {
+	callback = function() vim.hl.on_yank() end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+	callback = function() vim.opt_local.formatoptions:remove("o") end,
+})
 
 function _G.StatusColumn()
 	local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
@@ -52,18 +78,21 @@ function _G.StatusColumn()
 		return pad
 	end
 
+	if vim.v.virtnum ~= 0 then
+		return cell("", "", 2) .. "%=" .. "  " .. cell("", "", 2)
+	end
 	local num = vim.v.relnum == 0 and vim.v.lnum or vim.v.relnum
-	return "%C" .. cell(diag_text, diag_hl, 2) .. "%=" .. num .. " " .. cell(git_text, git_hl, 2)
+	return cell(diag_text, diag_hl, 2) .. "%=" .. num .. " " .. cell(git_text, git_hl, 2)
 end
 
 vim.diagnostic.config({
 	jump = { float = true },
 	signs = {
 		text = {
-			[vim.diagnostic.severity.ERROR] = "●",
-			[vim.diagnostic.severity.WARN] = "●",
-			[vim.diagnostic.severity.INFO] = "●",
-			[vim.diagnostic.severity.HINT] = "●",
+			[vim.diagnostic.severity.ERROR] = "󰅚",
+			[vim.diagnostic.severity.WARN] = "󰀪",
+			[vim.diagnostic.severity.INFO] = "󰋽",
+			[vim.diagnostic.severity.HINT] = "󰌶",
 		},
 	},
 	status = {
@@ -109,7 +138,10 @@ vim.pack.add({
 	"https://github.com/echasnovski/mini.notify",
 	"https://github.com/lewis6991/gitsigns.nvim",
 	"https://github.com/sindrets/diffview.nvim",
-})
+	"https://github.com/folke/trouble.nvim",
+	"https://github.com/ibhagwan/fzf-lua",
+	"https://github.com/Cannon07/claude-preview.nvim",
+}, { confirm = false })
 
 local function pack_clean()
 	local stale = vim.iter(vim.pack.get())
@@ -130,19 +162,23 @@ vim.cmd.colorscheme("catppuccin-frappe")
 
 -- Treesitter
 
-local ok, ts = pcall(require, "nvim-treesitter")
-if ok then
+local ts_ok, ts = pcall(require, "nvim-treesitter")
+if ts_ok then
 	ts.install({ "typescript", "tsx", "javascript", "rust" })
-end
 
--- vim.api.nvim_create_autocmd("FileType", {
--- 	callback = function()
--- 		if pcall(vim.treesitter.start) then
--- 			vim.wo[0][0].foldmethod = "expr"
--- 			vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
--- 		end
--- 	end,
--- })
+	vim.api.nvim_create_autocmd("FileType", {
+		callback = function(args)
+			local lang = vim.treesitter.language.get_lang(args.match)
+			if not lang then return end
+			if not vim.treesitter.language.add(lang) then return end
+
+			vim.treesitter.start(args.buf, lang)
+			vim.wo[0][0].foldmethod = "expr"
+			vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+			vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+		end,
+	})
+end
 
 -- Auto-reload files changed outside of Neovim
 
@@ -154,6 +190,11 @@ local w = vim.uv.new_fs_event()
 w:start(vim.fn.getcwd(), { recursive = true }, vim.schedule_wrap(function()
 	vim.cmd("checktime")
 end))
+
+-- Auto-reload without W12 confirm prompt
+-- vim.api.nvim_create_autocmd("FileChangedShell", {
+-- 	callback = function() return "reload" end,
+-- })
 
 -- Completion (blink.cmp)
 
@@ -174,16 +215,16 @@ require("gitsigns").setup({
 	signs = {
 		add = { text = "▎" },
 		change = { text = "▎" },
-		delete = { text = "" },
-		topdelete = { text = "" },
+		delete = { text = "_" },
+		topdelete = { text = "‾" },
 		changedelete = { text = "▎" },
 		untracked = { text = "▎" },
 	},
 	signs_staged = {
 		add = { text = "▎" },
 		change = { text = "▎" },
-		delete = { text = "" },
-		topdelete = { text = "" },
+		delete = { text = "_" },
+		topdelete = { text = "‾" },
 		changedelete = { text = "▎" },
 	},
 })
@@ -260,7 +301,7 @@ vim.lsp.config.lua_ls = {
 		client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
 			runtime = {
 				version = "LuaJIT",
-				path = { "lua/?.lua", "lua/?/init.lua" },
+				path = { "lua/?.lua", "lua/?/init.lua" }
 			},
 			workspace = {
 				checkThirdParty = false,
@@ -292,7 +333,14 @@ end
 -- File tree
 
 require("mini.icons").setup()
-require("mini.notify").setup()
+require("mini.notify").setup({
+	window = {
+		config = {
+			border = "rounded",
+		},
+		winblend = 75,
+	},
+})
 require("fyler").setup({
 	views = {
 		finder = {
@@ -326,7 +374,7 @@ require("fyler").setup({
 			watcher = { enabled = true },
 			win = {
 				kinds = {
-					split_left = { width = "20%" },
+					split_left_most = { width = "20%" },
 				},
 			},
 		},
@@ -336,12 +384,33 @@ require("fyler").setup({
 -- Keymaps
 
 vim.keymap.set("n", "<leader>r", function()
+	-- Close fyler before saving session (plugin state isn't serialisable)
+	for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+		if vim.bo[buf].filetype == "fyler" then
+			vim.api.nvim_buf_delete(buf, { force = true })
+		end
+	end
 	local session = vim.fn.stdpath("state") .. "/restart.vim"
 	vim.cmd.mksession({ args = { session }, bang = true })
 	vim.cmd.restart({ args = { "source", session } })
 end, { desc = "Restart nvim with session" })
 
+require("trouble").setup()
+
+vim.keymap.set("n", "<leader>x", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+
+require("fzf-lua").register_ui_select()
+require("claude-preview").setup()
+
+vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
+vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
+vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua helptags<cr>", { desc = "Live grep" })
+
+vim.keymap.set({ "n", "x" }, "j", function() return vim.v.count == 0 and "gj" or "j" end, { expr = true })
+vim.keymap.set({ "n", "x" }, "k", function() return vim.v.count == 0 and "gk" or "k" end, { expr = true })
+
 vim.keymap.set("n", "<leader>e", function()
-	require("fyler").toggle({ kind = "split_left" })
+	require("fyler").toggle({ kind = "split_left_most" })
 end, { desc = "Toggle file tree" })
+
 

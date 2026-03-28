@@ -20,6 +20,10 @@ link() {
 # packages
 brew bundle --verbose --file="$DOTFILES/Brewfile"
 
+# macos defaults
+# NOTE: Disable Ctrl+Space for input source switching in System Settings > Keyboard > Keyboard Shortcuts > Input Sources
+defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add "Hide Ghostty" '\0'
+
 # config files
 cd "$DOTFILES/config"
 find . -type f | while read -r f; do
