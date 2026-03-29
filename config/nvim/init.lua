@@ -8,7 +8,8 @@ vim.o.cursorline = true                -- Highlight the current line
 vim.o.signcolumn = "no"                -- Hide sign column (signs rendered in statuscolumn)
 vim.o.statuscolumn = "%!v:lua.StatusColumn()"
 vim.o.laststatus = 3                   -- Single global statusline
-vim.o.pumborder = "rounded"            -- Rounded borders on popup menus
+-- vim.o.winborder = "🭽,▔,🭾,▕,🭿,▁,🭼,▏"
+-- vim.o.winborder = "rounded"
 vim.o.scrolloff = 8                    -- Keep 8 lines visible above/below cursor
 vim.o.list = true                      -- Show whitespace characters
 vim.opt.listchars = { tab = "→ ", trail = "·", nbsp = "␣" }
@@ -141,6 +142,7 @@ vim.pack.add({
 	"https://github.com/folke/trouble.nvim",
 	"https://github.com/ibhagwan/fzf-lua",
 	"https://github.com/Cannon07/claude-preview.nvim",
+	"https://github.com/stevearc/conform.nvim",
 }, { confirm = false })
 
 local function pack_clean()
@@ -242,6 +244,9 @@ vim.lsp.config.tsgo = {
 	cmd = { "tsgo", "--lsp", "--stdio" },
 	filetypes = ts_filetypes,
 	root_markers = ts_root_markers,
+	handlers = {
+		["$/progress"] = function() end,
+	},
 	on_init = function(client)
 		-- Diagnostics are push-based (textDocument/publishDiagnostics), no capability needed.
 		-- Clear everything else so vtsls handles completions, hover, go-to-def, etc.
@@ -381,6 +386,33 @@ require("fyler").setup({
 	},
 })
 
+vim.g.auto_format = true
+
+-- Formatting (conform.nvim)
+
+local web_formatters = { "biome", "prettierd", "prettier", stop_after_first = true }
+
+require("conform").setup({
+	formatters_by_ft = {
+		javascript = web_formatters,
+		javascriptreact = web_formatters,
+		typescript = web_formatters,
+		typescriptreact = web_formatters,
+		json = web_formatters,
+		css = web_formatters,
+		lua = { "stylua" },
+		rust = { lsp_format = "prefer" },
+	},
+	formatters = {
+		prettierd = { require_cwd = true },
+		prettier = { require_cwd = true },
+	},
+	format_on_save = function()
+		if not vim.g.auto_format then return end
+		return { timeout_ms = 500, lsp_format = "never" }
+	end,
+})
+
 -- Keymaps
 
 vim.keymap.set("n", "<leader>r", function()
@@ -412,5 +444,16 @@ vim.keymap.set({ "n", "x" }, "k", function() return vim.v.count == 0 and "gk" or
 vim.keymap.set("n", "<leader>e", function()
 	require("fyler").toggle({ kind = "split_left_most" })
 end, { desc = "Toggle file tree" })
+
+vim.keymap.set("n", "<leader>th", function()
+	local enabled = not vim.lsp.inlay_hint.is_enabled()
+	vim.lsp.inlay_hint.enable(enabled)
+	vim.notify("Inlay hints: " .. (enabled and "on" or "off"))
+end, { desc = "Toggle inlay hints" })
+
+vim.keymap.set("n", "<leader>tf", function()
+	vim.g.auto_format = not vim.g.auto_format
+	vim.notify("Auto format: " .. (vim.g.auto_format and "on" or "off"))
+end, { desc = "Toggle auto format" })
 
 

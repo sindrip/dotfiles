@@ -9,6 +9,10 @@
       "rev": "4aee3b003ce806900de22986efe96dba44ec91e7",
       "src": "https://github.com/Cannon07/claude-preview.nvim"
     },
+    "conform.nvim": {
+      "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
+      "src": "https://github.com/stevearc/conform.nvim"
+    },
     "diffview.nvim": {
       "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
       "src": "https://github.com/sindrets/diffview.nvim"
