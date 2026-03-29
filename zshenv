@@ -12,6 +12,7 @@ export HISTFILE="$XDG_STATE_HOME/zsh/history"
 
 # XDG compliance for tools that don't respect it by default
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
 export TMUX_PLUGIN_MANAGER_PATH="$XDG_DATA_HOME/tmux/plugins"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
 

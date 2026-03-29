@@ -1,13 +1,9 @@
 {
   "plugins": {
     "blink.cmp": {
-      "rev": "62c3d54f7d739ee46f850ea6832383e3b7ca2ee1",
+      "rev": "451168851e8e2466bc97ee3e026c3dcb9141ce07",
       "src": "https://github.com/saghen/blink.cmp",
-      "version": "1.0.0 - 1.1.0"
-    },
-    "claude-preview.nvim": {
-      "rev": "4aee3b003ce806900de22986efe96dba44ec91e7",
-      "src": "https://github.com/Cannon07/claude-preview.nvim"
+      "version": "1.0.0 - 2.0.0"
     },
     "conform.nvim": {
       "rev": "086a40dc7ed8242c03be9f47fbcee68699cc2395",
@@ -18,8 +14,9 @@
       "src": "https://github.com/sindrets/diffview.nvim"
     },
     "fyler.nvim": {
-      "rev": "15fabd5d8cf6ba8afb0a404878106ba5300843b1",
-      "src": "https://github.com/A7Lavinraj/fyler.nvim"
+      "rev": "bb8b9f30c652c948d35211958b0deec3496bcc08",
+      "src": "https://github.com/A7Lavinraj/fyler.nvim",
+      "version": "'stable'"
     },
     "fzf-lua": {
       "rev": "bde73a6886b607246095aa59f396de5e0d036890",
@@ -46,7 +43,7 @@
       "src": "https://github.com/catppuccin/nvim"
     },
     "nvim-treesitter": {
-      "rev": "6620ae1c44dfa8623b22d0cbf873a9e8d073b849",
+      "rev": "7caec274fd19c12b55902a5b795100d21531391f",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "trouble.nvim": {
