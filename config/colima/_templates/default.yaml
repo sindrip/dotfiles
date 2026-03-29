@@ -1,0 +1,14 @@
+cpu: 6
+memory: 12
+arch: host
+runtime: docker
+modelRunner: docker
+kubernetes:
+  enabled: false
+autoActivate: true
+forwardAgent: true
+vmType: vz
+rosetta: true
+nestedVirtualization: true
+mountType: virtiofs
+mountInotify: true

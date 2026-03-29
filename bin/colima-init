@@ -1,0 +1,12 @@
+#!/bin/sh
+exec colima start \
+	--cpu 6 \
+	--memory 12 \
+	--vm-type vz \
+	--mount-type virtiofs \
+	--vz-rosetta \
+	--mount-inotify \
+	--nested-virtualization \
+	--ssh-agent \
+	--activate \
+	"$@"
