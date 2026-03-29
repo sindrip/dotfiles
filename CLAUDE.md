@@ -24,3 +24,4 @@ This runs `brew bundle`, symlinks everything in `config/` to `~/.config/`, and s
 ## Guidelines
 
 - When adding or configuring new tools, consult [xdg-ninja](https://github.com/b3nj5m1n/xdg-ninja) to ensure configs use XDG-compliant paths (`~/.config/`, `~/.local/share/`, etc.) rather than cluttering `~`.
+- Don't symlink configs that may contain runtime secrets (auth tokens, credentials). Document manual setup in `README.md` instead.

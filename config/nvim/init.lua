@@ -94,7 +94,7 @@ function _G.StatusColumn()
 end
 
 vim.diagnostic.config({
-  jump = { float = true },
+  jump = { on_jump = "open_float" },
   signs = {
     text = {
       [vim.diagnostic.severity.ERROR] = "󰅚",

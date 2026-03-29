@@ -11,7 +11,7 @@ setopt SHARE_HISTORY
 
 # Completion
 autoload -U compinit
-compinit
+compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
 
 # Navigation
 setopt AUTO_CD
