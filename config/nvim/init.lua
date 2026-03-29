@@ -68,15 +68,16 @@ function _G.StatusColumn()
   local git_text, git_hl = "", ""
   for _, mark in ipairs(marks) do
     local d = mark[4]
-    local text = (d.sign_text or ""):gsub("%s", "")
-    local hl = d.sign_hl_group or ""
-    if hl:find("GitSigns") then
-      git_text, git_hl = text, hl
-    else
-      diag_text, diag_hl = text, hl
+    if d then
+      local text = (d.sign_text or ""):gsub("%s", "")
+      local hl = d.sign_hl_group or ""
+      if hl:find("GitSigns") then
+        git_text, git_hl = text, hl
+      else
+        diag_text, diag_hl = text, hl
+      end
     end
   end
-
   local function cell(text, hl, width)
     local dw = vim.fn.strdisplaywidth(text)
     local pad = string.rep(" ", math.max(0, width - dw))
@@ -94,21 +95,23 @@ function _G.StatusColumn()
 end
 
 vim.diagnostic.config({
-  jump = { on_jump = "open_float" },
+  -- jump = { on_jump = function() vim.diagnostic.open_float() end },
+  jump = { float = true },
   signs = {
     text = {
-      [vim.diagnostic.severity.ERROR] = "󰅚",
-      [vim.diagnostic.severity.WARN] = "󰀪",
-      [vim.diagnostic.severity.INFO] = "󰋽",
-      [vim.diagnostic.severity.HINT] = "󰌶",
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN] = "",
+      [vim.diagnostic.severity.INFO] = "",
+      [vim.diagnostic.severity.HINT] = "",
     },
   },
+  virtual_text = { current_line = true },
   status = {
     format = {
-      [vim.diagnostic.severity.ERROR] = "󰅚 ",
-      [vim.diagnostic.severity.WARN] = "󰀪 ",
-      [vim.diagnostic.severity.INFO] = "󰋽 ",
-      [vim.diagnostic.severity.HINT] = "󰌶 ",
+      [vim.diagnostic.severity.ERROR] = "",
+      [vim.diagnostic.severity.WARN] = "",
+      [vim.diagnostic.severity.INFO] = "",
+      [vim.diagnostic.severity.HINT] = "",
     },
   },
 })
@@ -150,6 +153,7 @@ pack.add({
     end,
   },
   { "https://github.com/mason-org/mason.nvim", opts = {} },
+  { "https://github.com/folke/lazydev.nvim", opts = {} },
   {
     "https://github.com/A7Lavinraj/fyler.nvim",
     branch = "stable",
@@ -245,7 +249,8 @@ pack.add({
       },
     },
   },
-  "https://github.com/sindrets/diffview.nvim",
+  -- "https://github.com/sindrets/diffview.nvim",
+  "https://github.com/neovim/nvim-lspconfig",
   { "https://github.com/folke/trouble.nvim", opts = {} },
   {
     "https://github.com/ibhagwan/fzf-lua",
@@ -270,6 +275,7 @@ pack.add({
           rust = { lsp_format = "prefer" },
         },
         formatters = {
+          biome = { require_cwd = true },
           prettierd = { require_cwd = true },
           prettier = { require_cwd = true },
         },
@@ -287,102 +293,51 @@ pack.add({
 -- Auto-reload files changed outside of Neovim
 
 local w = vim.uv.new_fs_event()
-w:start(
-  vim.fn.getcwd(),
-  { recursive = true },
-  vim.schedule_wrap(function()
-    vim.cmd("checktime")
-  end)
-)
+if w then
+  w:start(
+    vim.fn.getcwd(),
+    { recursive = true },
+    vim.schedule_wrap(function()
+      vim.cmd("checktime")
+    end)
+  )
+end
 
--- LSP: tsgo (diagnostics only) + vtsls (everything else)
-
-local ts_filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }
-local ts_root_markers = { "tsconfig.json", "package.json", ".git" }
-
-vim.lsp.config.tsgo = {
-  cmd = { "tsgo", "--lsp", "--stdio" },
-  filetypes = ts_filetypes,
-  root_markers = ts_root_markers,
-  handlers = {
-    ["$/progress"] = function() end,
-  },
-  on_init = function(client)
-    -- Diagnostics are push-based (textDocument/publishDiagnostics), no capability needed.
-    -- Clear everything else so vtsls handles completions, hover, go-to-def, etc.
-    local caps = client.server_capabilities
-    caps.completionProvider = nil
-    caps.hoverProvider = nil
-    caps.signatureHelpProvider = nil
-    caps.definitionProvider = nil
-    caps.typeDefinitionProvider = nil
-    caps.implementationProvider = nil
-    caps.referencesProvider = nil
-    caps.documentHighlightProvider = nil
-    caps.documentSymbolProvider = nil
-    caps.workspaceSymbolProvider = nil
-    caps.codeActionProvider = nil
-    caps.codeLensProvider = nil
-    caps.documentFormattingProvider = nil
-    caps.documentRangeFormattingProvider = nil
-    caps.renameProvider = nil
-    caps.inlayHintProvider = nil
-    caps.semanticTokensProvider = nil
-    caps.declarationProvider = nil
-    caps.callHierarchyProvider = nil
-    caps.selectionRangeProvider = nil
-  end,
-}
-
+-- -- LSP: tsgo (diagnostics only) + vtsls (everything else)
+-- -- Defaults (cmd, filetypes, root_dir, init_options) provided by nvim-lspconfig
+--
+-- vim.lsp.config.tsgo = {
+--   -- handlers = {
+--   --   ["$/progress"] = function() end,
+--   -- },
+--   on_init = function(client)
+--     -- Only using tsgo for diagnostics
+--     -- Clear all capabilities so vtsls handles everything else.
+--     for key in pairs(client.server_capabilities) do
+--       if key ~= "textDocumentSync" and key ~= "diagnosticProvider" then
+--         client.server_capabilities[key] = nil
+--       end
+--     end
+--   end,
+-- }
+--
 vim.lsp.config.vtsls = {
-  cmd = { "vtsls", "--stdio" },
-  filetypes = ts_filetypes,
-  root_markers = ts_root_markers,
-  init_options = { hostInfo = "neovim" },
-  handlers = {
-    ["textDocument/publishDiagnostics"] = function() end,
+  settings = {
+    typescript = {
+      inlayHints = {
+        parameterNames = { enabled = "literals" },
+        parameterTypes = { enabled = true },
+        variableTypes = { enabled = true },
+        propertyDeclarationTypes = { enabled = true },
+        functionLikeReturnTypes = { enabled = true },
+        enumMemberValues = { enabled = true },
+      },
+    },
   },
 }
 
-vim.lsp.config.lua_ls = {
-  cmd = { "lua-language-server" },
-  filetypes = { "lua" },
-  root_markers = {
-    ".luarc.json",
-    ".luarc.jsonc",
-    ".emmyrc.json",
-    ".luacheckrc",
-    ".stylua.toml",
-    "stylua.toml",
-    "selene.toml",
-    ".git",
-  },
-  on_init = function(client)
-    -- Only inject Neovim runtime when the project has no .luarc.json
-    if client.workspace_folders then
-      local path = client.workspace_folders[1].name
-      if
-        path ~= vim.fn.stdpath("config")
-        and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
-      then
-        return
-      end
-    end
-    client.config.settings.Lua = vim.tbl_deep_extend("force", client.config.settings.Lua, {
-      runtime = {
-        version = "LuaJIT",
-        path = { "lua/?.lua", "lua/?/init.lua" },
-      },
-      workspace = {
-        checkThirdParty = false,
-        library = { vim.env.VIMRUNTIME },
-      },
-    })
-  end,
-  settings = { Lua = {} },
-}
-
-vim.lsp.enable({ "tsgo", "vtsls", "lua_ls", "rust_analyzer" })
+-- vim.lsp.enable({ "tsgo", "vtsls", "lua_ls", "rust_analyzer" })
+vim.lsp.enable({ "vtsls", "lua_ls", "rust_analyzer" })
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 vim.lsp.codelens.enable(true)
@@ -395,11 +350,12 @@ vim.lsp.codelens.enable(true)
 -- • inlineCompletion     – ghost-text style completions
 
 -- 0.12 features that can be enabled manually:
-if not pcall(function()
-  require("vim._core.ui2").enable({})
-end) then
-  vim.notify("vim._core.ui2 unavailable — experimental cmdline UI disabled", vim.log.levels.WARN)
-end
+vim.api.nvim_create_autocmd("UIEnter", {
+  once = true,
+  callback = function()
+    require("vim._core.ui2").enable({})
+  end,
+})
 -- vim.o.diffopt = vim.o.diffopt .. ",inline:word"  -- word-level inline diff highlighting
 
 vim.g.auto_format = true
@@ -418,6 +374,8 @@ vim.keymap.set("n", "<leader>r", function()
   vim.cmd.restart({ args = { "source", session } })
 end, { desc = "Restart nvim with session" })
 
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
+
 vim.keymap.set("n", "<leader>x", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
 
 vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
@@ -430,6 +388,10 @@ end, { expr = true })
 vim.keymap.set({ "n", "x" }, "k", function()
   return vim.v.count == 0 and "gk" or "k"
 end, { expr = true })
+
+vim.keymap.set("n", "grA", function()
+  vim.lsp.buf.code_action({ context = { only = { "source" }, diagnostics = {} } })
+end, { desc = "Source actions" })
 
 vim.keymap.set("n", "<leader>e", function()
   require("fyler").toggle({ kind = "split_left_most" })
