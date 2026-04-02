@@ -134,7 +134,6 @@ pack.add({
     build = ":TSUpdate",
     config = function()
       local ts = require("nvim-treesitter")
-      ts.install({ "typescript", "tsx", "javascript", "rust" })
 
       vim.api.nvim_create_autocmd("FileType", {
         callback = function(args)
@@ -143,6 +142,9 @@ pack.add({
             return
           end
           if not vim.treesitter.language.add(lang) then
+            if vim.list_contains(ts.get_available(), lang) then
+              ts.install(lang)
+            end
             return
           end
 
@@ -280,6 +282,20 @@ vim.lsp.config.vtsls = {
 
 vim.lsp.config.lua_ls = {
   settings = { Lua = { format = { enable = false } } },
+}
+
+vim.lsp.config.formatter = {
+  init_options = {
+    formatters_by_ft = {
+      javascript = { "biome", "prettier" },
+      javascriptreact = { "biome", "prettier" },
+      typescript = { "biome", "prettier" },
+      typescriptreact = { "biome", "prettier" },
+      json = { "biome", "prettier" },
+      css = { "biome", "prettier" },
+      lua = { "stylua" },
+    },
+  },
 }
 
 vim.lsp.enable("file_watcher")
