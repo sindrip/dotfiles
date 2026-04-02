@@ -331,6 +331,7 @@ pack.add({
 vim.lsp.config.vtsls = {
   settings = {
     typescript = {
+      format = { enable = false },
       inlayHints = {
         parameterNames = { enabled = "literals" },
         parameterTypes = { enabled = true },
@@ -339,6 +340,9 @@ vim.lsp.config.vtsls = {
         functionLikeReturnTypes = { enabled = true },
         enumMemberValues = { enabled = true },
       },
+    },
+    javascript = {
+      format = { enable = false },
     },
   },
 }
