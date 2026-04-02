@@ -361,7 +361,7 @@ vim.lsp.config.formatter = {
   },
 }
 
-vim.lsp.enable("file_watcher")
+vim.lsp.enable("fswatcher")
 vim.lsp.enable("formatter")
 vim.lsp.enable("vtsls")
 vim.lsp.enable("lua_ls")
