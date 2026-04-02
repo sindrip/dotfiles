@@ -80,6 +80,22 @@ function _G.StatusColumn()
       end
     end
   end
+
+  local mark_text, mark_hl = "", ""
+  for _, m in ipairs(vim.fn.getmarklist(buf)) do
+    if m.pos[2] == vim.v.lnum and m.mark:match("^'[a-zA-Z]$") then
+      mark_text, mark_hl = m.mark:sub(2, 2), "DiagnosticSignHint"
+      break
+    end
+  end
+  if mark_text == "" then
+    for _, m in ipairs(vim.fn.getmarklist()) do
+      if m.pos[1] == buf and m.pos[2] == vim.v.lnum and m.mark:match("^'[A-Z]$") then
+        mark_text, mark_hl = m.mark:sub(2, 2), "DiagnosticSignHint"
+        break
+      end
+    end
+  end
   local function cell(text, hl, width)
     local dw = vim.fn.strdisplaywidth(text)
     local pad = string.rep(" ", math.max(0, width - dw))
@@ -92,8 +108,19 @@ function _G.StatusColumn()
   if vim.v.virtnum ~= 0 then
     return cell("", "", 2) .. "%=" .. "  " .. cell("", "", 2)
   end
-  local num = vim.v.relnum == 0 and vim.v.lnum or vim.v.relnum
-  return cell(diag_text, diag_hl, 2) .. "%=" .. num .. " " .. cell(git_text, git_hl, 2)
+  local win = vim.g.statusline_winid
+  local nu = vim.wo[win].number
+  local rnu = vim.wo[win].relativenumber
+  if not nu and not rnu then
+    return ""
+  end
+  local left_text = diag_text ~= "" and diag_text or mark_text
+  local left_hl = diag_text ~= "" and diag_hl or mark_hl
+  local num = ""
+  if nu or rnu then
+    num = vim.v.relnum == 0 and vim.v.lnum or vim.v.relnum
+  end
+  return cell(left_text, left_hl, 2) .. "%=" .. num .. " " .. cell(git_text, git_hl, 2)
 end
 
 vim.diagnostic.config({
@@ -202,6 +229,36 @@ pack.add({
     },
   },
   {
+    "https://github.com/nvim-tree/nvim-tree.lua",
+    module = "nvim-tree",
+    opts = {
+      renderer = {
+        -- root_folder_label = false,
+        group_empty = true,
+        indent_markers = { enable = true },
+        -- highlight_opened_files = "name",
+        -- highlight_git = "name",
+        icons = {
+          git_placement = "after",
+          show = { folder_arrow = false },
+          glyphs = {
+            git = {
+              unstaged = "󰦒",
+              staged = "󰐕",
+              untracked = "󰐕",
+              deleted = "󰍴",
+              renamed = "󰑕",
+              ignored = "",
+            },
+          },
+        },
+      },
+      view = { signcolumn = "no", width = 40 },
+      update_focused_file = { enable = true },
+      filters = { dotfiles = false },
+    },
+  },
+  {
     "https://github.com/catppuccin/nvim",
     config = function()
       vim.cmd.colorscheme("catppuccin-frappe")
@@ -223,7 +280,13 @@ pack.add({
       },
     },
   },
-  { "https://github.com/echasnovski/mini.icons", opts = {} },
+  {
+    "https://github.com/echasnovski/mini.icons",
+    config = function()
+      require("mini.icons").setup()
+      MiniIcons.mock_nvim_web_devicons()
+    end,
+  },
   {
     "https://github.com/echasnovski/mini.notify",
     opts = {
@@ -337,9 +400,10 @@ vim.api.nvim_create_autocmd("BufWritePre", {
 -- Keymaps
 
 vim.keymap.set("n", "<leader>r", function()
-  -- Close fyler before saving session (plugin state isn't serialisable)
+  -- Close plugin buffers before saving session (plugin state isn't serialisable)
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    if vim.bo[buf].filetype == "fyler" then
+    local ft = vim.bo[buf].filetype
+    if ft == "fyler" or ft == "NvimTree" then
       vim.api.nvim_buf_delete(buf, { force = true })
     end
   end
@@ -370,7 +434,8 @@ end, { desc = "Source actions" })
 
 vim.keymap.set("n", "<leader>e", function()
   require("fyler").toggle({ kind = "split_left_most" })
-end, { desc = "Toggle file tree" })
+end, { desc = "Toggle fyler" })
+vim.keymap.set("n", "<leader>E", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle nvim-tree" })
 
 vim.keymap.set("n", "<leader>th", function()
   local enabled = not vim.lsp.inlay_hint.is_enabled()
