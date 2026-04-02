@@ -1,6 +1,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+vim.cmd.packadd("nvim.undotree")
+
 -- UI
 vim.o.number = true -- Show line numbers
 vim.o.relativenumber = true -- Relative line numbers for easy jumping
@@ -259,68 +261,8 @@ pack.add({
     end,
   },
   -- { "https://github.com/Cannon07/claude-preview.nvim", opts = {} },
-  {
-    "https://github.com/stevearc/conform.nvim",
-    config = function()
-      local web_formatters = { "biome", "prettierd", "prettier", stop_after_first = true }
-      require("conform").setup({
-        formatters_by_ft = {
-          javascript = web_formatters,
-          javascriptreact = web_formatters,
-          typescript = web_formatters,
-          typescriptreact = web_formatters,
-          json = web_formatters,
-          css = web_formatters,
-          lua = { "stylua" },
-          rust = { lsp_format = "prefer" },
-        },
-        formatters = {
-          biome = { require_cwd = true },
-          prettierd = { require_cwd = true },
-          prettier = { require_cwd = true },
-        },
-        format_on_save = function()
-          if not vim.g.auto_format then
-            return
-          end
-          return { timeout_ms = 500, lsp_format = "never" }
-        end,
-      })
-    end,
-  },
 })
 
--- Auto-reload files changed outside of Neovim
-
-local w = vim.uv.new_fs_event()
-if w then
-  w:start(
-    vim.fn.getcwd(),
-    { recursive = true },
-    vim.schedule_wrap(function()
-      vim.cmd("checktime")
-    end)
-  )
-end
-
--- -- LSP: tsgo (diagnostics only) + vtsls (everything else)
--- -- Defaults (cmd, filetypes, root_dir, init_options) provided by nvim-lspconfig
---
--- vim.lsp.config.tsgo = {
---   -- handlers = {
---   --   ["$/progress"] = function() end,
---   -- },
---   on_init = function(client)
---     -- Only using tsgo for diagnostics
---     -- Clear all capabilities so vtsls handles everything else.
---     for key in pairs(client.server_capabilities) do
---       if key ~= "textDocumentSync" and key ~= "diagnosticProvider" then
---         client.server_capabilities[key] = nil
---       end
---     end
---   end,
--- }
---
 vim.lsp.config.vtsls = {
   settings = {
     typescript = {
@@ -336,11 +278,18 @@ vim.lsp.config.vtsls = {
   },
 }
 
--- vim.lsp.enable({ "tsgo", "vtsls", "lua_ls", "rust_analyzer" })
-vim.lsp.enable({ "vtsls", "lua_ls", "rust_analyzer" })
+vim.lsp.config.lua_ls = {
+  settings = { Lua = { format = { enable = false } } },
+}
+
+vim.lsp.enable("file_watcher")
+vim.lsp.enable("formatter")
+vim.lsp.enable("vtsls")
+vim.lsp.enable("lua_ls")
+vim.lsp.enable("rust_analyzer")
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
-vim.lsp.codelens.enable(true)
+-- vim.lsp.codelens.enable(true)
 
 -- 0.12 features that activate automatically when the LSP server supports them:
 -- • documentColor        – inline color swatches (CSS, etc.)
@@ -360,6 +309,15 @@ vim.api.nvim_create_autocmd("UIEnter", {
 
 vim.g.auto_format = true
 
+vim.api.nvim_create_autocmd("BufWritePre", {
+  callback = function(args)
+    if not vim.g.auto_format then
+      return
+    end
+    vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 500 })
+  end,
+})
+
 -- Keymaps
 
 vim.keymap.set("n", "<leader>r", function()
@@ -376,6 +334,7 @@ end, { desc = "Restart nvim with session" })
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
+vim.keymap.set("n", "<leader>u", "<cmd>Undotree<cr>", { desc = "Undotree" })
 vim.keymap.set("n", "<leader>x", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
 
 vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })

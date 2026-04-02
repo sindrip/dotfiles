@@ -1,3 +1,4 @@
+brew "pam-reattach"
 brew "fish"
 brew "neovim"
 brew "tmux"
