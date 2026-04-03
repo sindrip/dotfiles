@@ -187,6 +187,16 @@ pack.add({
     end,
   },
   { "https://github.com/mason-org/mason.nvim", opts = {} },
+  {
+    "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+    opts = {
+      ensure_installed = {
+        "lua-language-server",
+        "stylua",
+        "vtsls",
+      },
+    },
+  },
   { "https://github.com/folke/lazydev.nvim", opts = {} },
   {
     "https://github.com/A7Lavinraj/fyler.nvim",
