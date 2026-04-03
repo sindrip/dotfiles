@@ -268,7 +268,7 @@ pack.add({
       },
       view = { signcolumn = "no", width = 40 },
       update_focused_file = { enable = true },
-      filters = { dotfiles = false },
+      filters = { dotfiles = false, git_ignored = false },
     },
   },
   {

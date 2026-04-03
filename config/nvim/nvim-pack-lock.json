@@ -6,7 +6,7 @@
       "version": "1.0.0 - 2.0.0"
     },
     "formatls.nvim": {
-      "rev": "fcd3dcf4d02a5e2dbf3ff5a60968f96f9282a1fc",
+      "rev": "af1a52b374bb1dd7e81d24df4987e2844a56814b",
       "src": "https://github.com/sindrip/formatls.nvim"
     },
     "fyler.nvim": {
@@ -15,7 +15,7 @@
       "version": "'stable'"
     },
     "fzf-lua": {
-      "rev": "3f194300c92e3ec2de8f9307d6a7ce988b7b6d0c",
+      "rev": "5cbe58ca48c4c4a2fbe5e324b854596d8242711e",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
