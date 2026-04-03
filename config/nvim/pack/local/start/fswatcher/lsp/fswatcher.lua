@@ -23,7 +23,7 @@ function M:watch(uri)
     vim.uri_to_fname(uri),
     {},
     vim.schedule_wrap(function()
-      vim.cmd.checktime()
+      pcall(vim.cmd.checktime)
       self:watch(uri)
     end)
   )

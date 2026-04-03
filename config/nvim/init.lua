@@ -2,6 +2,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 vim.cmd.packadd("nvim.undotree")
+vim.cmd.packadd("nvim.difftool")
 
 -- UI
 vim.o.number = true -- Show line numbers
@@ -287,15 +288,15 @@ pack.add({
       MiniIcons.mock_nvim_web_devicons()
     end,
   },
-  {
-    "https://github.com/echasnovski/mini.notify",
-    opts = {
-      window = {
-        config = { border = "rounded" },
-        winblend = 75,
-      },
-    },
-  },
+  -- {
+  --   "https://github.com/echasnovski/mini.notify",
+  --   opts = {
+  --     window = {
+  --       config = { border = "rounded" },
+  --       winblend = 75,
+  --     },
+  --   },
+  -- },
   {
     "https://github.com/lewis6991/gitsigns.nvim",
     opts = {
@@ -346,13 +347,36 @@ vim.lsp.config.vtsls = {
 vim.lsp.config.formatter = {
   init_options = {
     formatters_by_ft = {
-      javascript = { { "biome" }, { "source.organizeImports", "prettier" } },
-      javascriptreact = { { "biome" }, { "source.organizeImports", "prettier" } },
-      typescript = { { "biome" }, { "source.organizeImports", "prettier" } },
-      typescriptreact = { { "biome" }, { "source.organizeImports", "prettier" } },
-      json = { { "biome" }, { "prettier" } },
-      css = { { "biome" }, { "prettier" } },
-      lua = { { "stylua" } },
+      javascript = {
+        { "biome" },
+        { "source.organizeImports", "prettier" },
+      },
+      javascriptreact = {
+        { "biome" },
+        { "source.organizeImports", "prettier" },
+      },
+      typescript = {
+        { "biome" },
+        { "source.organizeImports", "prettier" },
+      },
+      typescriptreact = {
+        { "biome" },
+        { "source.organizeImports", "prettier" },
+      },
+      json = {
+        { "biome" },
+        { "prettier" },
+      },
+      css = {
+        { "biome" },
+        { "prettier" },
+      },
+      lua = {
+        { "stylua" },
+      },
+      go = {
+        { "source.organizeImports", "source.format" },
+      },
     },
   },
 }
@@ -362,6 +386,7 @@ vim.lsp.enable("formatter")
 vim.lsp.enable("vtsls")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
+vim.lsp.enable("gopls")
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)

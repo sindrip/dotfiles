@@ -21,23 +21,6 @@ local function resolve_cmd(cmd, dirname)
   return found[1] or cmd
 end
 
-local function classify_step(entry)
-  if type(entry) == "table" and entry.action then
-    return "action"
-  end
-  if type(entry) == "string" and entry:match("^source%.") then
-    return "action"
-  end
-  return "cli"
-end
-
-local function normalize_action(entry)
-  if type(entry) == "table" then
-    return entry.action, entry.server
-  end
-  return entry, nil
-end
-
 local function resolve_cli(name, dirname)
   local spec = get_spec(name)
   if not spec then
@@ -62,17 +45,17 @@ local function resolve_group(groups, dirname)
     local viable = true
 
     for _, entry in ipairs(group) do
-      local kind = classify_step(entry)
-      if kind == "cli" then
+      if entry == "source.format" then
+        steps[#steps + 1] = { kind = "format" }
+      elseif type(entry) == "string" and entry:match("^source%.") then
+        steps[#steps + 1] = { kind = "action", action = entry }
+      else
         local spec, cmd = resolve_cli(entry, dirname)
         if not spec then
           viable = false
           break
         end
         steps[#steps + 1] = { kind = "cli", spec = spec, cmd = cmd }
-      else
-        local action, server = normalize_action(entry)
-        steps[#steps + 1] = { kind = "action", action = action, server = server }
       end
     end
 
@@ -88,7 +71,8 @@ local function run_cmd(cmd, content, cwd)
   local result = vim.system(cmd, { stdin = content, cwd = cwd }):wait(5000)
 
   if result.code ~= 0 then
-    return nil, result.stderr or (cmd[1] .. " exited with code " .. result.code)
+    local name = vim.fn.fnamemodify(cmd[1], ":t")
+    return nil, name .. " failed"
   end
 
   if not result.stdout or result.stdout == "" then
@@ -98,144 +82,38 @@ local function run_cmd(cmd, content, cwd)
   return result.stdout
 end
 
-local function apply_edits(content, edits)
-  local lines = vim.split(content, "\n", { plain = true })
-
-  table.sort(edits, function(a, b)
-    if a.range.start.line ~= b.range.start.line then
-      return a.range.start.line > b.range.start.line
-    end
-    return a.range.start.character > b.range.start.character
-  end)
-
-  for _, edit in ipairs(edits) do
-    local start_line = edit.range.start.line + 1
-    local end_line = edit.range["end"].line + 1
-    local new_lines = vim.split(edit.newText, "\n", { plain = true })
-
-    if edit.range.start.character > 0 and start_line <= #lines then
-      new_lines[1] = lines[start_line]:sub(1, edit.range.start.character) .. new_lines[1]
-    end
-
-    if edit.range["end"].character > 0 and end_line <= #lines then
-      new_lines[#new_lines] = new_lines[#new_lines] .. lines[end_line]:sub(edit.range["end"].character + 1)
-    end
-
-    for i = end_line, start_line, -1 do
-      table.remove(lines, i)
-    end
-    for i, line in ipairs(new_lines) do
-      table.insert(lines, start_line + i - 1, line)
-    end
-  end
-
-  return table.concat(lines, "\n")
-end
-
-local function extract_edits(workspace_edit, uri)
-  if workspace_edit.documentChanges then
-    for _, change in ipairs(workspace_edit.documentChanges) do
-      if change.textDocument and change.textDocument.uri == uri then
-        return change.edits
-      end
-    end
-  end
-
-  if workspace_edit.changes then
-    return workspace_edit.changes[uri]
-  end
-
-  return nil
-end
-
-
-local function exec_action(hijack, bufnr, content, action_kind, server_filter, method, params)
-  local uri = vim.uri_from_bufnr(bufnr)
-
-  if action_kind == "source.format" then
-    local client
-    local formatters = hijack:get_formatters(bufnr)
-    for _, entry in ipairs(formatters) do
-      if not server_filter or entry.name == server_filter then
-        client = vim.lsp.get_client_by_id(entry.client_id)
-        if client then
-          break
-        end
-      end
-    end
-    if not client then
-      return content
-    end
-
-    local result = client:request_sync(method, params, 5000, bufnr)
-    if result and result.result and #result.result > 0 then
-      return apply_edits(content, result.result)
-    end
-
-    return content
-  end
-
-  local lines = vim.split(content, "\n", { plain = true })
-  local ca_params = {
-    textDocument = { uri = uri },
+local function exec_action(bufnr, action_kind)
+  local params = {
+    textDocument = { uri = vim.uri_from_bufnr(bufnr) },
     range = {
       start = { line = 0, character = 0 },
-      ["end"] = { line = #lines, character = 0 },
+      ["end"] = { line = vim.api.nvim_buf_line_count(bufnr), character = 0 },
     },
-    context = {
-      only = { action_kind },
-      diagnostics = {},
-    },
+    context = { only = { action_kind }, diagnostics = {} },
   }
 
-  for client_id, entry in pairs(hijack:get(bufnr)) do
-    if not server_filter or entry.name == server_filter then
-      local client = vim.lsp.get_client_by_id(client_id)
-      if client then
-        local result = client:request_sync("textDocument/codeAction", ca_params, 5000, bufnr)
-        if result and result.result then
-          for _, action in ipairs(result.result) do
-            if not action.edit then
-              local resolved = client:request_sync("codeAction/resolve", action, 5000, bufnr)
-              if resolved and resolved.result then
-                action = resolved.result
-              end
-            end
+  local clients = vim.lsp.get_clients({ bufnr = bufnr, method = "textDocument/codeAction" })
 
-            if action.edit then
-              local edits = extract_edits(action.edit, uri)
-              if edits then
-                content = apply_edits(content, edits)
-              end
-            end
-            if action.command then
-              client:request_sync("workspace/executeCommand", action.command, 5000, bufnr)
-            end
+  for _, client in ipairs(clients) do
+    local res = client:request_sync("textDocument/codeAction", params, 5000, bufnr)
+    if res and not res.err then
+      for _, action in ipairs(res.result or {}) do
+        if not action.edit then
+          local resolved = client:request_sync("codeAction/resolve", action, 5000, bufnr)
+          if resolved and resolved.result then
+            action = resolved.result
           end
-          return content
+        end
+
+        if action.edit then
+          vim.lsp.util.apply_workspace_edit(action.edit, "utf-16")
+        end
+        if action.command then
+          client:request_sync("workspace/executeCommand", action.command, 5000, bufnr)
         end
       end
     end
   end
-
-  return content
-end
-
-local function run_pipeline(steps, ctx, content)
-  for _, step in ipairs(steps) do
-    if step.kind == "action" then
-      content = exec_action(ctx.hijack, ctx.bufnr, content, step.action, step.server, ctx.method, ctx.params)
-    elseif step.kind == "cli" then
-      local output, err = run_cmd({ step.cmd, unpack(step.spec.args(ctx.filepath)) }, content, ctx.dirname)
-      if not output then
-        vim.notify("[formatter] " .. err, vim.log.levels.WARN)
-        return nil
-      end
-      content = output
-    end
-  end
-
-  return content
 end
 
 local function compute_edits(old, new)
@@ -262,27 +140,84 @@ local function compute_edits(old, new)
   return edits
 end
 
+local function apply_text_edits(content, edits)
+  local scratch = vim.api.nvim_create_buf(false, true)
+  local lines = vim.split(content, "\n", { plain = true })
+  if #lines > 0 and lines[#lines] == "" then
+    table.remove(lines)
+  end
+  vim.api.nvim_buf_set_lines(scratch, 0, -1, false, lines)
+  vim.lsp.util.apply_text_edits(edits, scratch, "utf-16")
+  local result = table.concat(vim.api.nvim_buf_get_lines(scratch, 0, -1, false), "\n") .. "\n"
+  vim.api.nvim_buf_delete(scratch, { force = true })
+  return result
+end
+
+local function get_lsp_edits(ctx)
+  for _, entry in ipairs(ctx.hijack:get_formatters(ctx.bufnr)) do
+    local client = vim.lsp.get_client_by_id(entry.client_id)
+    if client then
+      local result = client:request_sync(ctx.method, ctx.params, 5000, ctx.bufnr)
+      if result and result.result and #result.result > 0 then
+        return result.result
+      end
+    end
+  end
+  return nil
+end
+
+local function lsp_format(ctx, content)
+  local edits = get_lsp_edits(ctx)
+  if edits then
+    return apply_text_edits(content, edits)
+  end
+  return content
+end
+
+local function run_pipeline(steps, ctx, content)
+  for _, step in ipairs(steps) do
+    if step.kind == "format" then
+      content = lsp_format(ctx, content)
+    elseif step.kind == "cli" then
+      local output, err = run_cmd({ step.cmd, unpack(step.spec.args(ctx.filepath)) }, content, ctx.dirname)
+      if not output then
+        vim.notify("[formatter] " .. err, vim.log.levels.WARN)
+        return nil
+      end
+      content = output
+    end
+  end
+  return content
+end
+
 local function handle_format(self, method, params)
-  local uri = params.textDocument.uri
-  local bufnr = vim.uri_to_bufnr(uri)
-  local filepath = vim.uri_to_fname(uri)
+  local bufnr = vim.uri_to_bufnr(params.textDocument.uri)
+  local filepath = vim.uri_to_fname(params.textDocument.uri)
   local dirname = vim.fn.fnamemodify(filepath, ":h")
 
   local steps = resolve_group(self.formatters_by_ft[vim.bo[bufnr].filetype] or {}, dirname)
-  if not steps then
-    steps = { { kind = "action", action = "source.format" } }
-  end
 
-  local original = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n") .. "\n"
-
-  local final = run_pipeline(steps, {
+  local ctx = {
     hijack = self.hijack,
     bufnr = bufnr,
     filepath = filepath,
     dirname = dirname,
     method = method,
     params = params,
-  }, original)
+  }
+
+  if not steps then
+    return get_lsp_edits(ctx) or {}
+  end
+
+  for _, step in ipairs(steps) do
+    if step.kind == "action" then
+      exec_action(bufnr, step.action)
+    end
+  end
+
+  local original = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n") .. "\n"
+  local final = run_pipeline(steps, ctx, original)
 
   if not final or final == original then
     return {}
@@ -290,8 +225,6 @@ local function handle_format(self, method, params)
 
   return compute_edits(original, final)
 end
-
--- LSP server
 
 local M = Server.new("formatter")
 
@@ -328,7 +261,7 @@ M.notifications["textDocument/didOpen"] = function(self, params)
 
   local names = {}
   for _, step in ipairs(steps) do
-    names[#names + 1] = step.action or step.cmd
+    names[#names + 1] = step.action or step.cmd or "lsp"
   end
 
   local title = table.concat(names, " | ")

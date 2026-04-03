@@ -18,15 +18,6 @@ link() {
   info "$dest -> $src"
 }
 
-header "Touch ID sudo"
-if [ ! -f /etc/pam.d/sudo_local ]; then
-  printf 'auth       optional       /opt/homebrew/lib/pam/pam_reattach.so\n' | sudo tee /etc/pam.d/sudo_local >/dev/null
-  sudo sed 's/^#auth/auth/' /etc/pam.d/sudo_local.template | sudo tee -a /etc/pam.d/sudo_local >/dev/null
-  info "created /etc/pam.d/sudo_local with Touch ID + pam-reattach"
-else
-  info "/etc/pam.d/sudo_local already exists, skipping"
-fi
-
 header "macOS defaults"
 # NOTE: Disable Ctrl+Space for input source switching in System Settings > Keyboard > Keyboard Shortcuts > Input Sources
 defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add "Hide Ghostty" '\0'
@@ -82,4 +73,13 @@ brew bundle --verbose --file="$DOTFILES/Brewfile"
 header "Mise tools"
 mise trust "$HOME/.config/mise/config.toml"
 mise upgrade
+
+header "Touch ID sudo"
+if [ ! -f /etc/pam.d/sudo_local ]; then
+  printf 'auth       optional       /opt/homebrew/lib/pam/pam_reattach.so\n' | sudo tee /etc/pam.d/sudo_local >/dev/null
+  sudo sed 's/^#auth/auth/' /etc/pam.d/sudo_local.template | sudo tee -a /etc/pam.d/sudo_local >/dev/null
+  info "created /etc/pam.d/sudo_local with Touch ID + pam-reattach"
+else
+  info "/etc/pam.d/sudo_local already exists, skipping"
+fi
 
