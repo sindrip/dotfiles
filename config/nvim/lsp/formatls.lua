@@ -3,19 +3,19 @@ return {
     formatters_by_ft = {
       javascript = {
         { "biome" },
-        { "source.organizeImports", "prettier" },
+        { "source.addMissingImports", "source.organizeImports", "prettier" },
       },
       javascriptreact = {
         { "biome" },
-        { "source.organizeImports", "prettier" },
+        { "source.addMissingImports", "source.organizeImports", "prettier" },
       },
       typescript = {
         { "biome" },
-        { "source.organizeImports", "prettier" },
+        { "source.addMissingImports", "source.organizeImports", "prettier" },
       },
       typescriptreact = {
         { "biome" },
-        { "source.organizeImports", "prettier" },
+        { "source.addMissingImports", "source.organizeImports", "prettier" },
       },
       json = {
         { "biome" },
