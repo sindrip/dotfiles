@@ -41,13 +41,11 @@ local function on_load(plug)
   local data = plug.spec.data or {}
 
   if data.config then
-    data.config()
-  end
-
-  if data.opts then
+    data.config(data.opts)
+  else
     local ok, mod = pcall(require, data.module)
     if ok and mod.setup then
-      mod.setup(data.opts)
+      mod.setup(data.opts or {})
     end
   end
 end
