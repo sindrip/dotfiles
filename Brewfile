@@ -22,8 +22,6 @@ brew "rustup"
 brew "tree-sitter-cli"
 brew "kubectx"
 brew "xdg-ninja"
-
-cask "claude-code"
 cask "font-iosevka"
 cask "font-jetbrains-mono"
 cask "gcloud-cli"

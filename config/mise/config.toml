@@ -3,6 +3,7 @@ rust = "latest"
 biome = "latest"
 bun = "latest"
 node = "latest"
+"npm:@anthropic-ai/claude-code" = "latest"
 "npm:corepack" = "latest"
 [settings]
 idiomatic_version_file_enable_tools = ["node", "rust"]

@@ -27,22 +27,19 @@ else
   info "/etc/pam.d/sudo_local already exists, skipping"
 fi
 
-header "Packages"
-brew bundle --verbose --file="$DOTFILES/Brewfile"
-
 header "macOS defaults"
 # NOTE: Disable Ctrl+Space for input source switching in System Settings > Keyboard > Keyboard Shortcuts > Input Sources
 defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add "Hide Ghostty" '\0'
 
-header "Config files"
-cd "$DOTFILES/config"
+header "Dotfiles"
+(cd "$DOTFILES/config"
 find . -type f | while read -r f; do
   f="${f#./}"
   mkdir -p "$HOME/.config/$(dirname "$f")"
   link "$DOTFILES/config/$f" "$HOME/.config/$f"
-done
+done)
 
-header "Dotfiles"
+header "Non-XDG dotfiles"
 # zshenv (must live in ~/ to bootstrap ZDOTDIR)
 link "$DOTFILES/zshenv" "$HOME/.zshenv"
 # hushlogin (suppress "Last login" message)
@@ -78,4 +75,11 @@ ensure_dirs() {
   done
 }
 ensure_dirs
+
+header "Packages"
+brew bundle --verbose --file="$DOTFILES/Brewfile"
+
+header "Mise tools"
+mise trust "$HOME/.config/mise/config.toml"
+mise upgrade
 
