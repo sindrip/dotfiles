@@ -1,6 +1,8 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+require("local-plugins")
+
 vim.cmd.packadd("nvim.undotree")
 vim.cmd.packadd("nvim.difftool")
 
@@ -319,6 +321,7 @@ pack.add({
   },
   -- "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
+  "https://github.com/sindrip/formatls.nvim",
   { "https://github.com/folke/trouble.nvim", opts = {} },
   {
     "https://github.com/ibhagwan/fzf-lua",
@@ -344,45 +347,8 @@ vim.lsp.config.vtsls = {
   },
 }
 
-vim.lsp.config.formatter = {
-  init_options = {
-    formatters_by_ft = {
-      javascript = {
-        { "biome" },
-        { "source.organizeImports", "prettier" },
-      },
-      javascriptreact = {
-        { "biome" },
-        { "source.organizeImports", "prettier" },
-      },
-      typescript = {
-        { "biome" },
-        { "source.organizeImports", "prettier" },
-      },
-      typescriptreact = {
-        { "biome" },
-        { "source.organizeImports", "prettier" },
-      },
-      json = {
-        { "biome" },
-        { "prettier" },
-      },
-      css = {
-        { "biome" },
-        { "prettier" },
-      },
-      lua = {
-        { "stylua" },
-      },
-      go = {
-        { "source.organizeImports", "source.format" },
-      },
-    },
-  },
-}
-
 vim.lsp.enable("fswatcher")
-vim.lsp.enable("formatter")
+vim.lsp.enable("formatls")
 vim.lsp.enable("vtsls")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")

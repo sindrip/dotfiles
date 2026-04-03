@@ -1,0 +1,36 @@
+return {
+  init_options = {
+    formatters_by_ft = {
+      javascript = {
+        { "biome" },
+        { "source.organizeImports", "prettier" },
+      },
+      javascriptreact = {
+        { "biome" },
+        { "source.organizeImports", "prettier" },
+      },
+      typescript = {
+        { "biome" },
+        { "source.organizeImports", "prettier" },
+      },
+      typescriptreact = {
+        { "biome" },
+        { "source.organizeImports", "prettier" },
+      },
+      json = {
+        { "biome" },
+        { "prettier" },
+      },
+      css = {
+        { "biome" },
+        { "prettier" },
+      },
+      lua = {
+        { "stylua" },
+      },
+      go = {
+        { "source.organizeImports", "source.format" },
+      },
+    },
+  },
+}

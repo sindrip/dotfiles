@@ -5,6 +5,10 @@
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
     },
+    "formatls.nvim": {
+      "rev": "7b416560e62ca37130b7496d39acacc28ebd8427",
+      "src": "https://github.com/sindrip/formatls.nvim"
+    },
     "fyler.nvim": {
       "rev": "bb8b9f30c652c948d35211958b0deec3496bcc08",
       "src": "https://github.com/A7Lavinraj/fyler.nvim",
