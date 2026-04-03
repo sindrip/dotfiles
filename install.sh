@@ -70,6 +70,9 @@ ensure_dirs
 header "Packages"
 brew bundle --verbose --file="$DOTFILES/Brewfile"
 
+header "GitHub extensions"
+gh extension install dlvhdr/gh-dash 2>/dev/null || gh extension upgrade dlvhdr/gh-dash
+
 header "Mise tools"
 mise trust "$HOME/.config/mise/config.toml"
 mise upgrade
