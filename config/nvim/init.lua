@@ -331,7 +331,6 @@ pack.add({
 vim.lsp.config.vtsls = {
   settings = {
     typescript = {
-      format = { enable = false },
       inlayHints = {
         parameterNames = { enabled = "literals" },
         parameterTypes = { enabled = true },
@@ -341,26 +340,19 @@ vim.lsp.config.vtsls = {
         enumMemberValues = { enabled = true },
       },
     },
-    javascript = {
-      format = { enable = false },
-    },
   },
-}
-
-vim.lsp.config.lua_ls = {
-  settings = { Lua = { format = { enable = false } } },
 }
 
 vim.lsp.config.formatter = {
   init_options = {
     formatters_by_ft = {
-      javascript = { "biome", "prettier" },
-      javascriptreact = { "biome", "prettier" },
-      typescript = { "biome", "prettier" },
-      typescriptreact = { "biome", "prettier" },
-      json = { "biome", "prettier" },
-      css = { "biome", "prettier" },
-      lua = { "stylua" },
+      javascript = { { "biome" }, { "source.organizeImports", "prettier" } },
+      javascriptreact = { { "biome" }, { "source.organizeImports", "prettier" } },
+      typescript = { { "biome" }, { "source.organizeImports", "prettier" } },
+      typescriptreact = { { "biome" }, { "source.organizeImports", "prettier" } },
+      json = { { "biome" }, { "prettier" } },
+      css = { { "biome" }, { "prettier" } },
+      lua = { { "stylua" } },
     },
   },
 }
