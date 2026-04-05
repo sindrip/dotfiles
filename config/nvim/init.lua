@@ -138,6 +138,7 @@ vim.diagnostic.config({
     },
   },
   virtual_text = { current_line = true },
+  -- virtual_text = true,
   status = {
     format = {
       [vim.diagnostic.severity.ERROR] = "",
@@ -332,6 +333,8 @@ pack.add({
   -- "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/sindrip/formatls.nvim",
+  "https://github.com/sindrip/todocomments-ls.nvim",
+  "https://github.com/sindrip/fixpoint.nvim",
   { "https://github.com/folke/trouble.nvim", opts = {} },
   {
     "https://github.com/ibhagwan/fzf-lua",
@@ -357,7 +360,8 @@ vim.lsp.config.vtsls = {
   },
 }
 
-vim.lsp.enable("fswatcher")
+vim.lsp.enable("fixpoint_fswatcher")
+vim.lsp.enable("todocomments-ls")
 vim.lsp.enable("formatls")
 vim.lsp.enable("vtsls")
 vim.lsp.enable("lua_ls")

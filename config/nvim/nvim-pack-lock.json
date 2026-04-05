@@ -5,6 +5,10 @@
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
     },
+    "fixpoint.nvim": {
+      "rev": "46e7f88dfd500a35102d9e3142342566776dd9fa",
+      "src": "https://github.com/sindrip/fixpoint.nvim"
+    },
     "formatls.nvim": {
       "rev": "af1a52b374bb1dd7e81d24df4987e2844a56814b",
       "src": "https://github.com/sindrip/formatls.nvim"
@@ -38,6 +42,10 @@
       "rev": "7fdae2443a0e2910015ca39ad74b50524ee682d3",
       "src": "https://github.com/echasnovski/mini.icons"
     },
+    "mini.test": {
+      "rev": "4b187876dc134c820677f9e67f0b28910be739ea",
+      "src": "https://github.com/echasnovski/mini.test"
+    },
     "nvim": {
       "rev": "16408d203973da7e43fab87c6f9d3bf7fa98fa8b",
       "src": "https://github.com/catppuccin/nvim"
@@ -53,6 +61,18 @@
     "nvim-treesitter": {
       "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    },
+    "plenary.nvim": {
+      "rev": "b9fd5226c2f76c951fc8ed5923d85e4de065e509",
+      "src": "https://github.com/nvim-lua/plenary.nvim"
+    },
+    "todo-comments.nvim": {
+      "rev": "31e3c38ce9b29781e4422fc0322eb0a21f4e8668",
+      "src": "https://github.com/folke/todo-comments.nvim"
+    },
+    "todocomments-ls.nvim": {
+      "rev": "fecc438e73cb19b4f210380c29fa19dd1ac570f3",
+      "src": "https://github.com/sindrip/todocomments-ls.nvim"
     },
     "trouble.nvim": {
       "rev": "bd67efe408d4816e25e8491cc5ad4088e708a69a",

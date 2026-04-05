@@ -29,7 +29,7 @@ return {
         { "stylua" },
       },
       go = {
-        { "source.organizeImports", "source.format" },
+        { "source.organizeImports", "textDocument/formatting" },
       },
     },
   },
