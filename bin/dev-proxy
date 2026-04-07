@@ -1,0 +1,53 @@
+#!/usr/bin/env sh
+set -e
+
+usage() {
+	echo "Usage: dev-proxy {up,down,status}"
+	exit 1
+}
+
+ensure_network() {
+	docker network inspect proxy >/dev/null 2>&1 ||
+		docker network create proxy
+}
+
+compose() {
+	docker compose -p dev-proxy -f - "$@" <<'EOF'
+services:
+  traefik:
+    image: traefik:v3
+    restart: unless-stopped
+    command:
+      - --api.dashboard=true
+      - --providers.docker=true
+      - --providers.docker.exposedbydefault=false
+      - --providers.docker.network=proxy
+      - --entrypoints.web.address=:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.localhost`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    external: true
+EOF
+}
+
+ensure_network
+
+COMMAND="${1:-}"
+shift || usage
+
+case "$COMMAND" in
+	up) compose up -d ;;
+	down) compose down ;;
+	status) compose ps ;;
+	*) usage ;;
+esac
