@@ -59,6 +59,15 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "NvimTree",
+  callback = function()
+    vim.schedule(function()
+      vim.wo.winhighlight = ""
+    end)
+  end,
+})
+
 function _G.StatusColumn()
   local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
   local marks = vim.api.nvim_buf_get_extmarks(
@@ -275,6 +284,15 @@ pack.add({
   {
     "https://github.com/catppuccin/nvim",
     config = function()
+      require("catppuccin").setup({
+        transparent_background = true,
+        dim_inactive = {
+          enabled = true,
+          shade = "dark",
+          percentage = 0.15,
+        },
+
+      })
       vim.cmd.colorscheme("catppuccin-frappe")
     end,
   },
