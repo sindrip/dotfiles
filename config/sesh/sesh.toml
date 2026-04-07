@@ -1,0 +1,19 @@
+[[session]]
+name = "config"
+path = "~/.config"
+startup_command = "nvim"
+
+[[session]]
+name = "control-room"
+startup_command = "gh dash"
+windows = ["docker"]
+
+[[window]]
+name = "docker"
+startup_script = "lazydocker"
+
+[[wildcard]]
+pattern = "~/projects/*"
+
+[[wildcard]]
+pattern = "~/alternate/*"
