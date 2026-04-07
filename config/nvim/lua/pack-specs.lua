@@ -52,6 +52,10 @@ end
 
 function M.add(specs)
   local native = vim.iter(specs):map(to_spec):totable()
+  M._known = vim.iter(native):fold({}, function(acc, s)
+    acc[s.src:match("[^/]+$")] = true
+    return acc
+  end)
 
   vim.api.nvim_create_autocmd("PackChanged", {
     group = vim.api.nvim_create_augroup("PackSpec", { clear = true }),
@@ -63,10 +67,11 @@ end
 
 M.commands = {
   clean = function()
+    local known = M._known or {}
     local stale = vim
       .iter(vim.pack.get())
       :filter(function(p)
-        return not p.active
+        return not p.active and not known[p.spec.name]
       end)
       :map(function(p)
         return p.spec.name

@@ -1,7 +1,7 @@
 {
   "plugins": {
     "blink.cmp": {
-      "rev": "451168851e8e2466bc97ee3e026c3dcb9141ce07",
+      "rev": "78336bc89ee5365633bcf754d93df01678b5c08f",
       "src": "https://github.com/saghen/blink.cmp",
       "version": "1.0.0 - 2.0.0"
     },
@@ -10,7 +10,7 @@
       "src": "https://github.com/sindrip/fixpoint.nvim"
     },
     "formatls.nvim": {
-      "rev": "af1a52b374bb1dd7e81d24df4987e2844a56814b",
+      "rev": "0312a309786ccee8242902a664a3f1299e4cff28",
       "src": "https://github.com/sindrip/formatls.nvim"
     },
     "fyler.nvim": {
@@ -19,11 +19,11 @@
       "version": "'stable'"
     },
     "fzf-lua": {
-      "rev": "5cbe58ca48c4c4a2fbe5e324b854596d8242711e",
+      "rev": "9f0432fdd7825ab163520045831a40b6df82ea28",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
-      "rev": "944ef13cc8d8fe8b846c91f36041c8dfb85ca000",
+      "rev": "0d797daee85366bc242580e352a4f62d67557b84",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "lazydev.nvim": {
@@ -35,7 +35,7 @@
       "src": "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim"
     },
     "mason.nvim": {
-      "rev": "44d1e90e1f66e077268191e3ee9d2ac97cc18e65",
+      "rev": "b03fb0f20bc1d43daf558cda981a2be22e73ac42",
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.icons": {
@@ -43,15 +43,15 @@
       "src": "https://github.com/echasnovski/mini.icons"
     },
     "nvim": {
-      "rev": "16408d203973da7e43fab87c6f9d3bf7fa98fa8b",
+      "rev": "426dbebe06b5c69fd846ceb17b42e12f890aedf1",
       "src": "https://github.com/catppuccin/nvim"
     },
     "nvim-lspconfig": {
-      "rev": "9ccd58a7949091c0cc2777d4e92a45a209c808c1",
+      "rev": "bedca8b426b2fee0ccac596d167d71bbe971253f",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-tree.lua": {
-      "rev": "31503ad5d869fca61461d82a9126f62480ecb0ab",
+      "rev": "509962f21ab7289d8dcd28568af539be39a8c01e",
       "src": "https://github.com/nvim-tree/nvim-tree.lua"
     },
     "nvim-treesitter": {
@@ -59,7 +59,7 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
     "todocomments-ls.nvim": {
-      "rev": "fecc438e73cb19b4f210380c29fa19dd1ac570f3",
+      "rev": "d35ae553e6096a3d4e78e611d7f1ff5f6319d2d8",
       "src": "https://github.com/sindrip/todocomments-ls.nvim"
     },
     "trouble.nvim": {
