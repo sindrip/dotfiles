@@ -10,6 +10,39 @@ vim.cmd.packadd("nvim.difftool")
 vim.o.number = true -- Show line numbers
 vim.o.relativenumber = true -- Relative line numbers for easy jumping
 vim.o.cursorline = true -- Highlight the current line
+
+vim.api.nvim_create_autocmd("WinEnter", {
+  callback = function()
+    vim.wo.cursorline = true
+  end,
+})
+vim.api.nvim_create_autocmd("FocusGained", {
+  callback = function()
+    vim.wo.cursorline = true
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      local buf = vim.api.nvim_win_get_buf(win)
+      local ft = vim.bo[buf].filetype
+      if ft == "NvimTree" or ft == "fyler" then
+        vim.wo[win].cursorline = true
+      end
+    end
+  end,
+})
+vim.api.nvim_create_autocmd("WinLeave", {
+  callback = function()
+    if vim.bo.filetype == "NvimTree" or vim.bo.filetype == "fyler" then
+      return
+    end
+    vim.wo.cursorline = false
+  end,
+})
+vim.api.nvim_create_autocmd("FocusLost", {
+  callback = function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      vim.wo[win].cursorline = false
+    end
+  end,
+})
 vim.o.signcolumn = "no" -- Hide sign column (signs rendered in statuscolumn)
 vim.o.statuscolumn = "%!v:lua.StatusColumn()"
 vim.o.laststatus = 3 -- Single global statusline
@@ -41,7 +74,7 @@ vim.o.splitbelow = true -- Horizontal splits open below
 -- Folds
 vim.o.foldlevelstart = 99 -- Start with all folds open
 vim.o.foldtext = "" -- Use highlighted fold text (no summary line)
-vim.o.foldnestmax = 1 -- Only fold one level deep
+vim.o.foldnestmax = 3
 
 -- Timing
 vim.o.updatetime = 250 -- Faster CursorHold events (default 4000ms)
@@ -149,12 +182,23 @@ vim.diagnostic.config({
   virtual_text = { current_line = true },
   -- virtual_text = true,
   status = {
-    format = {
-      [vim.diagnostic.severity.ERROR] = "",
-      [vim.diagnostic.severity.WARN] = "",
-      [vim.diagnostic.severity.INFO] = "",
-      [vim.diagnostic.severity.HINT] = "",
-    },
+    format = function(counts)
+      local signs = vim.diagnostic.config().signs.text
+      local hl_map = {
+        [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+        [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+        [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+        [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+      }
+      local items = {}
+      for level, _ in ipairs(vim.diagnostic.severity) do
+        local count = counts[level] or 0
+        if count > 0 then
+          table.insert(items, ("%%#%s#%s %s"):format(hl_map[level], signs[level], count))
+        end
+      end
+      return table.concat(items, " ")
+    end,
   },
 })
 
@@ -204,6 +248,7 @@ pack.add({
         "lua-language-server",
         "stylua",
         "vtsls",
+        "copilot-language-server",
       },
     },
   },
@@ -291,7 +336,6 @@ pack.add({
           shade = "dark",
           percentage = 0.15,
         },
-
       })
       vim.cmd.colorscheme("catppuccin-frappe")
     end,
@@ -348,7 +392,7 @@ pack.add({
       },
     },
   },
-  -- "https://github.com/sindrets/diffview.nvim",
+  "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/sindrip/formatls.nvim",
   "https://github.com/sindrip/todocomments-ls.nvim",
@@ -361,7 +405,95 @@ pack.add({
       require("fzf-lua").register_ui_select()
     end,
   },
+  {
+    "https://github.com/nvim-lualine/lualine.nvim",
+    config = function()
+      local icon_copilot = string.char(0xEF, 0x92, 0xB8)
+      local icon_copilot_err = string.char(0xEF, 0x92, 0xB9)
+      local icon_check = string.char(0xEF, 0x80, 0x8C)
+
+      local function copilot_status()
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+          if client.name == "copilot" then
+            return icon_copilot
+          end
+        end
+        return icon_copilot_err
+      end
+
+      local function copilot_color()
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+          if client.name == "copilot" then
+            return nil
+          end
+        end
+        return { fg = "#737994" }
+      end
+
+      local function copilot_click()
+        local clients = vim.lsp.get_clients({ name = "copilot" })
+        if #clients > 0 then
+          for _, client in ipairs(clients) do
+            client:stop()
+          end
+        else
+          vim.lsp.enable("copilot")
+        end
+        vim.cmd.redrawstatus()
+      end
+
+      local function formatter_status()
+        for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+          if client.name == "formatls" then
+            return icon_check .. " formatls"
+          end
+        end
+        return ""
+      end
+
+      vim.o.showmode = false
+      require("lualine").setup({
+        options = {
+          theme = "auto",
+          component_separators = { left = "", right = "\u{e0b3}" },
+          section_separators = { left = "\u{e0b0}", right = "\u{e0b2}" },
+          refresh = { statusline = 100 },
+        },
+        sections = {
+          lualine_a = { "mode" },
+          lualine_b = {
+            { "filetype", icon_only = true, colored = true, padding = { left = 1, right = 0 } },
+            { "filename", padding = { left = 0, right = 1 } },
+          },
+          lualine_c = {
+            "diagnostics",
+          },
+          lualine_x = {
+            { copilot_status, color = copilot_color, on_click = copilot_click, padding = { left = 1, right = 2 } },
+            { "lsp_status", ignore_lsp = { "copilot", "fixpoint_fswatcher", "formatls", "todocomments-ls" } },
+          },
+          lualine_y = { "progress", "location" },
+          lualine_z = { "branch" },
+        },
+      })
+    end,
+  },
+  {
+    "https://github.com/rachartier/tiny-cmdline.nvim",
+    config = function()
+      vim.o.cmdheight = 0
+      require("tiny-cmdline").setup()
+    end,
+  },
   -- { "https://github.com/Cannon07/claude-preview.nvim", opts = {} },
+  {
+    "https://github.com/akinsho/toggleterm.nvim",
+    opts = {
+      open_mapping = [[<C-\>]],
+      direction = "horizontal",
+      size = 20,
+    },
+  },
 })
 
 vim.lsp.config.vtsls = {
@@ -382,6 +514,8 @@ vim.lsp.config.vtsls = {
 vim.lsp.enable("fixpoint_fswatcher")
 vim.lsp.enable("todocomments-ls")
 vim.lsp.enable("formatls")
+
+vim.lsp.enable("copilot")
 vim.lsp.enable("vtsls")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
@@ -398,6 +532,18 @@ vim.lsp.enable("gopls")
 -- • inlineCompletion     – ghost-text style completions
 
 -- 0.12 features that can be enabled manually:
+vim.lsp.inline_completion.enable()
+
+vim.keymap.set("i", "<Tab>", function()
+  if not vim.lsp.inline_completion.get() then
+    return "<Tab>"
+  end
+end, { expr = true, desc = "Accept inline completion" })
+
+vim.keymap.set("i", "<C-e>", function()
+  vim.lsp.inline_completion.select()
+end, { desc = "Next inline completion" })
+
 vim.api.nvim_create_autocmd("UIEnter", {
   once = true,
   callback = function()
@@ -416,6 +562,10 @@ vim.api.nvim_create_autocmd("BufWritePre", {
     vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 500 })
   end,
 })
+
+vim.api.nvim_create_user_command("LspLog", function()
+  vim.cmd.edit(vim.lsp.log.get_filename())
+end, { desc = "Open LSP log file" })
 
 -- Keymaps
 
@@ -463,7 +613,81 @@ vim.keymap.set("n", "<leader>th", function()
   vim.notify("Inlay hints: " .. (enabled and "on" or "off"))
 end, { desc = "Toggle inlay hints" })
 
+local Terminal = require("toggleterm.terminal").Terminal
+
+local lazygit = Terminal:new({
+  cmd = "lazygit",
+  dir = "git_dir",
+  direction = "float",
+  float_opts = {
+    border = "rounded",
+    width = function()
+      return math.floor(vim.o.columns * 0.9)
+    end,
+    height = function()
+      return math.floor(vim.o.lines * 0.9)
+    end,
+  },
+  on_open = function(term)
+    vim.cmd("startinsert!")
+    vim.keymap.set("t", "<Esc>", "<Esc>", { buffer = term.bufnr })
+  end,
+  on_close = function(term)
+    vim.cmd("startinsert!")
+  end,
+})
+
+local lazydocker = Terminal:new({
+  cmd = "lazydocker",
+  direction = "float",
+  float_opts = {
+    border = "rounded",
+  },
+})
+
+vim.keymap.set("n", "<leader>gg", function()
+  lazygit:toggle()
+end, { desc = "Lazygit" })
+vim.keymap.set("n", "<leader>gd", function()
+  lazydocker:toggle()
+end, { desc = "Lazydocker" })
+
+-- vim.keymap.set("n", "<leader>gg", function()
+--   require("toggleterm.terminal").Terminal
+--     :new({
+--       cmd = "lazygit",
+--       direction = "float",
+--       float_opts = {
+--         width = math.floor(vim.o.columns * 0.9),
+--         height = math.floor(vim.o.lines * 0.9),
+--         -- width = vim.o.columns,
+--         -- height = vim.o.lines,
+--       },
+--     })
+--     :toggle()
+-- end, { desc = "Lazygit" })
+
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<C-h>", function()
+  vim.cmd.wincmd("h")
+end, { desc = "Move to left split" })
+vim.keymap.set("t", "<C-j>", function()
+  vim.cmd.wincmd("j")
+end, { desc = "Move to below split" })
+vim.keymap.set("t", "<C-k>", function()
+  vim.cmd.wincmd("k")
+end, { desc = "Move to above split" })
+vim.keymap.set("t", "<C-l>", function()
+  vim.cmd.wincmd("l")
+end, { desc = "Move to right split" })
+
 vim.keymap.set("n", "<leader>tf", function()
   vim.g.auto_format = not vim.g.auto_format
   vim.notify("Auto format: " .. (vim.g.auto_format and "on" or "off"))
 end, { desc = "Toggle auto format" })
+
+vim.keymap.set("n", "<leader>tc", function()
+  local enabled = not vim.lsp.inline_completion.is_enabled()
+  vim.lsp.inline_completion.enable(enabled)
+  vim.notify("Copilot inline completion: " .. (enabled and "on" or "off"))
+end, { desc = "Toggle Copilot inline completion" })
