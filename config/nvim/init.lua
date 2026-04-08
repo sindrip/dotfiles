@@ -278,7 +278,7 @@ pack.add({
       },
       view = { signcolumn = "no", width = 40 },
       update_focused_file = { enable = true },
-      filters = { dotfiles = false, git_ignored = false },
+      filters = { dotfiles = false, git_ignored = false, custom = { "node_modules" } },
     },
   },
   {
@@ -353,6 +353,7 @@ pack.add({
   "https://github.com/sindrip/formatls.nvim",
   "https://github.com/sindrip/todocomments-ls.nvim",
   "https://github.com/sindrip/fixpoint.nvim",
+  "https://github.com/MeanderingProgrammer/render-markdown.nvim",
   { "https://github.com/folke/trouble.nvim", opts = {} },
   {
     "https://github.com/ibhagwan/fzf-lua",

@@ -58,6 +58,10 @@
       "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
     },
+    "render-markdown.nvim": {
+      "rev": "54d4b5431e9634ee3d8d30784e017239b5b89d41",
+      "src": "https://github.com/MeanderingProgrammer/render-markdown.nvim"
+    },
     "todocomments-ls.nvim": {
       "rev": "d35ae553e6096a3d4e78e611d7f1ff5f6319d2d8",
       "src": "https://github.com/sindrip/todocomments-ls.nvim"
