@@ -1,0 +1,45 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "docker-cli-plugin-metadata" ]; then
+    echo '{"SchemaVersion":"0.1.0","Vendor":"capos","Version":"0.1.0","ShortDescription":"Debug a running container"}'
+    exit 0
+fi
+
+# Docker passes: docker-debug debug <container> [cmd...]
+shift
+CONTAINER="${1:?usage: docker debug <container> [cmd...]}"
+shift
+
+# Build debug image on first use
+IMAGE="docker-debug:latest"
+if ! docker image inspect "$IMAGE" >/dev/null 2>&1; then
+    docker build -t "$IMAGE" - <<'DOCKERFILE'
+FROM nicolaka/netshoot
+RUN apk add --no-cache wireguard-tools
+DOCKERFILE
+fi
+
+# Detect TTY
+TTY_FLAGS="-i"
+[ -t 0 ] && TTY_FLAGS="-it"
+
+# Derive capabilities from the target container
+PRIVILEGED=$(docker inspect --format '{{.HostConfig.Privileged}}' "$CONTAINER")
+if [ "$PRIVILEGED" = "true" ]; then
+    CAP_FLAGS="--privileged"
+else
+    CAP_FLAGS=$(docker inspect --format '{{range .HostConfig.CapAdd}}--cap-add {{.}} {{end}}' "$CONTAINER")
+fi
+
+# Default to shell if no command given
+if [ $# -eq 0 ]; then
+    set -- sh
+fi
+
+exec docker run --rm $TTY_FLAGS \
+    --network "container:$CONTAINER" \
+    --pid "container:$CONTAINER" \
+    --volumes-from "$CONTAINER" \
+    $CAP_FLAGS \
+    "$IMAGE" "$@"

@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
-exec colima start \
+set -eu
+
+colima start \
 	--cpu 6 \
 	--memory 12 \
 	--vm-type vz \
@@ -10,3 +12,14 @@ exec colima start \
 	--ssh-agent \
 	--activate \
 	"$@"
+
+if ! colima ssh -- dpkg -s linux-generic-hwe-24.04 >/dev/null 2>&1; then
+	echo "colima-init: installing HWE kernel..." >&2
+	colima ssh -- sh -c '
+		set -e
+		sudo apt-get update
+		sudo DEBIAN_FRONTEND=noninteractive apt-get install -y linux-generic-hwe-24.04
+	'
+	echo "colima-init: restarting VM for new kernel..." >&2
+	colima restart
+fi
