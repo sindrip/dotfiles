@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
-exec colima start \
+set -eu
+
+colima start \
 	--cpu 6 \
 	--memory 12 \
 	--vm-type vz \
