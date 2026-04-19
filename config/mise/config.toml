@@ -3,7 +3,6 @@ rust = "latest"
 biome = "latest"
 bun = "latest"
 node = "latest"
-"npm:@anthropic-ai/claude-code" = "latest"
 "npm:corepack" = "latest"
 go = "latest"
 [settings]

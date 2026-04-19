@@ -10,6 +10,7 @@ setopt HIST_VERIFY
 setopt SHARE_HISTORY
 
 # Completion
+fpath=(/Applications/OrbStack.app/Contents/Resources/completions/zsh(/N) $fpath)
 autoload -U compinit
 compinit -d "$XDG_CACHE_HOME"/zsh/zcompdump-"$ZSH_VERSION"
 
