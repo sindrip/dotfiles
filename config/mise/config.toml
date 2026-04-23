@@ -4,6 +4,7 @@ biome = "latest"
 bun = "latest"
 node = "latest"
 "npm:corepack" = "latest"
+"npm:@mariozechner/pi-coding-agent" = "latest"
 go = "latest"
 [settings]
 idiomatic_version_file_enable_tools = ["node", "rust"]
