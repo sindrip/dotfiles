@@ -10,41 +10,25 @@ vim.cmd.packadd("nvim.difftool")
 vim.o.number = true -- Show line numbers
 vim.o.relativenumber = true -- Relative line numbers for easy jumping
 vim.o.cursorline = true -- Highlight the current line
+vim.o.smoothscroll = true
 
 vim.api.nvim_create_autocmd("WinEnter", {
   callback = function()
     vim.wo.cursorline = true
   end,
 })
-vim.api.nvim_create_autocmd("FocusGained", {
-  callback = function()
-    vim.wo.cursorline = true
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      local buf = vim.api.nvim_win_get_buf(win)
-      local ft = vim.bo[buf].filetype
-      if ft == "NvimTree" or ft == "fyler" then
-        vim.wo[win].cursorline = true
-      end
-    end
-  end,
-})
 vim.api.nvim_create_autocmd("WinLeave", {
   callback = function()
-    if vim.bo.filetype == "NvimTree" or vim.bo.filetype == "fyler" then
-      return
-    end
     vim.wo.cursorline = false
   end,
 })
-vim.api.nvim_create_autocmd("FocusLost", {
+vim.api.nvim_create_autocmd("VimResized", {
+  group = vim.api.nvim_create_augroup("EqualizeSplitsOnResize", { clear = true }),
   callback = function()
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      vim.wo[win].cursorline = false
-    end
+    vim.cmd.wincmd("=")
   end,
 })
-vim.o.signcolumn = "no" -- Hide sign column (signs rendered in statuscolumn)
-vim.o.statuscolumn = "%!v:lua.StatusColumn()"
+
 vim.o.laststatus = 3 -- Single global statusline
 -- vim.o.winborder = "🭽,▔,🭾,▕,🭿,▁,🭼,▏"
 -- vim.o.winborder = "rounded"
@@ -92,82 +76,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "NvimTree",
-  callback = function()
-    vim.schedule(function()
-      vim.wo.winhighlight = ""
-    end)
-  end,
-})
-
-function _G.StatusColumn()
-  local buf = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
-  local marks = vim.api.nvim_buf_get_extmarks(
-    buf,
-    -1,
-    { vim.v.lnum - 1, 0 },
-    { vim.v.lnum - 1, -1 },
-    { details = true, type = "sign" }
-  )
-
-  local diag_text, diag_hl = "", ""
-  local git_text, git_hl = "", ""
-  for _, mark in ipairs(marks) do
-    local d = mark[4]
-    if d then
-      local text = (d.sign_text or ""):gsub("%s", "")
-      local hl = d.sign_hl_group or ""
-      if hl:find("GitSigns") then
-        git_text, git_hl = text, hl
-      else
-        diag_text, diag_hl = text, hl
-      end
-    end
-  end
-
-  local mark_text, mark_hl = "", ""
-  for _, m in ipairs(vim.fn.getmarklist(buf)) do
-    if m.pos[2] == vim.v.lnum and m.mark:match("^'[a-zA-Z]$") then
-      mark_text, mark_hl = m.mark:sub(2, 2), "DiagnosticSignHint"
-      break
-    end
-  end
-  if mark_text == "" then
-    for _, m in ipairs(vim.fn.getmarklist()) do
-      if m.pos[1] == buf and m.pos[2] == vim.v.lnum and m.mark:match("^'[A-Z]$") then
-        mark_text, mark_hl = m.mark:sub(2, 2), "DiagnosticSignHint"
-        break
-      end
-    end
-  end
-  local function cell(text, hl, width)
-    local dw = vim.fn.strdisplaywidth(text)
-    local pad = string.rep(" ", math.max(0, width - dw))
-    if hl ~= "" then
-      return "%#" .. hl .. "#" .. text .. "%*" .. pad
-    end
-    return pad
-  end
-
-  if vim.v.virtnum ~= 0 then
-    return cell("", "", 2) .. "%=" .. "  " .. cell("", "", 2)
-  end
-  local win = vim.g.statusline_winid
-  local nu = vim.wo[win].number
-  local rnu = vim.wo[win].relativenumber
-  if not nu and not rnu then
-    return ""
-  end
-  local left_text = diag_text ~= "" and diag_text or mark_text
-  local left_hl = diag_text ~= "" and diag_hl or mark_hl
-  local num = ""
-  if nu or rnu then
-    num = vim.v.relnum == 0 and vim.v.lnum or vim.v.relnum
-  end
-  return cell(left_text, left_hl, 2) .. "%=" .. num .. " " .. cell(git_text, git_hl, 2)
-end
-
 vim.diagnostic.config({
   -- jump = { on_jump = function() vim.diagnostic.open_float() end },
   jump = { float = true },
@@ -208,6 +116,13 @@ vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 
 -- Plugins
+
+vim.api.nvim_create_autocmd("UIEnter", {
+  once = true,
+  callback = function()
+    require("vim._core.ui2").enable({})
+  end,
+})
 
 local pack = require("pack-specs")
 pack.register_commands()
@@ -254,76 +169,22 @@ pack.add({
   },
   { "https://github.com/folke/lazydev.nvim", opts = {} },
   {
-    "https://github.com/A7Lavinraj/fyler.nvim",
-    branch = "stable",
+    "https://github.com/folke/snacks.nvim",
     opts = {
-      views = {
-        finder = {
-          close_on_select = false,
-          columns = {
-            permission = { enabled = false },
-            size = { enabled = false },
-            link = { enabled = false },
-            git = {
-              symbols = {
-                Untracked = "󰐕",
-                Added = "󰐕",
-                Modified = "󰦒",
-                Deleted = "󰍴",
-                Renamed = "󰑕",
-                Copied = "󰆏",
-                Conflict = "󰅗",
-                Ignored = "",
-              },
-            },
-            diagnostic = {
-              symbols = {
-                Error = "E",
-                Warn = "W",
-                Info = "I",
-                Hint = "H",
-              },
-            },
-          },
-          follow_current_file = true,
-          watcher = { enabled = true },
-          win = {
-            kinds = {
-              split_left_most = { width = "20%" },
-            },
+      bigfile = { enabled = true },
+      bufdelete = { enabled = true },
+      explorer = { enabled = true },
+      picker = {
+        enabled = true,
+        sources = {
+          explorer = {
+            hidden = true,
+            ignored = true,
+            exclude = { ".git", "node_modules" },
           },
         },
       },
-    },
-  },
-  {
-    "https://github.com/nvim-tree/nvim-tree.lua",
-    module = "nvim-tree",
-    opts = {
-      renderer = {
-        -- root_folder_label = false,
-        group_empty = true,
-        indent_markers = { enable = true },
-        -- highlight_opened_files = "name",
-        -- highlight_git = "name",
-        icons = {
-          git_placement = "after",
-          show = { folder_arrow = false },
-          glyphs = {
-            git = {
-              unstaged = "󰦒",
-              staged = "󰐕",
-              untracked = "󰐕",
-              deleted = "󰍴",
-              renamed = "󰑕",
-              ignored = "",
-            },
-          },
-        },
-      },
-      view = { signcolumn = "no", width = 40 },
-      update_focused_file = { enable = true },
-      filters = { dotfiles = false, git_ignored = false, custom = { "node_modules" } },
+      statuscolumn = { enabled = true },
     },
   },
   {
@@ -363,15 +224,6 @@ pack.add({
       MiniIcons.mock_nvim_web_devicons()
     end,
   },
-  -- {
-  --   "https://github.com/echasnovski/mini.notify",
-  --   opts = {
-  --     window = {
-  --       config = { border = "rounded" },
-  --       winblend = 75,
-  --     },
-  --   },
-  -- },
   {
     "https://github.com/lewis6991/gitsigns.nvim",
     opts = {
@@ -482,7 +334,9 @@ pack.add({
     "https://github.com/rachartier/tiny-cmdline.nvim",
     config = function()
       vim.o.cmdheight = 0
-      require("tiny-cmdline").setup()
+      require("tiny-cmdline").setup({
+        on_reposition = require("tiny-cmdline").adapters.blink,
+      })
     end,
   },
   -- { "https://github.com/Cannon07/claude-preview.nvim", opts = {} },
@@ -544,12 +398,6 @@ vim.keymap.set("i", "<C-e>", function()
   vim.lsp.inline_completion.select()
 end, { desc = "Next inline completion" })
 
-vim.api.nvim_create_autocmd("UIEnter", {
-  once = true,
-  callback = function()
-    require("vim._core.ui2").enable({})
-  end,
-})
 -- vim.o.diffopt = vim.o.diffopt .. ",inline:word"  -- word-level inline diff highlighting
 
 vim.g.auto_format = true
@@ -570,22 +418,17 @@ end, { desc = "Open LSP log file" })
 -- Keymaps
 
 vim.keymap.set("n", "<leader>r", function()
-  -- Close plugin buffers before saving session (plugin state isn't serialisable)
-  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-    local ft = vim.bo[buf].filetype
-    if ft == "fyler" or ft == "NvimTree" then
-      vim.api.nvim_buf_delete(buf, { force = true })
-    end
-  end
-  local session = vim.fn.stdpath("state") .. "/restart.vim"
-  vim.cmd.mksession({ args = { session }, bang = true })
-  vim.cmd.restart({ args = { "source", session } })
-end, { desc = "Restart nvim with session" })
+  require("session").save()
+  vim.cmd.restart()
+end, { desc = "Restart nvim" })
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
 vim.keymap.set("n", "<leader>u", "<cmd>Undotree<cr>", { desc = "Undotree" })
 vim.keymap.set("n", "<leader>x", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+vim.keymap.set("n", "<leader>bd", function()
+  Snacks.bufdelete()
+end, { desc = "Delete buffer (keep window)" })
 
 vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
 vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
@@ -603,9 +446,8 @@ vim.keymap.set("n", "grA", function()
 end, { desc = "Source actions" })
 
 vim.keymap.set("n", "<leader>e", function()
-  require("fyler").toggle({ kind = "split_left_most" })
-end, { desc = "Toggle fyler" })
-vim.keymap.set("n", "<leader>E", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle nvim-tree" })
+  Snacks.explorer()
+end, { desc = "Toggle snacks explorer" })
 
 vim.keymap.set("n", "<leader>th", function()
   local enabled = not vim.lsp.inlay_hint.is_enabled()
@@ -651,21 +493,6 @@ end, { desc = "Lazygit" })
 vim.keymap.set("n", "<leader>gd", function()
   lazydocker:toggle()
 end, { desc = "Lazydocker" })
-
--- vim.keymap.set("n", "<leader>gg", function()
---   require("toggleterm.terminal").Terminal
---     :new({
---       cmd = "lazygit",
---       direction = "float",
---       float_opts = {
---         width = math.floor(vim.o.columns * 0.9),
---         height = math.floor(vim.o.lines * 0.9),
---         -- width = vim.o.columns,
---         -- height = vim.o.lines,
---       },
---     })
---     :toggle()
--- end, { desc = "Lazygit" })
 
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set({ "n", "t" }, "<C-h>", function()

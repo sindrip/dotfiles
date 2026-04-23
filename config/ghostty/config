@@ -6,6 +6,12 @@ macos-option-as-alt = true
 key-remap = cmd=option
 key-remap = option=cmd
 
+# tmux resize
+keybind = option+shift+h=esc:H
+keybind = option+shift+j=esc:J
+keybind = option+shift+k=esc:K
+keybind = option+shift+l=esc:L
+
 keybind = option+v=paste_from_clipboard
 keybind = cmd+zero=unbind
-
+keybind = super+shift+enter=unbind
