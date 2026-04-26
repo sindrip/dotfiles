@@ -151,6 +151,8 @@ pack.add({
         "copilot-language-server",
         "gopls",
         "lua-language-server",
+        "prettier",
+        "shfmt",
         "stylua",
         "vtsls",
       },
@@ -235,8 +237,12 @@ pack.add({
   },
   "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
-  "https://github.com/sindrip/formatls.nvim",
-  -- "https://github.com/sindrip/todocomments-ls.nvim",
+  {
+    "https://github.com/stevearc/conform.nvim",
+    config = function()
+      require("formatter").setup()
+    end,
+  },
   "https://github.com/sindrip/fixpoint.nvim",
   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
   {
@@ -303,15 +309,6 @@ pack.add({
         vim.cmd.redrawstatus()
       end
 
-      local function formatter_status()
-        for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-          if client.name == "formatls" then
-            return icon_check .. " formatls"
-          end
-        end
-        return ""
-      end
-
       vim.o.showmode = false
       require("lualine").setup({
         options = {
@@ -331,7 +328,7 @@ pack.add({
           },
           lualine_x = {
             { copilot_status, color = copilot_color, on_click = copilot_click, padding = { left = 1, right = 2 } },
-            { "lsp_status", ignore_lsp = { "copilot", "formatls", "todocomments-ls" } },
+            { "lsp_status", ignore_lsp = { "copilot" } },
           },
           lualine_y = { "progress", "location" },
           lualine_z = { "branch" },
@@ -374,8 +371,6 @@ vim.lsp.config.vtsls = {
   },
 }
 
-vim.lsp.enable("formatls")
-
 vim.lsp.enable("copilot")
 vim.lsp.enable("vtsls")
 vim.lsp.enable("lua_ls")
@@ -406,17 +401,6 @@ vim.keymap.set("i", "<C-e>", function()
 end, { desc = "Next inline completion" })
 
 -- vim.o.diffopt = vim.o.diffopt .. ",inline:word"  -- word-level inline diff highlighting
-
-vim.g.auto_format = true
-
-vim.api.nvim_create_autocmd("BufWritePre", {
-  callback = function(args)
-    if not vim.g.auto_format then
-      return
-    end
-    vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 500 })
-  end,
-})
 
 vim.api.nvim_create_user_command("LspLog", function()
   vim.cmd.edit(vim.lsp.log.get_filename())
@@ -525,8 +509,7 @@ vim.keymap.set({ "n", "t" }, "<C-l>", function()
 end, { desc = "Move to right split" })
 
 vim.keymap.set("n", "<leader>tf", function()
-  vim.g.auto_format = not vim.g.auto_format
-  vim.notify("Auto format: " .. (vim.g.auto_format and "on" or "off"))
+  require("formatter").toggle()
 end, { desc = "Toggle auto format" })
 
 vim.keymap.set("n", "<leader>tc", function()
