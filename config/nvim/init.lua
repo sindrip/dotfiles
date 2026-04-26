@@ -64,39 +64,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.diagnostic.config({
-  -- jump = { on_jump = function() vim.diagnostic.open_float() end },
-  jump = { float = true },
-  signs = {
-    text = {
-      [vim.diagnostic.severity.ERROR] = "",
-      [vim.diagnostic.severity.WARN] = "",
-      [vim.diagnostic.severity.INFO] = "",
-      [vim.diagnostic.severity.HINT] = "",
-    },
-  },
-  virtual_text = { current_line = true },
-  -- virtual_text = true,
-  status = {
-    format = function(counts)
-      local signs = vim.diagnostic.config().signs.text
-      local hl_map = {
-        [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
-        [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
-        [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
-        [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
-      }
-      local items = {}
-      for level, _ in ipairs(vim.diagnostic.severity) do
-        local count = counts[level] or 0
-        if count > 0 then
-          table.insert(items, ("%%#%s#%s %s"):format(hl_map[level], signs[level], count))
-        end
-      end
-      return table.concat(items, " ")
-    end,
-  },
-})
+require("diagnostics")
 
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
