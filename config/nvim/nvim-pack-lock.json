@@ -17,14 +17,6 @@
       "rev": "207fd9b3fc75d590497d9ce8400616f7100a3e60",
       "src": "https://github.com/sindrip/fixpoint.nvim"
     },
-    "formatls.nvim": {
-      "rev": "0312a309786ccee8242902a664a3f1299e4cff28",
-      "src": "https://github.com/sindrip/formatls.nvim"
-    },
-    "fzf-lua": {
-      "rev": "33321eba594f530e23a6b8970ba0b5fd695c8bba",
-      "src": "https://github.com/ibhagwan/fzf-lua"
-    },
     "gitsigns.nvim": {
       "rev": "6d808f99bd63303646794406e270bd553ad7792e",
       "src": "https://github.com/lewis6991/gitsigns.nvim"

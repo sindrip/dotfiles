@@ -234,12 +234,12 @@ pack.add({
       },
     },
   },
-  {
-    "https://github.com/ibhagwan/fzf-lua",
-    config = function()
-      require("fzf-lua").register_ui_select()
-    end,
-  },
+  -- {
+  --   "https://github.com/ibhagwan/fzf-lua",
+  --   config = function()
+  --     require("fzf-lua").register_ui_select()
+  --   end,
+  -- },
   {
     "https://github.com/nvim-lualine/lualine.nvim",
     config = function()
@@ -340,9 +340,22 @@ vim.keymap.set("n", "<leader>bd", function()
   Snacks.bufdelete()
 end, { desc = "Delete buffer (keep window)" })
 
-vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
-vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
-vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua helptags<cr>", { desc = "Help tags" })
+vim.keymap.set("n", "<leader>ff", function()
+  Snacks.picker.files()
+end, { desc = "Find files" })
+vim.keymap.set("n", "<leader>fg", function()
+  Snacks.picker.grep()
+end, { desc = "Live grep" })
+vim.keymap.set("n", "<leader>fh", function()
+  Snacks.picker.help()
+end, { desc = "Help tags" })
+vim.keymap.set("n", "<leader>fb", function()
+  Snacks.picker.buffers()
+end, { desc = "Help tags" })
+
+-- vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
+-- vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
+-- vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua helptags<cr>", { desc = "Help tags" })
 
 vim.keymap.set({ "n", "x" }, "j", function()
   return vim.v.count == 0 and "gj" or "j"
@@ -389,20 +402,9 @@ local lazygit = Terminal:new({
   end,
 })
 
-local lazydocker = Terminal:new({
-  cmd = "lazydocker",
-  direction = "float",
-  float_opts = {
-    border = "rounded",
-  },
-})
-
 vim.keymap.set("n", "<leader>gg", function()
   lazygit:toggle()
 end, { desc = "Lazygit" })
-vim.keymap.set("n", "<leader>gd", function()
-  lazydocker:toggle()
-end, { desc = "Lazydocker" })
 
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set({ "n", "t" }, "<C-h>", function()

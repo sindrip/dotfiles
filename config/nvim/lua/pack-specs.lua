@@ -42,11 +42,8 @@ local function on_load(plug)
 
   if data.config then
     data.config(data.opts)
-  else
-    local ok, mod = pcall(require, data.module)
-    if ok and mod.setup then
-      mod.setup(data.opts or {})
-    end
+  elseif data.opts then
+    require(data.module).setup(data.opts)
   end
 end
 
