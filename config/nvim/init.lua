@@ -9,19 +9,7 @@ vim.cmd.packadd("nvim.difftool")
 -- UI
 vim.o.number = true -- Show line numbers
 vim.o.relativenumber = true -- Relative line numbers for easy jumping
-vim.o.cursorline = true -- Highlight the current line
 vim.o.smoothscroll = true
-
-vim.api.nvim_create_autocmd("WinEnter", {
-  callback = function()
-    vim.wo.cursorline = true
-  end,
-})
-vim.api.nvim_create_autocmd("WinLeave", {
-  callback = function()
-    vim.wo.cursorline = false
-  end,
-})
 vim.api.nvim_create_autocmd("VimResized", {
   group = vim.api.nvim_create_augroup("EqualizeSplitsOnResize", { clear = true }),
   callback = function()
@@ -387,7 +375,7 @@ vim.lsp.config.vtsls = {
 }
 
 vim.lsp.enable("fixpoint_fswatcher")
-vim.lsp.enable("todocomments-ls")
+-- vim.lsp.enable("todocomments-ls")
 vim.lsp.enable("formatls")
 
 vim.lsp.enable("copilot")
