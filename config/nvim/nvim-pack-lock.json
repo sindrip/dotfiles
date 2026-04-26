@@ -18,7 +18,7 @@
       "src": "https://github.com/sindrip/formatls.nvim"
     },
     "fzf-lua": {
-      "rev": "ffa44ee9470743a7697d28df3a1a216fdfe2b09d",
+      "rev": "33321eba594f530e23a6b8970ba0b5fd695c8bba",
       "src": "https://github.com/ibhagwan/fzf-lua"
     },
     "gitsigns.nvim": {
@@ -50,12 +50,16 @@
       "src": "https://github.com/catppuccin/nvim"
     },
     "nvim-lspconfig": {
-      "rev": "81878de76c0de4ce289513734ad80c31ec7871b8",
+      "rev": "21db1fd40cbcbf1524ae154ab8f394fdf085749a",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
       "rev": "4916d6592ede8c07973490d9322f187e07dfefac",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter"
+    },
+    "quicker.nvim": {
+      "rev": "063cc44da1eef8681bbd653b29d3bc961780886a",
+      "src": "https://github.com/stevearc/quicker.nvim"
     },
     "render-markdown.nvim": {
       "rev": "d67113f11384c0dad96fced2f7b91f1fc811e97f",
@@ -69,17 +73,9 @@
       "rev": "ad58747b955d0743ccfd56e97da1a4c1fac89f58",
       "src": "https://github.com/rachartier/tiny-cmdline.nvim"
     },
-    "todocomments-ls.nvim": {
-      "rev": "d35ae553e6096a3d4e78e611d7f1ff5f6319d2d8",
-      "src": "https://github.com/sindrip/todocomments-ls.nvim"
-    },
     "toggleterm.nvim": {
       "rev": "9a88eae817ef395952e08650b3283726786fb5fb",
       "src": "https://github.com/akinsho/toggleterm.nvim"
-    },
-    "trouble.nvim": {
-      "rev": "bd67efe408d4816e25e8491cc5ad4088e708a69a",
-      "src": "https://github.com/folke/trouble.nvim"
     },
     "which-key.nvim": {
       "rev": "3aab2147e74890957785941f0c1ad87d0a44c15a",

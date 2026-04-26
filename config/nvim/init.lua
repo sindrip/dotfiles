@@ -160,10 +160,11 @@ pack.add({
     "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
     opts = {
       ensure_installed = {
+        "copilot-language-server",
+        "gopls",
         "lua-language-server",
         "stylua",
         "vtsls",
-        "copilot-language-server",
       },
     },
   },
@@ -247,10 +248,30 @@ pack.add({
   "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/sindrip/formatls.nvim",
-  "https://github.com/sindrip/todocomments-ls.nvim",
+  -- "https://github.com/sindrip/todocomments-ls.nvim",
   "https://github.com/sindrip/fixpoint.nvim",
   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
-  { "https://github.com/folke/trouble.nvim", opts = {} },
+  {
+    "https://github.com/stevearc/quicker.nvim",
+    opts = {
+      keys = {
+        {
+          ">",
+          function()
+            require("quicker").expand({ add_to_existing = true })
+          end,
+          desc = "Expand quickfix context",
+        },
+        {
+          "<",
+          function()
+            require("quicker").collapse()
+          end,
+          desc = "Collapse quickfix context",
+        },
+      },
+    },
+  },
   {
     "https://github.com/ibhagwan/fzf-lua",
     config = function()
@@ -425,7 +446,16 @@ end, { desc = "Restart nvim" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
 vim.keymap.set("n", "<leader>u", "<cmd>Undotree<cr>", { desc = "Undotree" })
-vim.keymap.set("n", "<leader>x", "<cmd>Trouble diagnostics toggle<cr>", { desc = "Diagnostics (Trouble)" })
+vim.keymap.set("n", "grq", function()
+  vim.diagnostic.setqflist()
+  -- require("quicker").refresh()
+end, { desc = "Diagnostics to quickfix" })
+vim.keymap.set("n", "<leader>q", function()
+  require("quicker").toggle()
+end, { desc = "Toggle quickfix" })
+vim.keymap.set("n", "<leader>l", function()
+  require("quicker").toggle({ loclist = true })
+end, { desc = "Toggle loclist" })
 vim.keymap.set("n", "<leader>bd", function()
   Snacks.bufdelete()
 end, { desc = "Delete buffer (keep window)" })
