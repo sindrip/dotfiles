@@ -256,14 +256,6 @@ pack.add({
     end,
   },
   -- { "https://github.com/Cannon07/claude-preview.nvim", opts = {} },
-  {
-    "https://github.com/akinsho/toggleterm.nvim",
-    opts = {
-      open_mapping = [[<C-\>]],
-      direction = "horizontal",
-      size = 20,
-    },
-  },
 })
 
 vim.lsp.config.vtsls = {
@@ -353,10 +345,6 @@ vim.keymap.set("n", "<leader>fb", function()
   Snacks.picker.buffers()
 end, { desc = "Help tags" })
 
--- vim.keymap.set("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Find files" })
--- vim.keymap.set("n", "<leader>fg", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
--- vim.keymap.set("n", "<leader>fh", "<cmd>FzfLua helptags<cr>", { desc = "Help tags" })
-
 vim.keymap.set({ "n", "x" }, "j", function()
   return vim.v.count == 0 and "gj" or "j"
 end, { expr = true })
@@ -378,33 +366,13 @@ vim.keymap.set("n", "<leader>th", function()
   vim.notify("Inlay hints: " .. (enabled and "on" or "off"))
 end, { desc = "Toggle inlay hints" })
 
-local Terminal = require("toggleterm.terminal").Terminal
-
-local lazygit = Terminal:new({
-  cmd = "lazygit",
-  dir = "git_dir",
-  direction = "float",
-  float_opts = {
-    border = "rounded",
-    width = function()
-      return math.floor(vim.o.columns * 0.9)
-    end,
-    height = function()
-      return math.floor(vim.o.lines * 0.9)
-    end,
-  },
-  on_open = function(term)
-    vim.cmd("startinsert!")
-    vim.keymap.set("t", "<Esc>", "<Esc>", { buffer = term.bufnr })
-  end,
-  on_close = function(term)
-    vim.cmd("startinsert!")
-  end,
-})
-
 vim.keymap.set("n", "<leader>gg", function()
-  lazygit:toggle()
+  Snacks.lazygit()
 end, { desc = "Lazygit" })
+
+vim.keymap.set({ "n", "t" }, "<C-\\>", function()
+  Snacks.terminal.toggle(nil, { win = { position = "bottom", height = 0.3 } })
+end, { desc = "Toggle terminal" })
 
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set({ "n", "t" }, "<C-h>", function()
