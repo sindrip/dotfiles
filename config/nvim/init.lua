@@ -133,6 +133,10 @@ pack.add({
       bigfile = { enabled = true },
       bufdelete = { enabled = true },
       explorer = { enabled = true },
+      lazygit = {
+        configure = false,
+        win = { width = 0.95, height = 0.95 },
+      },
       picker = {
         enabled = true,
         sources = {
@@ -151,6 +155,7 @@ pack.add({
     config = function()
       require("catppuccin").setup({
         transparent_background = true,
+        float = { transparent = true, solid = false },
         dim_inactive = {
           enabled = true,
           shade = "dark",
@@ -234,12 +239,6 @@ pack.add({
       },
     },
   },
-  -- {
-  --   "https://github.com/ibhagwan/fzf-lua",
-  --   config = function()
-  --     require("fzf-lua").register_ui_select()
-  --   end,
-  -- },
   {
     "https://github.com/nvim-lualine/lualine.nvim",
     config = function()
@@ -255,7 +254,6 @@ pack.add({
       })
     end,
   },
-  -- { "https://github.com/Cannon07/claude-preview.nvim", opts = {} },
 })
 
 vim.lsp.config.vtsls = {
@@ -345,6 +343,10 @@ vim.keymap.set("n", "<leader>fb", function()
   Snacks.picker.buffers()
 end, { desc = "Help tags" })
 
+vim.keymap.set("n", "<leader>e", function()
+  Snacks.explorer()
+end, { desc = "Toggle snacks explorer" })
+
 vim.keymap.set({ "n", "x" }, "j", function()
   return vim.v.count == 0 and "gj" or "j"
 end, { expr = true })
@@ -355,10 +357,6 @@ end, { expr = true })
 vim.keymap.set("n", "grA", function()
   vim.lsp.buf.code_action({ context = { only = { "source" }, diagnostics = {} } })
 end, { desc = "Source actions" })
-
-vim.keymap.set("n", "<leader>e", function()
-  Snacks.explorer()
-end, { desc = "Toggle snacks explorer" })
 
 vim.keymap.set("n", "<leader>th", function()
   local enabled = not vim.lsp.inlay_hint.is_enabled()
