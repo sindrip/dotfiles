@@ -122,7 +122,7 @@ pack.add({
         "prettier",
         "shfmt",
         "stylua",
-        "vtsls",
+        "tsgo",
       },
     },
   },
@@ -171,10 +171,17 @@ pack.add({
     "https://github.com/saghen/blink.cmp",
     version = vim.version.range("1"),
     opts = {
-      keymap = { preset = "default" },
+      keymap = {
+        preset = "default",
+        ["<M-.>"] = { "show", "show_documentation", "hide_documentation" },
+      },
       appearance = { nerd_font_variant = "mono" },
-      completion = { documentation = { auto_show = true } },
+      completion = {
+        documentation = { auto_show = true },
+        menu = { auto_show = false },
+      },
       sources = { default = { "lsp", "path", "snippets", "buffer" } },
+      signature = { enabled = true },
       fuzzy = {
         implementation = "prefer_rust",
         prebuilt_binaries = { force_version = "v1.*" },
@@ -256,26 +263,11 @@ pack.add({
   },
 })
 
-vim.lsp.config.vtsls = {
-  settings = {
-    typescript = {
-      inlayHints = {
-        parameterNames = { enabled = "literals" },
-        parameterTypes = { enabled = true },
-        variableTypes = { enabled = true },
-        propertyDeclarationTypes = { enabled = true },
-        functionLikeReturnTypes = { enabled = true },
-        enumMemberValues = { enabled = true },
-      },
-    },
-  },
-}
-
 vim.lsp.enable("copilot")
-vim.lsp.enable("vtsls")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
+vim.lsp.enable("tsgo")
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)
@@ -305,6 +297,16 @@ end, { desc = "Next inline completion" })
 vim.api.nvim_create_user_command("LspLog", function()
   vim.cmd.edit(vim.lsp.log.get_filename())
 end, { desc = "Open LSP log file" })
+
+vim.api.nvim_create_user_command("LspInfo", function()
+  vim.cmd.checkhealth("vim.lsp")
+end, { desc = "Show LSP info" })
+
+vim.api.nvim_create_user_command("LspRestart", function()
+  for _, c in ipairs(vim.lsp.get_clients()) do
+    c:_restart()
+  end
+end, { desc = "Restart LSP clients" })
 
 -- Keymaps
 
