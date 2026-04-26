@@ -161,6 +161,14 @@ pack.add({
           shade = "dark",
           percentage = 0.15,
         },
+        custom_highlights = function(C)
+          return {
+            BlinkPairsOrange = { fg = C.peach },
+            BlinkPairsPurple = { fg = C.mauve },
+            BlinkPairsBlue = { fg = C.blue },
+            BlinkPairsUnmatched = { fg = C.red },
+          }
+        end,
       })
       vim.cmd.colorscheme("catppuccin-frappe")
     end,
@@ -187,6 +195,12 @@ pack.add({
         prebuilt_binaries = { force_version = "v1.*" },
       },
     },
+  },
+  "https://github.com/saghen/blink.download",
+  {
+    "https://github.com/saghen/blink.pairs",
+    version = "*",
+    opts = {},
   },
   {
     "https://github.com/echasnovski/mini.icons",
