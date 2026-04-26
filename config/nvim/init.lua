@@ -331,7 +331,7 @@ pack.add({
           },
           lualine_x = {
             { copilot_status, color = copilot_color, on_click = copilot_click, padding = { left = 1, right = 2 } },
-            { "lsp_status", ignore_lsp = { "copilot", "fixpoint_fswatcher", "formatls", "todocomments-ls" } },
+            { "lsp_status", ignore_lsp = { "copilot", "formatls", "todocomments-ls" } },
           },
           lualine_y = { "progress", "location" },
           lualine_z = { "branch" },
@@ -374,8 +374,6 @@ vim.lsp.config.vtsls = {
   },
 }
 
-vim.lsp.enable("fixpoint_fswatcher")
--- vim.lsp.enable("todocomments-ls")
 vim.lsp.enable("formatls")
 
 vim.lsp.enable("copilot")
