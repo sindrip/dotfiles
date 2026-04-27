@@ -10,12 +10,6 @@ vim.cmd.packadd("nvim.difftool")
 vim.o.number = true -- Show line numbers
 vim.o.relativenumber = true -- Relative line numbers for easy jumping
 vim.o.smoothscroll = true
-vim.api.nvim_create_autocmd("VimResized", {
-  group = vim.api.nvim_create_augroup("EqualizeSplitsOnResize", { clear = true }),
-  callback = function()
-    vim.cmd.wincmd("=")
-  end,
-})
 
 vim.o.laststatus = 3 -- Single global statusline
 -- vim.o.winborder = "🭽,▔,🭾,▕,🭿,▁,🭼,▏"
@@ -52,6 +46,13 @@ vim.o.foldnestmax = 3
 vim.o.updatetime = 250 -- Faster CursorHold events (default 4000ms)
 vim.o.timeoutlen = 300 -- Time to wait for mapped sequence (default 1000ms)
 
+vim.api.nvim_create_autocmd("VimResized", {
+  group = vim.api.nvim_create_augroup("EqualizeSplitsOnResize", { clear = true }),
+  callback = function()
+    vim.cmd.wincmd("=")
+  end,
+})
+
 vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function()
     vim.hl.on_yank()
@@ -80,201 +81,184 @@ vim.api.nvim_create_autocmd("UIEnter", {
   end,
 })
 
-local pack = require("pack-specs")
-pack.register_commands()
+require("pack-hooks")
 
-pack.add({
-  {
-    "https://github.com/nvim-treesitter/nvim-treesitter",
-    build = ":TSUpdate",
-    config = function()
-      local ts = require("nvim-treesitter")
-
-      vim.api.nvim_create_autocmd("FileType", {
-        callback = function(args)
-          local lang = vim.treesitter.language.get_lang(args.match)
-          if not lang then
-            return
-          end
-          if not vim.treesitter.language.add(lang) then
-            if vim.list_contains(ts.get_available(), lang) then
-              ts.install(lang)
-            end
-            return
-          end
-
-          vim.treesitter.start(args.buf, lang)
-          vim.wo[0][0].foldmethod = "expr"
-          vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-          vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-        end,
-      })
-    end,
-  },
-  { "https://github.com/mason-org/mason.nvim", opts = {} },
-  {
-    "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
-    opts = {
-      ensure_installed = {
-        "copilot-language-server",
-        "gopls",
-        "lua-language-server",
-        "prettier",
-        "shfmt",
-        "stylua",
-        "tsgo",
-      },
-    },
-  },
-  { "https://github.com/folke/lazydev.nvim", opts = {} },
-  {
-    "https://github.com/folke/snacks.nvim",
-    opts = {
-      bigfile = { enabled = true },
-      bufdelete = { enabled = true },
-      explorer = { enabled = true },
-      lazygit = {
-        configure = false,
-        win = { width = 0.95, height = 0.95 },
-      },
-      picker = {
-        enabled = true,
-        sources = {
-          explorer = {
-            hidden = true,
-            ignored = true,
-            exclude = { ".git", "node_modules" },
-          },
-        },
-      },
-      statuscolumn = { enabled = true },
-    },
-  },
-  {
-    "https://github.com/catppuccin/nvim",
-    config = function()
-      require("catppuccin").setup({
-        transparent_background = true,
-        float = { transparent = true, solid = false },
-        dim_inactive = {
-          enabled = true,
-          shade = "dark",
-          percentage = 0.15,
-        },
-        custom_highlights = function(C)
-          return {
-            BlinkPairsOrange = { fg = C.peach },
-            BlinkPairsPurple = { fg = C.mauve },
-            BlinkPairsBlue = { fg = C.blue },
-            BlinkPairsUnmatched = { fg = C.red },
-          }
-        end,
-      })
-      vim.cmd.colorscheme("catppuccin-frappe")
-    end,
-  },
-  { "https://github.com/folke/which-key.nvim", opts = {} },
-  -- "https://github.com/b0o/SchemaStore.nvim",
-  {
-    "https://github.com/saghen/blink.cmp",
-    version = vim.version.range("1"),
-    opts = {
-      keymap = {
-        preset = "default",
-        ["<M-.>"] = { "show", "show_documentation", "hide_documentation" },
-      },
-      appearance = { nerd_font_variant = "mono" },
-      completion = {
-        documentation = { auto_show = true },
-        menu = { auto_show = false },
-      },
-      sources = { default = { "lsp", "path", "snippets", "buffer" } },
-      signature = { enabled = true },
-      fuzzy = {
-        implementation = "prefer_rust",
-        prebuilt_binaries = { force_version = "v1.*" },
-      },
-    },
-  },
+vim.pack.add({
   "https://github.com/saghen/blink.download",
-  {
-    "https://github.com/saghen/blink.pairs",
-    version = "*",
-    opts = {},
-  },
-  {
-    "https://github.com/echasnovski/mini.icons",
-    config = function()
-      require("mini.icons").setup()
-      MiniIcons.mock_nvim_web_devicons()
-    end,
-  },
-  {
-    "https://github.com/lewis6991/gitsigns.nvim",
-    opts = {
-      signs = {
-        add = { text = "▎" },
-        change = { text = "▎" },
-        delete = { text = "_" },
-        topdelete = { text = "‾" },
-        changedelete = { text = "▎" },
-        untracked = { text = "▎" },
-      },
-      signs_staged = {
-        add = { text = "▎" },
-        change = { text = "▎" },
-        delete = { text = "_" },
-        topdelete = { text = "‾" },
-        changedelete = { text = "▎" },
-      },
-    },
-  },
   "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
-  {
-    "https://github.com/stevearc/conform.nvim",
-    config = function()
-      require("formatter").setup()
-    end,
-  },
   "https://github.com/sindrip/fixpoint.nvim",
   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
+  "https://github.com/stevearc/conform.nvim",
+  "https://github.com/nvim-lualine/lualine.nvim",
+  "https://github.com/folke/which-key.nvim",
+  "https://github.com/mason-org/mason.nvim",
+  "https://github.com/folke/lazydev.nvim",
   {
-    "https://github.com/stevearc/quicker.nvim",
-    opts = {
-      keys = {
-        {
-          ">",
-          function()
-            require("quicker").expand({ add_to_existing = true })
-          end,
-          desc = "Expand quickfix context",
-        },
-        {
-          "<",
-          function()
-            require("quicker").collapse()
-          end,
-          desc = "Collapse quickfix context",
-        },
+    src = "https://github.com/nvim-treesitter/nvim-treesitter",
+    data = {
+      build = function()
+        vim.cmd("TSUpdate")
+      end,
+    },
+  },
+  { src = "https://github.com/saghen/blink.pairs", version = "v0.5.0" },
+}, { confirm = false })
+
+require("formatter").setup()
+require("statusline").setup()
+require("which-key").setup({})
+require("mason").setup({})
+require("lazydev").setup({})
+require("blink.pairs").setup({})
+
+vim.pack.add({
+  "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+  "https://github.com/folke/snacks.nvim",
+  "https://github.com/catppuccin/nvim",
+  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1") },
+  "https://github.com/echasnovski/mini.icons",
+  "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/stevearc/quicker.nvim",
+  "https://github.com/rachartier/tiny-cmdline.nvim",
+}, { confirm = false })
+
+local ts = require("nvim-treesitter")
+
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function(args)
+    local lang = vim.treesitter.language.get_lang(args.match)
+    if not lang then
+      return
+    end
+    if not vim.treesitter.language.add(lang) then
+      if vim.list_contains(ts.get_available(), lang) then
+        ts.install(lang)
+      end
+      return
+    end
+
+    vim.treesitter.start(args.buf, lang)
+    vim.wo[0][0].foldmethod = "expr"
+    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
+
+require("mason-tool-installer").setup({
+  ensure_installed = {
+    "copilot-language-server",
+    "gopls",
+    "lua-language-server",
+    "prettier",
+    "shfmt",
+    "stylua",
+    "tsgo",
+  },
+})
+
+require("snacks").setup({
+  bigfile = { enabled = true },
+  bufdelete = { enabled = true },
+  explorer = { enabled = true },
+  lazygit = {
+    configure = false,
+    win = { width = 0.95, height = 0.95 },
+  },
+  picker = {
+    enabled = true,
+    sources = {
+      explorer = {
+        hidden = true,
+        ignored = true,
+        exclude = { ".git", "node_modules" },
       },
     },
   },
-  {
-    "https://github.com/nvim-lualine/lualine.nvim",
-    config = function()
-      require("statusline").setup()
-    end,
+  statuscolumn = { enabled = true },
+})
+
+require("catppuccin").setup({
+  transparent_background = true,
+  float = { transparent = true, solid = false },
+  dim_inactive = {
+    enabled = true,
+    shade = "dark",
+    percentage = 0.15,
   },
-  {
-    "https://github.com/rachartier/tiny-cmdline.nvim",
-    config = function()
-      vim.o.cmdheight = 0
-      require("tiny-cmdline").setup({
-        on_reposition = require("tiny-cmdline").adapters.blink,
-      })
-    end,
+  custom_highlights = function(C)
+    return {
+      BlinkPairsOrange = { fg = C.peach },
+      BlinkPairsPurple = { fg = C.mauve },
+      BlinkPairsBlue = { fg = C.blue },
+      BlinkPairsUnmatched = { fg = C.red },
+    }
+  end,
+})
+vim.cmd.colorscheme("catppuccin-frappe")
+
+require("blink.cmp").setup({
+  keymap = {
+    preset = "default",
+    ["<M-.>"] = { "show", "show_documentation", "hide_documentation" },
   },
+  appearance = { nerd_font_variant = "mono" },
+  completion = {
+    documentation = { auto_show = true },
+    menu = { auto_show = false },
+  },
+  sources = { default = { "lsp", "path", "snippets", "buffer" } },
+  signature = { enabled = true },
+  fuzzy = {
+    implementation = "prefer_rust",
+    prebuilt_binaries = { force_version = "v1.*" },
+  },
+})
+
+local MiniIcons = require("mini.icons")
+MiniIcons.setup()
+MiniIcons.mock_nvim_web_devicons()
+
+require("gitsigns").setup({
+  signs = {
+    add = { text = "▎" },
+    change = { text = "▎" },
+    delete = { text = "_" },
+    topdelete = { text = "‾" },
+    changedelete = { text = "▎" },
+    untracked = { text = "▎" },
+  },
+  signs_staged = {
+    add = { text = "▎" },
+    change = { text = "▎" },
+    delete = { text = "_" },
+    topdelete = { text = "‾" },
+    changedelete = { text = "▎" },
+  },
+})
+
+require("quicker").setup({
+  keys = {
+    {
+      ">",
+      function()
+        require("quicker").expand({ add_to_existing = true })
+      end,
+      desc = "Expand quickfix context",
+    },
+    {
+      "<",
+      function()
+        require("quicker").collapse()
+      end,
+      desc = "Collapse quickfix context",
+    },
+  },
+})
+
+vim.o.cmdheight = 0
+require("tiny-cmdline").setup({
+  on_reposition = require("tiny-cmdline").adapters.blink,
 })
 
 vim.lsp.enable("copilot")
@@ -343,24 +327,24 @@ vim.keymap.set("n", "<leader>l", function()
   require("quicker").toggle({ loclist = true })
 end, { desc = "Toggle loclist" })
 vim.keymap.set("n", "<leader>bd", function()
-  Snacks.bufdelete()
+  require("snacks").bufdelete()
 end, { desc = "Delete buffer (keep window)" })
 
 vim.keymap.set("n", "<leader>ff", function()
-  Snacks.picker.files()
+  require("snacks").picker.files()
 end, { desc = "Find files" })
 vim.keymap.set("n", "<leader>fg", function()
-  Snacks.picker.grep()
+  require("snacks").picker.grep()
 end, { desc = "Live grep" })
 vim.keymap.set("n", "<leader>fh", function()
-  Snacks.picker.help()
+  require("snacks").picker.help()
 end, { desc = "Help tags" })
 vim.keymap.set("n", "<leader>fb", function()
-  Snacks.picker.buffers()
+  require("snacks").picker.buffers()
 end, { desc = "Help tags" })
 
 vim.keymap.set("n", "<leader>e", function()
-  Snacks.explorer()
+  require("snacks").explorer()
 end, { desc = "Toggle snacks explorer" })
 
 vim.keymap.set({ "n", "x" }, "j", function()
@@ -381,11 +365,11 @@ vim.keymap.set("n", "<leader>th", function()
 end, { desc = "Toggle inlay hints" })
 
 vim.keymap.set("n", "<leader>gg", function()
-  Snacks.lazygit()
+  require("snacks").lazygit()
 end, { desc = "Lazygit" })
 
 vim.keymap.set({ "n", "t" }, "<C-\\>", function()
-  Snacks.terminal.toggle(nil, { win = { position = "bottom", height = 0.3 } })
+  require("snacks").terminal.toggle(nil, { win = { position = "bottom", height = 0.3 } })
 end, { desc = "Toggle terminal" })
 
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
