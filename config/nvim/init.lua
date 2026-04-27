@@ -3,9 +3,6 @@ vim.g.maplocalleader = " "
 
 require("local-plugins")
 
-vim.cmd.packadd("nvim.undotree")
-vim.cmd.packadd("nvim.difftool")
-
 -- UI
 vim.o.number = true -- Show line numbers
 vim.o.relativenumber = true -- Relative line numbers for easy jumping
@@ -46,19 +43,6 @@ vim.o.foldnestmax = 3
 vim.o.updatetime = 250 -- Faster CursorHold events (default 4000ms)
 vim.o.timeoutlen = 300 -- Time to wait for mapped sequence (default 1000ms)
 
-vim.api.nvim_create_autocmd("VimResized", {
-  group = vim.api.nvim_create_augroup("EqualizeSplitsOnResize", { clear = true }),
-  callback = function()
-    vim.cmd.wincmd("=")
-  end,
-})
-
-vim.api.nvim_create_autocmd("TextYankPost", {
-  callback = function()
-    vim.hl.on_yank()
-  end,
-})
-
 vim.api.nvim_create_autocmd("FileType", {
   callback = function()
     vim.opt_local.formatoptions:remove("o")
@@ -74,15 +58,13 @@ vim.g.loaded_ruby_provider = 0
 
 -- Plugins
 
-vim.api.nvim_create_autocmd("UIEnter", {
-  once = true,
-  callback = function()
-    require("vim._core.ui2").enable({})
-  end,
-})
-
 require("pack-hooks")
 
+-- Built-in plugins that are disabled by default
+vim.cmd.packadd("nvim.undotree")
+vim.cmd.packadd("nvim.difftool")
+
+-- External plugins
 vim.pack.add({
   "https://github.com/saghen/blink.download",
   "https://github.com/sindrets/diffview.nvim",
@@ -103,16 +85,6 @@ vim.pack.add({
     },
   },
   { src = "https://github.com/saghen/blink.pairs", version = "v0.5.0" },
-}, { confirm = false })
-
-require("formatter").setup()
-require("statusline").setup()
-require("which-key").setup({})
-require("mason").setup({})
-require("lazydev").setup({})
-require("blink.pairs").setup({})
-
-vim.pack.add({
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
   "https://github.com/folke/snacks.nvim",
   "https://github.com/catppuccin/nvim",
@@ -122,6 +94,13 @@ vim.pack.add({
   "https://github.com/stevearc/quicker.nvim",
   "https://github.com/rachartier/tiny-cmdline.nvim",
 }, { confirm = false })
+
+require("formatter").setup()
+require("statusline").setup()
+require("which-key").setup({})
+require("mason").setup({})
+require("lazydev").setup({})
+require("blink.pairs").setup({})
 
 local ts = require("nvim-treesitter")
 
@@ -256,7 +235,7 @@ require("quicker").setup({
   },
 })
 
-vim.o.cmdheight = 0
+---@diagnostic disable-next-line: missing-fields
 require("tiny-cmdline").setup({
   on_reposition = require("tiny-cmdline").adapters.blink,
 })
@@ -276,7 +255,6 @@ vim.lsp.enable("tsgo")
 -- • onTypeFormatting     – auto-format as you type
 -- • selectionRange       – incremental selection (an/in in visual mode)
 -- • inlineCompletion     – ghost-text style completions
-
 -- 0.12 features that can be enabled manually:
 vim.lsp.inline_completion.enable()
 
@@ -316,16 +294,19 @@ end, { desc = "Restart nvim" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
 vim.keymap.set("n", "<leader>u", "<cmd>Undotree<cr>", { desc = "Undotree" })
+
 vim.keymap.set("n", "grq", function()
   vim.diagnostic.setqflist()
-  -- require("quicker").refresh()
 end, { desc = "Diagnostics to quickfix" })
+
 vim.keymap.set("n", "<leader>q", function()
   require("quicker").toggle()
 end, { desc = "Toggle quickfix" })
+
 vim.keymap.set("n", "<leader>l", function()
   require("quicker").toggle({ loclist = true })
 end, { desc = "Toggle loclist" })
+
 vim.keymap.set("n", "<leader>bd", function()
   require("snacks").bufdelete()
 end, { desc = "Delete buffer (keep window)" })
@@ -341,7 +322,7 @@ vim.keymap.set("n", "<leader>fh", function()
 end, { desc = "Help tags" })
 vim.keymap.set("n", "<leader>fb", function()
   require("snacks").picker.buffers()
-end, { desc = "Help tags" })
+end, { desc = "Buffers" })
 
 vim.keymap.set("n", "<leader>e", function()
   require("snacks").explorer()

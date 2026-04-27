@@ -1,6 +1,6 @@
 -- Only show the cursorline in the focused window.
 
-local group = vim.api.nvim_create_augroup("active-cursorline", { clear = true })
+local group = vim.api.nvim_create_augroup("ui-tweaks.cursorline", { clear = true })
 
 vim.api.nvim_create_autocmd("WinEnter", {
   group = group,
