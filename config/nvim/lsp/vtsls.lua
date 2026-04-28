@@ -9,8 +9,19 @@ local function loaded_bufnr_from_uri(uri)
   end
 end
 
+local dependency_path_fragments = {
+  "/node_modules/", -- npm, pnpm (under node_modules/.pnpm/), bun (default + isolated)
+  "/.yarn/", -- yarn berry / PnP (cache/, unplugged/, __virtual__/)
+}
+
 local function is_dependency_uri(uri)
-  return vim.fs.normalize(vim.uri_to_fname(uri)):find("/node_modules/", 1, true) ~= nil
+  local path = vim.fs.normalize(vim.uri_to_fname(uri))
+  for _, fragment in ipairs(dependency_path_fragments) do
+    if path:find(fragment, 1, true) then
+      return true
+    end
+  end
+  return false
 end
 
 return {
@@ -23,6 +34,8 @@ return {
 
       local bufnr = loaded_bufnr_from_uri(params.uri)
       if bufnr then
+        -- Covers :bunload -> vtsls publish -> reload, where on_attach does not re-run.
+        vim.diagnostic.reset(vim.lsp.diagnostic.get_namespace(ctx.client_id), bufnr)
         return
       end
 

@@ -241,15 +241,6 @@ require("tiny-cmdline").setup({
   on_reposition = require("tiny-cmdline").adapters.blink,
 })
 
-vim.lsp.config("tsgo", {
-  capabilities = {
-    general = {
-      -- Match vtsls/Copilot so attached TS clients agree on LSP offsets.
-      positionEncodings = { "utf-16" },
-    },
-  },
-})
-
 vim.lsp.enable("copilot")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
