@@ -50,6 +50,7 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 require("diagnostics")
+require("completion")
 
 vim.g.loaded_node_provider = 0
 vim.g.loaded_perl_provider = 0
@@ -241,7 +242,7 @@ require("tiny-cmdline").setup({
   on_reposition = require("tiny-cmdline").adapters.blink,
 })
 
-vim.lsp.enable("copilot")
+require("copilot")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
@@ -250,25 +251,6 @@ vim.lsp.enable("vtsls")
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)
-
--- 0.12 features that activate automatically when the LSP server supports them:
--- • documentColor        – inline color swatches (CSS, etc.)
--- • linkedEditingRange   – edit matching HTML tags simultaneously
--- • onTypeFormatting     – auto-format as you type
--- • selectionRange       – incremental selection (an/in in visual mode)
--- • inlineCompletion     – ghost-text style completions
--- 0.12 features that can be enabled manually:
-vim.lsp.inline_completion.enable()
-
-vim.keymap.set("i", "<Tab>", function()
-  if not vim.lsp.inline_completion.get() then
-    return "<Tab>"
-  end
-end, { expr = true, desc = "Accept inline completion" })
-
-vim.keymap.set("i", "<C-e>", function()
-  vim.lsp.inline_completion.select()
-end, { desc = "Next inline completion" })
 
 -- vim.o.diffopt = vim.o.diffopt .. ",inline:word"  -- word-level inline diff highlighting
 
@@ -372,9 +354,3 @@ end, { desc = "Move to right split" })
 vim.keymap.set("n", "<leader>tf", function()
   require("formatter").toggle()
 end, { desc = "Toggle auto format" })
-
-vim.keymap.set("n", "<leader>tc", function()
-  local enabled = not vim.lsp.inline_completion.is_enabled()
-  vim.lsp.inline_completion.enable(enabled)
-  vim.notify("Copilot inline completion: " .. (enabled and "on" or "off"))
-end, { desc = "Toggle Copilot inline completion" })
