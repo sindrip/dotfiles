@@ -241,32 +241,20 @@ require("tiny-cmdline").setup({
   on_reposition = require("tiny-cmdline").adapters.blink,
 })
 
-vim.lsp.config("vtsls", {
-  settings = {
-    typescript = {
-      tsserver = {
-        experimental = { enableProjectDiagnostics = true },
-      },
-    },
-    javascript = {
-      tsserver = {
-        experimental = { enableProjectDiagnostics = true },
-      },
+vim.lsp.config("tsgo", {
+  capabilities = {
+    general = {
+      -- Match vtsls/Copilot so attached TS clients agree on LSP offsets.
+      positionEncodings = { "utf-16" },
     },
   },
-  -- -- Run vtsls only for project-wide diagnostics; tsgo handles everything else.
-  -- -- Stripping capabilities stops nvim from routing requests here, but pushed
-  -- -- publishDiagnostics still arrive (no capability gate on inbound pushes).
-  -- on_attach = function(client)
-  --   client.server_capabilities = {}
-  -- end,
 })
 
 vim.lsp.enable("copilot")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
--- vim.lsp.enable("tsgo")
+vim.lsp.enable("tsgo")
 vim.lsp.enable("vtsls")
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
