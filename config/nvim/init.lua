@@ -242,7 +242,10 @@ require("tiny-cmdline").setup({
   on_reposition = require("tiny-cmdline").adapters.blink,
 })
 
-require("copilot")
+vim.lsp.inline_completion.enable(true)
+
+vim.lsp.enable("inline_assist")
+
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
