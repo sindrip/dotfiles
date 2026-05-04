@@ -6,16 +6,17 @@ function M.setup()
 
   local function copilot_status()
     for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-      if client.name == "copilot" then
+      if client.name == "inline_assist" then
         return icon_copilot
       end
     end
+
     return icon_copilot_err
   end
 
   local function copilot_color()
     for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-      if client.name == "copilot" then
+      if client.name == "inline_assist" then
         return nil
       end
     end
@@ -23,13 +24,13 @@ function M.setup()
   end
 
   local function copilot_click()
-    local clients = vim.lsp.get_clients({ name = "copilot" })
+    local clients = vim.lsp.get_clients({ name = "inline_assist" })
     if #clients > 0 then
       for _, client in ipairs(clients) do
         client:stop()
       end
     else
-      vim.lsp.enable("copilot")
+      vim.lsp.enable("inline_assist")
     end
     vim.cmd.redrawstatus()
   end
@@ -53,7 +54,7 @@ function M.setup()
       },
       lualine_x = {
         { copilot_status, color = copilot_color, on_click = copilot_click, padding = { left = 1, right = 2 } },
-        { "lsp_status", ignore_lsp = { "copilot" } },
+        { "lsp_status", ignore_lsp = { "inline_assist" } },
       },
       lualine_y = { "progress", "location" },
       lualine_z = { "branch" },

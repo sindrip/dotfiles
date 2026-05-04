@@ -78,11 +78,16 @@ mise trust "$HOME/.config/mise/config.toml"
 mise upgrade
 
 header "Touch ID sudo"
-if [ ! -f /etc/pam.d/sudo_local ]; then
-  printf 'auth       optional       /opt/homebrew/lib/pam/pam_reattach.so\n' | sudo tee /etc/pam.d/sudo_local >/dev/null
-  sudo sed 's/^#auth/auth/' /etc/pam.d/sudo_local.template | sudo tee -a /etc/pam.d/sudo_local >/dev/null
-  info "created /etc/pam.d/sudo_local with Touch ID + pam-reattach"
-else
-  info "/etc/pam.d/sudo_local already exists, skipping"
+sudo_local="/etc/pam.d/sudo_local"
+if [ ! -f "$sudo_local" ]; then
+  : | sudo tee "$sudo_local" >/dev/null
+fi
+if ! grep -q pam_reattach "$sudo_local"; then
+  printf 'auth       optional       /opt/homebrew/lib/pam/pam_reattach.so\n' | sudo tee -a "$sudo_local" >/dev/null
+  info "added pam_reattach to $sudo_local"
+fi
+if ! grep -q pam_tid "$sudo_local"; then
+  printf 'auth       sufficient     pam_tid.so\n' | sudo tee -a "$sudo_local" >/dev/null
+  info "added pam_tid to $sudo_local"
 fi
 
