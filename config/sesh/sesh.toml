@@ -6,4 +6,4 @@ path = "~/.config"
 startup_command = "nvim"
 
 [[wildcard]]
-pattern = "~/code/**"
+pattern = "~/projects/**"
