@@ -68,27 +68,46 @@ end
 
 local ns = vim.api.nvim_create_namespace("inline-assist.pending")
 local pending_timer = nil
+local pending_bufnr = nil
+
+local function clear_namespace(bufnr)
+  if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+    vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+  end
+end
 
 function M.is_pending()
   return pending_timer ~= nil
 end
 
 function M.show_pending(bufnr)
-  M.clear_pending(bufnr)
+  M.clear_pending()
+  pending_bufnr = bufnr
 
   local frames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" }
   local idx = 0
 
   local function render()
-    if not vim.api.nvim_buf_is_valid(bufnr) then
+    if pending_bufnr ~= bufnr then
+      return
+    end
+
+    if not vim.api.nvim_buf_is_valid(bufnr) or not vim.api.nvim_buf_is_loaded(bufnr) then
       M.clear_pending(bufnr)
       return
     end
 
-    vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+    clear_namespace(bufnr)
+
+    local wins = vim.fn.win_findbuf(bufnr)
+    if #wins == 0 then
+      return
+    end
+
     idx = idx % #frames + 1
-    local cursor = vim.api.nvim_win_get_cursor(0)
-    vim.api.nvim_buf_set_extmark(bufnr, ns, cursor[1] - 1, 0, {
+    local cursor = vim.api.nvim_win_get_cursor(wins[1])
+    local line = math.min(cursor[1], vim.api.nvim_buf_line_count(bufnr)) - 1
+    vim.api.nvim_buf_set_extmark(bufnr, ns, line, 0, {
       virt_text = { { " " .. frames[idx], "Comment" } },
       virt_text_pos = "eol",
       hl_mode = "combine",
@@ -102,12 +121,20 @@ function M.show_pending(bufnr)
 end
 
 function M.clear_pending(bufnr)
+  local clear_bufnr = pending_bufnr or bufnr
+
   if pending_timer then
     pending_timer:stop()
     pending_timer:close()
     pending_timer = nil
   end
-  vim.api.nvim_buf_clear_namespace(bufnr, ns, 0, -1)
+
+  clear_namespace(clear_bufnr)
+  if bufnr ~= clear_bufnr then
+    clear_namespace(bufnr)
+  end
+
+  pending_bufnr = nil
 end
 
 return M

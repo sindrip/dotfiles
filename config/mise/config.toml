@@ -6,5 +6,6 @@ node = "latest"
 "npm:corepack" = "latest"
 "npm:@mariozechner/pi-coding-agent" = "latest"
 go = "latest"
+"npm:typescript-language-server" = "latest"
 [settings]
 idiomatic_version_file_enable_tools = ["node", "rust"]

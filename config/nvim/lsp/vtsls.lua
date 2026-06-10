@@ -3,8 +3,8 @@
 -- diagnostics for unopened workspace files.
 
 local function loaded_bufnr_from_uri(uri)
-  local bufnr = vim.uri_to_bufnr(uri)
-  if vim.api.nvim_buf_is_loaded(bufnr) then
+  local bufnr = vim.fn.bufnr(vim.uri_to_fname(uri))
+  if bufnr ~= -1 and vim.api.nvim_buf_is_loaded(bufnr) then
     return bufnr
   end
 end
