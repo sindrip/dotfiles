@@ -10,14 +10,18 @@ Personal dotfiles for macOS. Manages Homebrew packages, config files (symlinked 
 
 ```sh
 ./install.sh
+mise bootstrap
 ```
 
-This runs `brew bundle`, symlinks everything in `config/` to `~/.config/`, and symlinks everything in `bin/` to `~/.local/bin/`.
+`install.sh` runs `brew bundle`, symlinks everything in `config/` to `~/.config/`, and symlinks everything in `bin/` to `~/.local/bin/`.
+
+`mise bootstrap` applies macOS defaults declared in `config/mise/conf.d/bootstrap.toml`.
 
 ## Structure
 
 - `Brewfile` — Homebrew packages and casks
 - `install.sh` — idempotent installer (symlinks, warns on conflicts instead of overwriting)
+- `config/mise/conf.d/bootstrap.toml` — macOS defaults via `mise bootstrap` (keyboard, dock, trackpad, hotkeys)
 - `config/` — XDG config files, mirroring `~/.config/` layout
 - `bin/` — custom scripts exposed as commands (e.g. `git-bare` becomes `git bare`)
 

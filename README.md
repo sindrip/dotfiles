@@ -4,15 +4,14 @@ Personal dotfiles for macOS.
 
 ```sh
 ./install.sh
+mise bootstrap
 ```
 
-Runs `brew bundle`, symlinks `config/` to `~/.config/`, and `bin/` to `~/.local/bin/`.
+`install.sh` runs `brew bundle`, symlinks `config/` to `~/.config/`, and `bin/` to `~/.local/bin/`.
+
+`mise bootstrap` applies macOS defaults (keyboard, dock, trackpad, autocorrect, hotkeys).
 
 ## Post-install
-
-### macOS keyboard
-
-Disable Ctrl+Space for input source switching in System Settings > Keyboard > Keyboard Shortcuts > Input Sources.
 
 ### npm
 
