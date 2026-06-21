@@ -48,6 +48,7 @@ header "Directories"
 # sources zshenv in a clean shell (env -i) and diffs the environment
 # before and after to find only the variables zshenv adds
 ensure_dirs() {
+  # shellcheck disable=SC2016
   env -i HOME="$HOME" ZSHENV="$DOTFILES/zshenv" sh -c '
     before=$(env | grep -v "^_=")
     . "$ZSHENV"
