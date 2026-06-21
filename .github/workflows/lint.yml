@@ -16,8 +16,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          curl -fsSL https://github.com/tamasfe/taplo/releases/latest/download/taplo-full-linux-x86_64.gz \
-            | gunzip > /usr/local/bin/taplo
-          chmod +x /usr/local/bin/taplo
+      - uses: uncenter/setup-taplo@v1
       - run: taplo check config/mise/**/*.toml
