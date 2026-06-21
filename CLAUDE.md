@@ -21,7 +21,7 @@ mise bootstrap
 
 - `Brewfile` — Homebrew packages and casks
 - `install.sh` — idempotent installer (symlinks, warns on conflicts instead of overwriting)
-- `config/mise/conf.d/bootstrap.toml` — macOS defaults via `mise bootstrap` (keyboard, dock, trackpad, hotkeys)
+- `config/mise/conf.d/macos.toml` — macOS defaults via `mise bootstrap` (keyboard, dock, trackpad, hotkeys)
 - `config/` — XDG config files, mirroring `~/.config/` layout
 - `bin/` — custom scripts exposed as commands (e.g. `git-bare` becomes `git bare`)
 

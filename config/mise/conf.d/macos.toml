@@ -33,24 +33,21 @@ TrackpadThreeFingerDrag = 1
 [bootstrap.macos.defaults."com.apple.HIToolbox"]
 AppleFnUsageType = 0
 
+# Disable keyboard shortcuts that conflict with tools (Raycast, etc.)
+[bootstrap.macos.defaults."com.apple.symbolichotkeys".AppleSymbolicHotKeys]
+# Ctrl+Space — previous input source
+"60" = { enabled = false, value = { parameters = [32, 49, 262144], type = "standard" } }
+# Ctrl+Option+Space — next input source
+"61" = { enabled = false, value = { parameters = [32, 49, 786432], type = "standard" } }
+# Cmd+Space — Spotlight (using Raycast)
+"64" = { enabled = false, value = { parameters = [32, 49, 1048576], type = "standard" } }
+# Cmd+Option+Space — Finder search
+"65" = { enabled = false, value = { parameters = [32, 49, 1572864], type = "standard" } }
+
 [bootstrap.hooks.pre-defaults]
 run = """
+[ "$(uname)" = "Darwin" ] || exit 0
+
 # Ghostty: unbind "Hide Ghostty" (Cmd+H)
 defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add 'Hide Ghostty' '\\0'
-
-# Disable keyboard shortcuts (dict-add values, can't use [bootstrap.macos.defaults])
-hotkeys="com.apple.symbolichotkeys AppleSymbolicHotKeys"
-
-# Ctrl+Space — previous input source
-defaults write $hotkeys -dict-add 60 '{enabled = 0; value = {parameters = (32, 49, 262144); type = standard;};}'
-
-# Ctrl+Option+Space — next input source
-defaults write $hotkeys -dict-add 61 '{enabled = 0; value = {parameters = (32, 49, 786432); type = standard;};}'
-
-# Cmd+Space — Spotlight (using Raycast)
-defaults write $hotkeys -dict-add 64 '{enabled = 0; value = {parameters = (32, 49, 1048576); type = standard;};}'
-
-# Cmd+Option+Space — Finder search
-defaults write $hotkeys -dict-add 65 '{enabled = 0; value = {parameters = (32, 49, 1572864); type = standard;};}'
-
 """
