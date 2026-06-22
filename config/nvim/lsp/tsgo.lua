@@ -4,6 +4,11 @@ return {
       -- Match vtsls/Copilot so attached TS clients agree on LSP offsets.
       positionEncodings = { "utf-16" },
     },
+    workspace = {
+      -- tsgo currently registers file watchers that can trip libuv EMFILE errors
+      -- on macOS. Open-buffer edits still use the normal didOpen/didChange flow.
+      didChangeWatchedFiles = { dynamicRegistration = false },
+    },
   },
   on_attach = function(client, bufnr)
     -- When opening a file from vtsls workspace diagnostics, pull once immediately.
