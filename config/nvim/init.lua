@@ -258,10 +258,6 @@ vim.lsp.enable("vtsls")
 
 -- vim.o.diffopt = vim.o.diffopt .. ",inline:word"  -- word-level inline diff highlighting
 
-vim.api.nvim_create_user_command("LspLog", function()
-  vim.cmd.edit(vim.lsp.log.get_filename())
-end, { desc = "Open LSP log file" })
-
 vim.api.nvim_create_user_command("LspInfo", function()
   vim.cmd.checkhealth("vim.lsp")
 end, { desc = "Show LSP info" })
