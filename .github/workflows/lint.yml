@@ -10,7 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: file bin/* | grep 'shell script\|sh script' | cut -d: -f1 | xargs shellcheck install.sh
+      - run: |
+          file bin/* | grep -e 'shell script' -e 'sh script' | cut -d: -f1 | xargs shellcheck install.sh
 
   toml:
     runs-on: ubuntu-latest
