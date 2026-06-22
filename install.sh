@@ -64,15 +64,40 @@ ensure_dirs() {
 }
 ensure_dirs
 
+header "Applications"
+mkdir -p "$HOME/Applications"
+for app in "$DOTFILES/apps/"*.app; do
+  [ -e "$app" ] || continue
+  dest="$HOME/Applications/$(basename "$app")"
+  if [ -e "$dest" ] && [ ! -L "$dest" ]; then
+    warn "$dest already exists (not a symlink), skipping"
+  else
+    ln -sfn "$app" "$dest"
+    info "$dest -> $app"
+  fi
+done
+
+header "Doom Emacs"
+DOOM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/emacs-doom"
+if [ ! -d "$DOOM_DIR" ]; then
+  git clone --depth 1 https://github.com/doomemacs/doomemacs "$DOOM_DIR"
+  info "cloned Doom Emacs to $DOOM_DIR"
+  info "run $DOOM_DIR/bin/doom install when ready"
+else
+  info "$DOOM_DIR already exists, skipping clone"
+fi
+
 header "Packages"
 brew bundle --verbose --file="$DOTFILES/Brewfile"
 
 header "GitHub extensions"
 gh extension install dlvhdr/gh-dash 2>/dev/null || gh extension upgrade dlvhdr/gh-dash
 
+header "macOS defaults"
+"$DOTFILES/bin/macos-defaults"
+
 header "Mise"
 mise trust "$HOME/.config/mise/config.toml"
-mise bootstrap --yes
 mise upgrade
 
 header "Touch ID sudo"
