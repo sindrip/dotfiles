@@ -18,10 +18,6 @@ link() {
   info "$dest -> $src"
 }
 
-header "macOS defaults"
-# NOTE: Disable Ctrl+Space for input source switching in System Settings > Keyboard > Keyboard Shortcuts > Input Sources
-defaults write com.mitchellh.ghostty NSUserKeyEquivalents -dict-add "Hide Ghostty" '\0'
-
 header "Dotfiles"
 (cd "$DOTFILES/config"
 find . -type f | while read -r f; do
@@ -74,8 +70,9 @@ brew bundle --verbose --file="$DOTFILES/Brewfile"
 header "GitHub extensions"
 gh extension install dlvhdr/gh-dash 2>/dev/null || gh extension upgrade dlvhdr/gh-dash
 
-header "Mise tools"
+header "Mise"
 mise trust "$HOME/.config/mise/config.toml"
+mise bootstrap --yes
 mise upgrade
 
 header "Touch ID sudo"
