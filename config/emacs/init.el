@@ -1,5 +1,7 @@
 ;;; -*- lexical-binding: t; -*-
 
+(add-to-list 'initial-frame-alist '(fullscreen . fullheight))
+
 ;; No foo~ backup files or .#foo lockfiles
 (setq make-backup-files nil)
 (setq create-lockfiles nil)
@@ -34,6 +36,7 @@
 ;; Show available keybindings after pressing a prefix key
 (setq which-key-idle-delay 0.5)
 (which-key-mode 1)
+(fido-vertical-mode 1)
 
 ;; macOS: Cmd as Meta, right Option free for special characters
 (setq mac-command-modifier 'meta)
@@ -51,58 +54,16 @@
 
 (unless (package-installed-p 'evil)
   (package-install 'evil))
+(setq evil-want-C-u-scroll t)
+(setq evil-undo-system 'undo-redo)
+(evil-mode 1)
 
 ;; Remap all modes to tree-sitter variants, auto-download grammars on first use
 (setq treesit-enabled-modes t)
 (setq treesit-auto-install-grammar 'always)
 
-;; evil-want-* must be set before loading evil
-;; integration: basic bindings in core Emacs modes (help, minibuffer)
-;; keybinding nil: skip non-core modes, evil-collection handles those instead
-(setq evil-want-integration t)
-(setq evil-want-keybinding nil)
-(require 'evil)
-(evil-mode 1)
-
-;; Vim bindings for 100+ non-core modes (dired, magit, help, etc.)
-(unless (package-installed-p 'evil-collection)
-  (package-install 'evil-collection))
-(evil-collection-init)
-
-;; C-{h,j,k,l} for window movement (F1 replaces C-h as help prefix)
-(evil-define-key '(normal visual) 'global (kbd "C-h") #'evil-window-left)
-(evil-define-key '(normal visual) 'global (kbd "C-j") #'evil-window-down)
-(evil-define-key '(normal visual) 'global (kbd "C-k") #'evil-window-up)
-(evil-define-key '(normal visual) 'global (kbd "C-l") #'evil-window-right)
-
-;; SPC as leader key in normal/visual mode
-(evil-set-leader 'normal (kbd "SPC"))
-(evil-set-leader 'visual (kbd "SPC"))
-
-;; SPC f — file
-(evil-define-key 'normal 'global (kbd "<leader>ff") #'find-file)
-(evil-define-key 'normal 'global (kbd "<leader>fr") #'recentf-open)
-(evil-define-key 'normal 'global (kbd "<leader>fs") #'save-buffer)
-
-;; SPC b — buffer
-(evil-define-key 'normal 'global (kbd "<leader>bb") #'switch-to-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>bd") #'kill-current-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>bn") #'next-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>bp") #'previous-buffer)
-
-;; SPC h — help
-(evil-define-key 'normal 'global (kbd "<leader>hf") #'describe-function)
-(evil-define-key 'normal 'global (kbd "<leader>hv") #'describe-variable)
-(evil-define-key 'normal 'global (kbd "<leader>hk") #'describe-key)
-
-;; SPC p — project
-(evil-define-key 'normal 'global (kbd "<leader>pf") #'project-find-file)
-(evil-define-key 'normal 'global (kbd "<leader>pp") #'project-switch-project)
-(evil-define-key 'normal 'global (kbd "<leader>pg") #'project-find-regexp)
-
-;; SPC — misc
-(evil-define-key 'normal 'global (kbd "<leader>SPC") #'execute-extended-command)
-(evil-define-key 'normal 'global (kbd "<leader>.") #'find-file)
+(unless (package-installed-p 'magit)
+  (package-install 'magit))
 
 ;; LSP via eglot (built-in), auto-start for supported languages
 (add-hook 'rust-ts-mode-hook #'eglot-ensure)
@@ -113,3 +74,11 @@
   (package-install 'catppuccin-theme))
 (setq catppuccin-flavor 'frappe)
 (load-theme 'catppuccin t)
+
+(unless (package-installed-p 'nerd-icons)
+  (package-install 'nerd-icons))
+(unless (package-installed-p 'doom-modeline)
+  (package-install 'doom-modeline))
+(doom-modeline-mode 1)
+
+(set-fontset-font t 'symbol "Symbols Nerd Font Mono" nil 'prepend)
