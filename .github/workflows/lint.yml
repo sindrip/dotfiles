@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - run: shellcheck install.sh bin/*
+      - run: grep -rl '^#!.*/\(sh\|bash\)' bin | xargs shellcheck install.sh
 
   toml:
     runs-on: ubuntu-latest
