@@ -10,12 +10,11 @@ Personal dotfiles for macOS. Manages Homebrew packages, config files (symlinked 
 
 ```sh
 ./install.sh
-mise bootstrap
 ```
 
-`install.sh` runs `brew bundle`, symlinks everything in `config/` to `~/.config/`, and symlinks everything in `bin/` to `~/.local/bin/`.
+`install.sh` symlinks everything in `config/` to `~/.config/`, everything in `bin/` to `~/.local/bin/`, runs `brew bundle`, and calls `mise bootstrap`.
 
-`mise bootstrap` applies macOS defaults declared in `config/mise/conf.d/bootstrap.toml`.
+`mise bootstrap` applies macOS defaults declared in `config/mise/conf.d/macos.toml` (keyboard, dock, trackpad, hotkeys, Ghostty keybinding).
 
 ## Structure
 

@@ -4,12 +4,9 @@ Personal dotfiles for macOS.
 
 ```sh
 ./install.sh
-mise bootstrap
 ```
 
-`install.sh` runs `brew bundle`, symlinks `config/` to `~/.config/`, and `bin/` to `~/.local/bin/`.
-
-`mise bootstrap` applies macOS defaults (keyboard, dock, trackpad, autocorrect, hotkeys).
+`install.sh` symlinks configs to `~/.config/`, scripts to `~/.local/bin/`, runs `brew bundle`, and calls `mise bootstrap` which applies macOS defaults (keyboard, dock, trackpad, autocorrect, hotkeys, Ghostty keybinding).
 
 ## Post-install
 
