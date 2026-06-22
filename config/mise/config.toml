@@ -1,11 +1,11 @@
-[tools]
-rust = "latest"
-biome = "latest"
-bun = "latest"
-node = "latest"
-"npm:corepack" = "latest"
-"npm:@mariozechner/pi-coding-agent" = "latest"
-go = "latest"
-"npm:typescript-language-server" = "latest"
 [settings]
 idiomatic_version_file_enable_tools = ["node", "rust"]
+
+[tools]
+"npm:corepack" = "latest"
+"npm:typescript-language-server" = "latest"
+biome = "latest"
+bun = "latest"
+go = "latest"
+node = "latest"
+rust = "latest"

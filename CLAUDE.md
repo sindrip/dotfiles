@@ -12,12 +12,13 @@ Personal dotfiles for macOS. Manages Homebrew packages, config files (symlinked 
 ./install.sh
 ```
 
-This runs `brew bundle`, symlinks everything in `config/` to `~/.config/`, and symlinks everything in `bin/` to `~/.local/bin/`.
+`install.sh` symlinks everything in `config/` to `~/.config/`, everything in `bin/` to `~/.local/bin/`, runs `brew bundle`, and applies macOS defaults.
 
 ## Structure
 
 - `Brewfile` — Homebrew packages and casks
 - `install.sh` — idempotent installer (symlinks, warns on conflicts instead of overwriting)
+- `bin/macos-defaults` — Swift script applying macOS defaults (keyboard, dock, trackpad, hotkeys, Ghostty keybinding)
 - `config/` — XDG config files, mirroring `~/.config/` layout
 - `bin/` — custom scripts exposed as commands (e.g. `git-bare` becomes `git bare`)
 

@@ -1,0 +1,88 @@
+#!/usr/bin/env swift
+
+import Foundation
+
+func defaults(_ domain: String, _ values: [String: Any]) {
+    let cfDomain = domain == "NSGlobalDomain"
+        ? kCFPreferencesAnyApplication
+        : domain as CFString
+    for (key, value) in values {
+        CFPreferencesSetValue(
+            key as CFString,
+            value as CFPropertyList,
+            cfDomain,
+            kCFPreferencesCurrentUser,
+            kCFPreferencesAnyHost
+        )
+    }
+    CFPreferencesSynchronize(cfDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+}
+
+func disableHotkeys(_ ids: [Int]) {
+    let domain = "com.apple.symbolichotkeys" as CFString
+    let key = "AppleSymbolicHotKeys" as CFString
+    var hotkeys = CFPreferencesCopyValue(key, domain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+        as? [String: Any] ?? [:]
+    for id in ids {
+        var entry = hotkeys[String(id)] as? [String: Any] ?? [:]
+        entry["enabled"] = false
+        hotkeys[String(id)] = entry
+    }
+    CFPreferencesSetValue(key, hotkeys as CFDictionary, domain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+    CFPreferencesSynchronize(domain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+}
+
+enum Hotkey {
+    static let previousInputSource = 60
+    static let nextInputSource = 61
+    static let spotlight = 64
+    static let finderSearch = 65
+}
+
+// -- Keyboard --
+defaults("NSGlobalDomain", [
+    "KeyRepeat": 2,
+    "InitialKeyRepeat": 15,
+    "NSAutomaticCapitalizationEnabled": false,
+    "NSAutomaticDashSubstitutionEnabled": false,
+    "NSAutomaticPeriodSubstitutionEnabled": false,
+    "NSAutomaticQuoteSubstitutionEnabled": false,
+    "NSAutomaticSpellingCorrectionEnabled": false,
+])
+
+// -- Dock --
+defaults("com.apple.dock", [
+    "autohide": true,
+    "autohide-delay": 0,
+    "autohide-time-modifier": 0,
+    "mru-spaces": false,
+    "show-recents": false,
+])
+
+// -- Trackpad --
+defaults("com.apple.AppleMultitouchTrackpad", [
+    "TrackpadThreeFingerDrag": true,
+])
+
+// -- Finder --
+defaults("com.apple.finder", [
+    "FXPreferredViewStyle": "Nlsv",
+])
+
+// -- Fn key: do nothing --
+defaults("com.apple.HIToolbox", [
+    "AppleFnUsageType": 0,
+])
+
+// -- Disable system hotkeys that conflict with tools --
+disableHotkeys([
+    Hotkey.previousInputSource,
+    Hotkey.nextInputSource,
+    Hotkey.spotlight,
+    Hotkey.finderSearch,
+])
+
+// -- Ghostty: unbind Cmd+H --
+defaults("com.mitchellh.ghostty", [
+    "NSUserKeyEquivalents": ["Hide Ghostty": "\u{0000}"],
+])

@@ -1,6 +1,7 @@
 brew "pam-reattach"
 brew "fish"
 brew "neovim"
+cask "emacs-app@nightly"
 brew "tmux"
 brew "ripgrep"
 brew "bat"

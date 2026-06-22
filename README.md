@@ -6,13 +6,9 @@ Personal dotfiles for macOS.
 ./install.sh
 ```
 
-Runs `brew bundle`, symlinks `config/` to `~/.config/`, and `bin/` to `~/.local/bin/`.
+`install.sh` symlinks configs to `~/.config/`, scripts to `~/.local/bin/`, runs `brew bundle`, and applies macOS defaults (keyboard, dock, trackpad, autocorrect, hotkeys, Ghostty keybinding).
 
 ## Post-install
-
-### macOS keyboard
-
-Disable Ctrl+Space for input source switching in System Settings > Keyboard > Keyboard Shortcuts > Input Sources.
 
 ### npm
 

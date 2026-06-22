@@ -1,0 +1,21 @@
+name: Lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: |
+          file bin/* | grep -e 'shell script' -e 'sh script' | cut -d: -f1 | xargs shellcheck install.sh
+
+  toml:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: uncenter/setup-taplo@v1
+      - run: taplo check config/mise/config.toml
