@@ -10,10 +10,11 @@ function M.toggle()
 end
 
 function M.setup()
-  local web = { "biome_strict", "prettier_strict", "biome", "prettier", stop_after_first = true }
+  local web = { "biome_strict", "prettier_strict", "oxfmt_strict", "biome", "prettier", "oxfmt", stop_after_first = true }
 
   require("conform").setup({
     formatters = {
+      oxfmt_strict = { inherit = "oxfmt", require_cwd = true },
       biome_strict = { inherit = "biome", require_cwd = true },
       prettier_strict = { inherit = "prettier", require_cwd = true },
     },
