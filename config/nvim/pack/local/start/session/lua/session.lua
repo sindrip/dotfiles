@@ -3,7 +3,12 @@ local M = {}
 local session_dir = vim.fn.stdpath("state") .. "/sessions"
 
 local function session_file()
-  return session_dir .. "/" .. vim.fn.getcwd():gsub("/", "%%") .. ".vim"
+  local key = vim.fn.getcwd()
+  local branch = vim.fn.system("git branch --show-current"):gsub("%s+$", "")
+  if vim.v.shell_error == 0 and branch ~= "" then
+    key = key .. "@" .. branch
+  end
+  return session_dir .. "/" .. key:gsub("/", "%%") .. ".vim"
 end
 
 function M.wipe_buftypes(...)
