@@ -179,23 +179,23 @@ require("catppuccin").setup({
 })
 vim.cmd.colorscheme("catppuccin-frappe")
 
-require("blink.cmp").setup({
-  keymap = {
-    preset = "default",
-    ["<M-.>"] = { "show", "show_documentation", "hide_documentation" },
-  },
-  appearance = { nerd_font_variant = "mono" },
-  completion = {
-    documentation = { auto_show = true },
-    menu = { auto_show = false },
-  },
-  sources = { default = { "lsp", "path", "snippets", "buffer" } },
-  signature = { enabled = true },
-  fuzzy = {
-    implementation = "prefer_rust",
-    prebuilt_binaries = { force_version = "v1.*" },
-  },
-})
+-- require("blink.cmp").setup({
+--   keymap = {
+--     preset = "default",
+--     ["<M-.>"] = { "show", "show_documentation", "hide_documentation" },
+--   },
+--   appearance = { nerd_font_variant = "mono" },
+--   completion = {
+--     documentation = { auto_show = true },
+--     menu = { auto_show = false },
+--   },
+--   sources = { default = { "lsp", "path", "snippets", "buffer" } },
+--   signature = { enabled = true },
+--   fuzzy = {
+--     implementation = "prefer_rust",
+--     prebuilt_binaries = { force_version = "v1.*" },
+--   },
+-- })
 
 local MiniIcons = require("mini.icons")
 MiniIcons.setup()

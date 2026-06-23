@@ -1,4 +1,4 @@
-vim.o.completeopt = "menuone,noselect,popup,fuzzy"
+vim.o.completeopt = "menuone,noselect,popup,fuzzy,preselect"
 vim.o.pumheight = 10
 vim.opt.shortmess:append("c") -- silence "match X of N", "Pattern not found"
 
@@ -11,7 +11,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
 
     vim.lsp.completion.enable(true, client.id, ev.buf, {
-      autotrigger = false,
+      autotrigger = true,
       convert = function(item)
         local kind = vim.lsp.protocol.CompletionItemKind[item.kind] or "Text"
         local icon, hl = require("mini.icons").get("lsp", kind)
