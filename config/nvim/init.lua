@@ -243,6 +243,8 @@ require("quicker").setup({
 --   on_reposition = require("tiny-cmdline").adapters.blink,
 -- })
 
+-- Semantic tokens cause highlights to go out of sync during edits (nvim requests full tokens on every change).
+vim.lsp.semantic_tokens.enable(false)
 vim.lsp.inline_completion.enable(true)
 
 vim.lsp.enable("inline_assist")
