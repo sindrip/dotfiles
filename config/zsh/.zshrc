@@ -14,7 +14,7 @@ setopt SHARE_HISTORY
 # fpath=(/Applications/OrbStack.app/Contents/Resources/completions/zsh(/N) $fpath)
 autoload -Uz compinit
 mkdir -p "$XDG_CACHE_HOME/zsh"
-compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$(date +%Y%m%d)"
+compinit -i -d "$XDG_CACHE_HOME/zsh/zcompdump-$(date +%Y%m%d)"
 
 # Completion UX
 setopt COMPLETE_IN_WORD ALWAYS_TO_END LIST_PACKED
@@ -41,7 +41,6 @@ alias ls='eza --icons=auto --group-directories-first'
 alias ll='eza -lh --icons=auto --git --group-directories-first'
 alias la='eza -lah --icons=auto --git --group-directories-first'
 alias tree='eza --tree --icons=auto'
-compdef eza=ls # reuse ls completions for eza
 
 alias -- -='cd -' # `-` jumps to the previous directory
 alias vim='nvim'

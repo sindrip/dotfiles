@@ -20,8 +20,8 @@ link() {
 
 header "Dotfiles"
 (cd "$DOTFILES/config"
-find . -type f | while read -r f; do
-  f="${f#./}"
+# Link only tracked files
+git ls-files | while read -r f; do
   mkdir -p "$HOME/.config/$(dirname "$f")"
   link "$DOTFILES/config/$f" "$HOME/.config/$f"
 done)
