@@ -38,6 +38,19 @@ for f in "$DOTFILES/bin/"*; do
   link "$f" "$HOME/.local/bin/$(basename "$f")"
 done
 
+header "Claude skills"
+# Copied, not symlinked: Claude Code's skill discovery doesn't resolve a
+# symlinked skill directory, so a symlink would silently fail to register.
+# The repo is the source of truth; this overwrites on every run.
+mkdir -p "$HOME/.claude/skills"
+for skill in "$DOTFILES/claude/skills/"*/; do
+  name="$(basename "$skill")"
+  dest="$HOME/.claude/skills/$name"
+  rm -rf "$dest"
+  cp -R "${skill%/}" "$dest"
+  info "skill $name -> $dest"
+done
+
 
 header "Directories"
 # ensure directories exist for paths introduced by zshenv
