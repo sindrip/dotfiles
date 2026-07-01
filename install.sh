@@ -19,12 +19,14 @@ link() {
 }
 
 header "Dotfiles"
-(cd "$DOTFILES/config"
-# Link only tracked files
-git ls-files | while read -r f; do
-  mkdir -p "$HOME/.config/$(dirname "$f")"
-  link "$DOTFILES/config/$f" "$HOME/.config/$f"
-done)
+(
+  cd "$DOTFILES/config"
+  # Link only tracked files
+  git ls-files | while read -r f; do
+    mkdir -p "$HOME/.config/$(dirname "$f")"
+    link "$DOTFILES/config/$f" "$HOME/.config/$f"
+  done
+)
 
 header "Non-XDG dotfiles"
 # zshenv (must live in ~/ to bootstrap ZDOTDIR)
@@ -51,7 +53,6 @@ for skill in "$DOTFILES/claude/skills/"*/; do
   info "skill $name -> $dest"
 done
 
-
 header "Directories"
 # ensure directories exist for paths introduced by zshenv
 # sources zshenv in a clean shell (env -i) and diffs the environment
@@ -64,14 +65,14 @@ ensure_dirs() {
     env | grep -v "^_=" | grep -vxF "$before"
   ' | while IFS='=' read -r name value; do
     case "$value" in
-      /*)
-        case "$name" in
-          *FILE|*HISTORY|*USERCONFIG) dir="$(dirname "$value")" ;;
-          *) dir="$value" ;;
-        esac
-        mkdir -p "$dir"
-        info "ensured $dir"
-        ;;
+    /*)
+      case "$name" in
+      *FILE | *HISTORY | *USERCONFIG) dir="$(dirname "$value")" ;;
+      *) dir="$value" ;;
+      esac
+      mkdir -p "$dir"
+      info "ensured $dir"
+      ;;
     esac
   done
 }
@@ -127,4 +128,3 @@ if ! grep -q pam_tid "$sudo_local"; then
   printf 'auth       sufficient     pam_tid.so\n' | sudo tee -a "$sudo_local" >/dev/null
   info "added pam_tid to $sudo_local"
 fi
-

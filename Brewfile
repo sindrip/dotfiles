@@ -3,7 +3,6 @@ brew "fish"
 # tap is patched locally: removed stale conflicts_with formula: stanza
 tap "jason0x43/neovim-nightly"
 cask "neovim-nightly"
-cask "emacs-app@nightly"
 brew "tmux"
 brew "ripgrep"
 brew "bat"

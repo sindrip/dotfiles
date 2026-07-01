@@ -33,7 +33,10 @@ cmd_clone() {
 		command -v fzf >/dev/null || usage
 		ORG=$({ gh api user -q .login; gh api user/orgs -q '.[].login'; } | fzf --prompt="org> " --height=40%)
 		[ -n "$ORG" ] || exit 1
-		REPO=$(gh repo list "$ORG" --json name -q '.[].name' --limit 200 | fzf --prompt="$ORG/> " --height=40%)
+		EXISTING=$(mktemp)
+		[ -d "$ORG" ] && ls -1 "$ORG" > "$EXISTING"
+		REPO=$(gh repo list "$ORG" --json name -q '.[].name' --limit 200 | grep -vFxf "$EXISTING" | fzf --prompt="$ORG/> " --height=40%)
+		rm -f "$EXISTING"
 		[ -n "$REPO" ] || exit 1
 		SPEC="$ORG/$REPO"
 	fi
