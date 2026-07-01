@@ -105,6 +105,7 @@ brew bundle --verbose --file="$DOTFILES/Brewfile"
 
 header "GitHub extensions"
 gh extension install dlvhdr/gh-dash 2>/dev/null || gh extension upgrade dlvhdr/gh-dash
+gh extension install github/gh-stack 2>/dev/null || gh extension upgrade github/gh-stack
 
 header "macOS defaults"
 "$DOTFILES/bin/macos-defaults"
