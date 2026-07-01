@@ -12,6 +12,9 @@ keybind = option+shift+j=esc:J
 keybind = option+shift+k=esc:K
 keybind = option+shift+l=esc:L
 
+# reclaim physical cmd+h from macOS's Hide menu item (see key-remap above)
+keybind = option+h=esc:h
+
 keybind = option+period=esc:.
 keybind = option+v=paste_from_clipboard
 keybind = cmd+zero=unbind

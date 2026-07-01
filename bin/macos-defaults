@@ -81,8 +81,3 @@ disableHotkeys([
     Hotkey.spotlight,
     Hotkey.finderSearch,
 ])
-
-// -- Ghostty: unbind Cmd+H --
-defaults("com.mitchellh.ghostty", [
-    "NSUserKeyEquivalents": ["Hide Ghostty": "\u{0000}"],
-])
