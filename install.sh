@@ -18,6 +18,15 @@ link() {
   info "$dest -> $src"
 }
 
+header "Repo state"
+untracked=$(git -C "$DOTFILES" ls-files --others --exclude-standard)
+if [ -n "$untracked" ]; then
+  warn "untracked files in dotfiles repo (won't be linked, won't survive a re-clone):"
+  printf '%s\n' "$untracked" | while read -r f; do warn "  $f"; done
+else
+  info "no untracked files"
+fi
+
 header "Dotfiles"
 (
   cd "$DOTFILES/config"

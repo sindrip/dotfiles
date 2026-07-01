@@ -1,5 +1,6 @@
 [settings]
 idiomatic_version_file_enable_tools = ["node", "rust"]
+minimum_release_age = "0s"
 
 [tools]
 "github:h4ckf0r0day/obscura" = "latest"
