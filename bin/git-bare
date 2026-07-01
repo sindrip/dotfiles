@@ -27,14 +27,38 @@ cmd_init() {
 }
 
 cmd_clone() {
-	URL="${1:?Usage: git bare clone <url>}"
-	NAME="${2:-$(basename "$URL" .git)}"
+	SPEC="$1"
+
+	if [ -z "$SPEC" ]; then
+		command -v fzf >/dev/null || usage
+		ORG=$({ gh api user -q .login; gh api user/orgs -q '.[].login'; } | fzf --prompt="org> " --height=40%)
+		[ -n "$ORG" ] || exit 1
+		REPO=$(gh repo list "$ORG" --json name -q '.[].name' --limit 200 | fzf --prompt="$ORG/> " --height=40%)
+		[ -n "$REPO" ] || exit 1
+		SPEC="$ORG/$REPO"
+	fi
+
+	if command -v gh >/dev/null && ! printf '%s' "$SPEC" | grep -q '^\(git@\|https\?://\)'; then
+		INFO=$(gh repo view "$SPEC" --json sshUrl,isFork,parent,name,owner)
+		URL=$(printf '%s' "$INFO" | jq -r .sshUrl)
+		DEFAULT_NAME=$(printf '%s' "$INFO" | jq -r '.owner.login + "/" + .name')
+	else
+		URL="$SPEC"
+		INFO=""
+		DEFAULT_NAME=$(basename "$URL" .git)
+	fi
+	NAME="${2:-$DEFAULT_NAME}"
 
 	ensure_not_exists "$NAME"
 
 	git clone --bare "$URL" "$NAME/.git"
 	git -C "$NAME" config core.logAllRefUpdates true
 	git -C "$NAME" config worktree.useRelativePaths true
+
+	if [ -n "$INFO" ] && [ "$(printf '%s' "$INFO" | jq -r .isFork)" = "true" ]; then
+		PARENT_URL="git@github.com:$(printf '%s' "$INFO" | jq -r .parent.owner.login)/$(printf '%s' "$INFO" | jq -r .parent.name).git"
+		git -C "$NAME" remote add upstream "$PARENT_URL"
+	fi
 
 	BRANCH=$(git -C "$NAME" symbolic-ref --short HEAD)
 	git -C "$NAME" config remote.origin.fetch "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH"
