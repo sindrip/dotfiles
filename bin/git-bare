@@ -37,6 +37,8 @@ cmd_clone() {
 	git -C "$NAME" config worktree.useRelativePaths true
 
 	BRANCH=$(git -C "$NAME" symbolic-ref --short HEAD)
+	git -C "$NAME" config remote.origin.fetch "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH"
+	git -C "$NAME" fetch origin
 	git -C "$NAME" worktree add "$BRANCH"
 }
 
