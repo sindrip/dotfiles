@@ -9,6 +9,10 @@ vim.o.relativenumber = true -- Relative line numbers for easy jumping
 vim.o.smoothscroll = true
 
 vim.o.laststatus = 3 -- Single global statusline
+-- TEMPORARY: tmux's floating-pane redraw rework (3.7/3.7a) leaves panes blank
+-- until an unrelated redraw is forced. Disabling synchronized-output avoids
+-- triggering it. Revert once fixed upstream: https://github.com/tmux/tmux/issues/4800
+vim.o.termsync = false
 -- vim.o.winborder = "🭽,▔,🭾,▕,🭿,▁,🭼,▏"
 -- vim.o.winborder = "rounded"
 vim.o.colorcolumn = "100" -- Highlight column 100
