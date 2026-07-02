@@ -14,7 +14,6 @@ if status is-interactive
     command -q mise && mise activate fish | source
     command -q zoxide && zoxide init fish | source
     command -q fzf && fzf --fish | source # Ctrl-T/R, Alt-C keybindings
-    command -q vp && source "$HOME/.vite-plus/env.fish" # node/npm/npx shims, vp wrapper + completion (https://viteplus.dev)
     command -q starship && starship init fish | source
 
     # Aliases

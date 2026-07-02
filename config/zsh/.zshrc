@@ -70,8 +70,6 @@ export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-ran
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 (( $+commands[starship] )) && eval "$(starship init zsh)"
-# Vite+ has no eval-style init; source its generated env (shims, vp wrapper, completion)
-(( $+commands[vp] )) && source "$HOME/.vite-plus/env"  # https://viteplus.dev
 
 # Plugins (sourced last so syntax highlighting wraps all prior ZLE widgets)
 [[ -r "$ZDOTDIR/plugins.zsh" ]] && source "$ZDOTDIR/plugins.zsh"

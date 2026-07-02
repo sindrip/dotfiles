@@ -4,7 +4,7 @@ local session_dir = vim.fn.stdpath("state") .. "/sessions"
 
 local function session_file()
   local key = vim.fn.getcwd()
-  local branch = vim.fn.system("git branch --show-current"):gsub("%s+$", "")
+  local branch = vim.fn.system({ "git", "branch", "--show-current" }):gsub("%s+$", "")
   if vim.v.shell_error == 0 and branch ~= "" then
     key = key .. "@" .. branch
   end
