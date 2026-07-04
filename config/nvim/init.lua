@@ -108,7 +108,6 @@ vim.pack.add({
   "https://github.com/echasnovski/mini.icons",
   "https://github.com/lewis6991/gitsigns.nvim",
   "https://github.com/stevearc/quicker.nvim",
-  -- "https://github.com/rachartier/tiny-cmdline.nvim",
 }, { confirm = false })
 
 require("formatter").setup()

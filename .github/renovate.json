@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "labels": ["dependencies"],
+  "semanticCommits": "enabled",
+  "packageRules": [
+    {
+      "description": "Group GitHub Actions updates together.",
+      "matchManagers": ["github-actions"],
+      "groupName": "GitHub Actions"
+    },
+    {
+      "description": "Group mise tool updates together.",
+      "matchManagers": ["mise"],
+      "groupName": "mise tools"
+    }
+  ]
+}
