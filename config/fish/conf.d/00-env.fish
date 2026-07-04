@@ -12,11 +12,9 @@ set -gx HISTFILE "$XDG_STATE_HOME/zsh/history"
 
 # XDG compliance for tools that don't respect it by default
 set -gx CARGO_HOME "$XDG_DATA_HOME/cargo"
-set -gx DOCKER_CONFIG "$XDG_CONFIG_HOME/docker"
 set -gx GOPATH "$XDG_DATA_HOME/go"
 set -gx LESSHISTFILE "$XDG_STATE_HOME/less/history"
 set -gx NODE_REPL_HISTORY "$XDG_DATA_HOME/node_repl_history"
-set -gx NPM_CONFIG_USERCONFIG "$XDG_CONFIG_HOME/npm/npmrc"
 set -gx RUSTUP_HOME "$XDG_DATA_HOME/rustup"
 set -gx TMUX_PLUGIN_MANAGER_PATH "$XDG_DATA_HOME/tmux/plugins"
 
