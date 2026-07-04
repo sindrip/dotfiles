@@ -100,16 +100,6 @@ for app in "$DOTFILES/apps/"*.app; do
   fi
 done
 
-header "Doom Emacs"
-DOOM_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/emacs-doom"
-if [ ! -d "$DOOM_DIR" ]; then
-  git clone --depth 1 https://github.com/doomemacs/doomemacs "$DOOM_DIR"
-  info "cloned Doom Emacs to $DOOM_DIR"
-  info "run $DOOM_DIR/bin/doom install when ready"
-else
-  info "$DOOM_DIR already exists, skipping clone"
-fi
-
 header "Packages"
 brew bundle --verbose --file="$DOTFILES/Brewfile"
 
