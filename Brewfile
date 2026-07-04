@@ -1,8 +1,6 @@
 brew "pam-reattach"
 brew "fish"
-# tap is patched locally: removed stale conflicts_with formula: stanza
-tap "jason0x43/neovim-nightly"
-cask "neovim-nightly"
+brew "neovim", args: ["HEAD"]
 brew "tmux"
 brew "ripgrep"
 brew "bat"
@@ -42,3 +40,5 @@ cask "ghostty"
 cask "google-chrome"
 cask "raycast"
 cask "spotify"
+
+brew "can1357/tap/omp"
