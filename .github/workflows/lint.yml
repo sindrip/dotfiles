@@ -17,5 +17,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: uncenter/setup-taplo@v1
+      - uses: uncenter/setup-taplo@v2
       - run: taplo check config/mise/config.toml
