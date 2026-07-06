@@ -90,17 +90,7 @@ vim.pack.add({
       end,
     },
   },
-  {
-    src = "https://github.com/saghen/blink.pairs",
-    version = "v0.6.0",
-    data = {
-      build = function()
-        package.loaded["blink.pairs"] = nil
-        ---@diagnostic disable-next-line: undefined-field
-        require("blink.pairs").download():pwait(60000)
-      end,
-    },
-  },
+  { src = "https://github.com/saghen/blink.pairs", version = "v0.6.0" },
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
   "https://github.com/folke/snacks.nvim",
   "https://github.com/catppuccin/nvim",
@@ -115,7 +105,22 @@ require("statusline").setup()
 require("which-key").setup({})
 require("mason").setup({})
 require("lazydev").setup({})
-require("blink.pairs").setup({})
+
+local blink_pairs = require("blink.pairs")
+
+local function blink_pairs_fetch(opts)
+  blink_pairs.download(opts):map(function()
+    vim.schedule(function()
+      blink_pairs.setup({})
+    end)
+  end)
+end
+
+if not blink_pairs.library_available() then
+  blink_pairs_fetch()
+elseif not pcall(blink_pairs.setup, {}) then
+  blink_pairs_fetch({ force = true })
+end
 
 local ts = require("nvim-treesitter")
 
