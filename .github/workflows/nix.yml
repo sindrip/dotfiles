@@ -1,0 +1,45 @@
+name: Nix
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+env:
+  SYSTEM: aarch64-darwin
+  CACHE: sindrip
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      missing: ${{ steps.probe.outputs.missing }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      - id: probe
+        run: |
+          nix eval --json ".#packages.$SYSTEM" --apply 'ps: builtins.mapAttrs (_: p: p.outPath) ps' > paths.json
+          missing=$(jq -r 'to_entries | unique_by(.value)[] | "\(.key) \(.value | split("/")[3] | split("-")[0])"' paths.json \
+            | while read -r attr hash; do
+                curl -sfo /dev/null "https://$CACHE.cachix.org/$hash.narinfo" || echo "$attr"
+              done | jq -Rnc '[inputs]')
+          echo "missing=$missing" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: check
+    if: needs.check.outputs.missing != '[]'
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        attr: ${{ fromJson(needs.check.outputs.missing) }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      - uses: cachix/cachix-action@v17
+        with:
+          name: ${{ env.CACHE }}
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+      - run: nix build ".#packages.$SYSTEM.${{ matrix.attr }}" -L
