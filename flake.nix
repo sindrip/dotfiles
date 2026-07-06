@@ -27,6 +27,7 @@
               bat
               eza
               fd
+              tree-sitter
             ];
           };
         });
