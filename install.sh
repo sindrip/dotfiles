@@ -107,12 +107,14 @@ header "Nix"
 nix registry add dotfiles "$DOTFILES"
 info "registry: dotfiles -> $DOTFILES"
 nix_profile_list="$(nix profile list)"
-if echo "$nix_profile_list" | grep -q neovim; then
-  nix profile upgrade neovim
-else
-  nix profile add dotfiles#neovim
-fi
-info "neovim nightly via nix profile"
+for pkg in neovim tools; do
+  if echo "$nix_profile_list" | grep -q "$pkg"; then
+    nix profile upgrade "$pkg"
+  else
+    nix profile add "dotfiles#$pkg"
+  fi
+  info "$pkg via nix profile"
+done
 
 header "GitHub extensions"
 gh extension install dlvhdr/gh-dash 2>/dev/null || gh extension upgrade dlvhdr/gh-dash
