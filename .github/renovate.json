@@ -4,6 +4,7 @@
   "dependencyDashboard": true,
   "labels": ["dependencies"],
   "semanticCommits": "enabled",
+  "platformAutomerge": false,
   "nix": {
     "enabled": true
   },
