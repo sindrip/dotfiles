@@ -8,6 +8,10 @@
 	path = work
 [includeIf "hasconfig:remote.*.url:https://github.com/dotcom-dev/**"]
 	path = work
+[includeIf "hasconfig:remote.*.url:git@github.com:cofixpoint/**"]
+	path = cofixpoint
+[includeIf "hasconfig:remote.*.url:https://github.com/cofixpoint/**"]
+	path = cofixpoint
 [includeIf "hasconfig:remote.*.url:git@github.com:sindrip/**"]
 	path = personal
 [includeIf "hasconfig:remote.*.url:https://github.com/sindrip/**"]
