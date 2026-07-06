@@ -4,6 +4,14 @@
   "dependencyDashboard": true,
   "labels": ["dependencies"],
   "semanticCommits": "enabled",
+  "nix": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 6am"],
+    "automerge": true
+  },
   "packageRules": [
     {
       "description": "Group GitHub Actions updates together.",

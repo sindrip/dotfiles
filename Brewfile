@@ -1,6 +1,5 @@
 brew "pam-reattach"
 brew "fish"
-brew "neovim", args: ["HEAD"]
 brew "tmux"
 brew "ripgrep"
 brew "bat"

@@ -103,6 +103,16 @@ done
 header "Packages"
 brew bundle --verbose --file="$DOTFILES/Brewfile"
 
+header "Nix"
+nix registry add dotfiles "$DOTFILES"
+info "registry: dotfiles -> $DOTFILES"
+if nix profile list | grep -q neovim; then
+  nix profile upgrade neovim
+else
+  nix profile add dotfiles#neovim
+fi
+info "neovim nightly via nix profile"
+
 header "GitHub extensions"
 gh extension install dlvhdr/gh-dash 2>/dev/null || gh extension upgrade dlvhdr/gh-dash
 gh extension install github/gh-stack 2>/dev/null || gh extension upgrade github/gh-stack
