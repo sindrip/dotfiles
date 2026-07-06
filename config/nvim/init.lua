@@ -115,7 +115,12 @@ require("statusline").setup()
 require("which-key").setup({})
 require("mason").setup({})
 require("lazydev").setup({})
-require("blink.pairs").setup({})
+
+local blink_pairs = require("blink.pairs")
+if not blink_pairs.library_available() then
+  blink_pairs.download():pwait(60000)
+end
+blink_pairs.setup({})
 
 local ts = require("nvim-treesitter")
 
