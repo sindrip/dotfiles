@@ -6,40 +6,36 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  SYSTEM: aarch64-darwin
-  CACHE: sindrip
-
 jobs:
   check:
     runs-on: ubuntu-latest
     outputs:
-      missing: ${{ steps.probe.outputs.missing }}
+      targets: ${{ steps.probe.outputs.targets }}
     steps:
       - uses: actions/checkout@v7
       - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            extra-substituters = https://sindrip.cachix.org
+            extra-trusted-public-keys = sindrip.cachix.org-1:tni1LcPdMGxgmv3ZseA3ULu3oMwR5iz1/0p9ibhBPHE=
       - id: probe
+        env:
+          PACKAGES: .#packages.aarch64-darwin
         run: |
-          nix eval --json ".#packages.$SYSTEM" --apply 'ps: builtins.mapAttrs (_: p: p.outPath) ps' > paths.json
-          missing=$(jq -r 'to_entries | unique_by(.value)[] | "\(.key) \(.value | split("/")[3] | split("-")[0])"' paths.json \
-            | while read -r attr hash; do
-                curl -sfo /dev/null "https://$CACHE.cachix.org/$hash.narinfo" || echo "$attr"
-              done | jq -Rnc '[inputs]')
-          echo "missing=$missing" >> "$GITHUB_OUTPUT"
+          targets=$(nix run nixpkgs#nix-eval-jobs -- --check-cache-status --flake "$PACKAGES" \
+            | jq -rn --arg p "$PACKAGES" \
+                '[inputs | select(.cacheStatus == "notBuilt")] | unique_by(.drvPath) | map("\($p).\(.attr)") | join(" ")')
+          echo "targets=$targets" >> "$GITHUB_OUTPUT"
 
   build:
     needs: check
-    if: needs.check.outputs.missing != '[]'
+    if: needs.check.outputs.targets != ''
     runs-on: macos-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        attr: ${{ fromJson(needs.check.outputs.missing) }}
     steps:
       - uses: actions/checkout@v7
       - uses: cachix/install-nix-action@v31
       - uses: cachix/cachix-action@v17
         with:
-          name: ${{ env.CACHE }}
+          name: sindrip
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-      - run: nix build ".#packages.$SYSTEM.${{ matrix.attr }}" -L
+      - run: nix build -L ${{ needs.check.outputs.targets }}
