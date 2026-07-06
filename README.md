@@ -10,7 +10,7 @@ Personal dotfiles for macOS.
 
 ## Nix
 
-Install [Nix](https://github.com/NixOS/nix-installer) before running `install.sh`. Trusting your user lets the flake's `nixConfig` pull prebuilt nightlies from the nix-community cache instead of compiling from source:
+Install [Nix](https://github.com/NixOS/nix-installer) before running `install.sh`. Trusting your user lets the caches in `config/nix/nix.conf` take effect, pulling prebuilt neovim nightlies (built by CI) instead of compiling from source:
 
 ```sh
 curl -sSfL https://artifacts.nixos.org/nix-installer | sh -s -- install --extra-conf "extra-trusted-users = $USER"
