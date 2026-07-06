@@ -106,7 +106,8 @@ brew bundle --verbose --file="$DOTFILES/Brewfile"
 header "Nix"
 nix registry add dotfiles "$DOTFILES"
 info "registry: dotfiles -> $DOTFILES"
-if nix profile list | grep -q neovim; then
+nix_profile_list="$(nix profile list)"
+if echo "$nix_profile_list" | grep -q neovim; then
   nix profile upgrade neovim
 else
   nix profile add dotfiles#neovim
