@@ -107,7 +107,7 @@ header "Nix"
 nix registry add dotfiles "$DOTFILES"
 info "registry: dotfiles -> $DOTFILES"
 nix_profile_list="$(nix profile list)"
-for pkg in neovim tools; do
+for pkg in neovim tools tmux; do
   if echo "$nix_profile_list" | grep -q "$pkg"; then
     nix profile upgrade "$pkg"
   else

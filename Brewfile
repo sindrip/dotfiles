@@ -1,6 +1,5 @@
 brew "pam-reattach"
 brew "fish"
-brew "tmux"
 brew "ripgrep"
 brew "fzf"
 brew "mise"

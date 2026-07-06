@@ -92,7 +92,41 @@
     "root": {
       "inputs": {
         "neovim-nightly-overlay": "neovim-nightly-overlay",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_2",
+        "tmux.catppuccin": "tmux.catppuccin",
+        "tmux.tpm": "tmux.tpm"
+      }
+    },
+    "tmux.catppuccin": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1775690893,
+        "narHash": "sha256-3CJRQCgS8NAN7vOLBjNGiHbGXTIrIyY/FLmfZrXcEYc=",
+        "owner": "catppuccin",
+        "repo": "tmux",
+        "rev": "d2d25bd3393fe43f19eb4fff6cdd2bdf5578e622",
+        "type": "github"
+      },
+      "original": {
+        "owner": "catppuccin",
+        "repo": "tmux",
+        "type": "github"
+      }
+    },
+    "tmux.tpm": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1779036064,
+        "narHash": "sha256-oRKUZNyJYQXlkeQfbEYiltUEBpvdwn2SoEBWHVUNmrA=",
+        "owner": "tmux-plugins",
+        "repo": "tpm",
+        "rev": "e261deb1b47614eed3400089ce7197dc68acc4eb",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tmux-plugins",
+        "repo": "tpm",
+        "type": "github"
       }
     }
   },
