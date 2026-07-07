@@ -9,4 +9,10 @@ path=(
   $path
 )
 
-export XDG_DATA_DIRS="$HOMEBREW_PREFIX/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+typeset -TUx XDG_DATA_DIRS xdg_data_dirs
+xdg_data_dirs=(
+  $HOMEBREW_PREFIX/share
+  $xdg_data_dirs
+  /usr/local/share
+  /usr/share
+)
