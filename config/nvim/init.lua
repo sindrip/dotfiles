@@ -92,7 +92,6 @@ vim.pack.add({
   "https://github.com/saghen/blink.lib",
   "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
-  "https://github.com/sindrip/fixpoint.nvim",
   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
   "https://github.com/stevearc/conform.nvim",
   "https://github.com/nvim-lualine/lualine.nvim",
