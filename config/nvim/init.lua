@@ -113,8 +113,13 @@ vim.pack.add({
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1") },
   "https://github.com/echasnovski/mini.icons",
   "https://github.com/lewis6991/gitsigns.nvim",
+  "https://github.com/NeogitOrg/neogit",
   "https://github.com/stevearc/quicker.nvim",
 }, { confirm = false })
+
+-- Aliases for common flag combos; bare update needs none (:packu[pdate])
+vim.api.nvim_create_user_command("PackSync", "packupdate<bang> ++lockfile <args>", { bang = true, nargs = "*", desc = "Sync plugins to lockfile revisions" })
+vim.api.nvim_create_user_command("PackClean", "packdel ++all", { desc = "Delete inactive plugins" })
 
 require("formatter").setup()
 require("statusline").setup()
