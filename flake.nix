@@ -53,14 +53,16 @@
           neovim = neovim-nightly-overlay.packages.${system}.default;
           default = neovim;
 
-          # tmux wrapped so tpm finds itself and the pinned plugins
+          # tmux wrapped so tpm finds itself and the pinned plugins, and so
+          # new panes run the flake-pinned fish (tmux default-shell = $SHELL)
           tmux = pkgs.symlinkJoin {
             name = "tmux";
             paths = [ pkgs.tmux ];
             nativeBuildInputs = [ pkgs.makeWrapper ];
             postBuild = ''
               wrapProgram $out/bin/tmux \
-                --set TMUX_PLUGIN_MANAGER_PATH ${tmux-plugins}/share/tmux-plugins
+                --set TMUX_PLUGIN_MANAGER_PATH ${tmux-plugins}/share/tmux-plugins \
+                --set SHELL ${pkgs.fish}/bin/fish
             '';
           };
 
@@ -70,6 +72,7 @@
               bat
               eza
               fd
+              fish
               starship
               tree-sitter
             ];

@@ -1,5 +1,4 @@
 brew "pam-reattach"
-brew "fish"
 brew "ripgrep"
 brew "fzf"
 brew "mise"
