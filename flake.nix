@@ -70,6 +70,7 @@
               bat
               eza
               fd
+              starship
               tree-sitter
             ];
           };
