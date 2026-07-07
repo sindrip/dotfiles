@@ -1,0 +1,7 @@
+[gcloud]
+disabled = true
+
+[nix_shell]
+# detect new-style `nix shell` (no IN_NIX_SHELL) by /nix/store paths in PATH
+heuristic = true
+symbol = ""
