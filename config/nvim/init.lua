@@ -90,7 +90,7 @@ vim.cmd.packadd("nvim.difftool")
 -- External plugins
 vim.pack.add({
   "https://github.com/saghen/blink.lib",
-  "https://github.com/sindrets/diffview.nvim",
+  -- "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
   "https://github.com/stevearc/conform.nvim",
@@ -113,12 +113,23 @@ vim.pack.add({
   { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1") },
   "https://github.com/echasnovski/mini.icons",
   "https://github.com/lewis6991/gitsigns.nvim",
-  "https://github.com/NeogitOrg/neogit",
+  {
+    src = "https://github.com/esmuellert/codediff.nvim",
+    data = {
+      build = function()
+        vim.cmd("CodeDiff install") -- fetch matching libvscode-diff binary
+      end,
+    },
+  },
   "https://github.com/stevearc/quicker.nvim",
 }, { confirm = false })
 
 -- Aliases for common flag combos; bare update needs none (:packu[pdate])
-vim.api.nvim_create_user_command("PackSync", "packupdate<bang> ++lockfile <args>", { bang = true, nargs = "*", desc = "Sync plugins to lockfile revisions" })
+vim.api.nvim_create_user_command(
+  "PackSync",
+  "packupdate<bang> ++lockfile <args>",
+  { bang = true, nargs = "*", desc = "Sync plugins to lockfile revisions" }
+)
 vim.api.nvim_create_user_command("PackClean", "packdel ++all", { desc = "Delete inactive plugins" })
 
 require("formatter").setup()
@@ -208,11 +219,13 @@ require("catppuccin").setup({
     percentage = 0.15,
   },
   custom_highlights = function(C)
+    local U = require("catppuccin.utils.colors")
     return {
       BlinkPairsOrange = { fg = C.peach },
       BlinkPairsPurple = { fg = C.mauve },
       BlinkPairsBlue = { fg = C.blue },
       BlinkPairsUnmatched = { fg = C.red },
+      DiffTextAdd = { bg = U.darken(C.green, 0.40, C.base) }, -- added text within a changed line (catppuccin lacks it, falls back to DiffText's blue)
     }
   end,
 })
@@ -296,8 +309,6 @@ vim.lsp.enable("vtsls")
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)
-
--- vim.o.diffopt = vim.o.diffopt .. ",inline:word"  -- word-level inline diff highlighting
 
 vim.api.nvim_create_user_command("LspInfo", function()
   vim.cmd.checkhealth("vim.lsp")
