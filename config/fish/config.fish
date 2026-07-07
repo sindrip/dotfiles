@@ -6,12 +6,6 @@ set -gx SUDO_EDITOR nvim
 # Fish
 set -g fish_greeting
 
-# fzf
-set -gx FZF_DEFAULT_COMMAND 'fd --type f --hidden --exclude .git --strip-cwd-prefix'
-set -gx FZF_CTRL_T_COMMAND $FZF_DEFAULT_COMMAND
-set -gx FZF_DEFAULT_OPTS '--height=60% --layout=reverse --border=rounded'
-set -gx FZF_CTRL_T_OPTS "--preview 'bat --color=always --style=numbers --line-range=:500 {}' --preview-window=right:60%:border-left"
-
 # Shell integrations (interactive only)
 if status is-interactive
     command -q mise && mise activate fish | source
