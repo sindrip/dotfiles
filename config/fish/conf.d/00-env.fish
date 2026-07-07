@@ -19,9 +19,3 @@ set -gx RUSTUP_HOME "$XDG_DATA_HOME/rustup"
 
 # Disable macOS per-session shell history
 set -gx SHELL_SESSIONS_DISABLE 1
-
-# Vendor completions from homebrew- and nix-installed tools (nix's fish only
-# scans its own store path and XDG_DATA_DIRS, which macOS leaves unset)
-set -a fish_complete_path \
-    /opt/homebrew/share/fish/vendor_completions.d \
-    "$HOME/.nix-profile/share/fish/vendor_completions.d"

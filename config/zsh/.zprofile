@@ -8,3 +8,5 @@ path=(
   $HOME/.orbstack/bin(N)
   $path
 )
+
+export XDG_DATA_DIRS="$HOMEBREW_PREFIX/share:${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
