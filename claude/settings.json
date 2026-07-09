@@ -11,6 +11,7 @@
   "enabledPlugins": {},
   "effortLevel": "xhigh",
   "tui": "fullscreen",
+  "theme": "dark",
   "verbose": true,
   "switchModelsOnFlag": false,
   "useAutoModeDuringPlan": true
