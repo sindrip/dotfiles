@@ -10,7 +10,8 @@ function M.toggle()
 end
 
 function M.setup()
-  local web = { "biome_strict", "prettier_strict", "oxfmt_strict", "biome", "prettier", "oxfmt", stop_after_first = true }
+  local web =
+    { "biome_strict", "prettier_strict", "oxfmt_strict", "biome", "prettier", "oxfmt", stop_after_first = true }
 
   require("conform").setup({
     formatters = {
@@ -43,7 +44,7 @@ function M.setup()
         return
       end
 
-      return { timeout_ms = 500 }
+      return { timeout_ms = 5000 }
     end,
   })
 end

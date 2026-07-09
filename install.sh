@@ -49,6 +49,14 @@ for f in "$DOTFILES/bin/"*; do
   link "$f" "$HOME/.local/bin/$(basename "$f")"
 done
 
+header "Claude config"
+# Symlinked so changes Claude Code writes (e.g. /config, permission grants)
+# land in the repo and show up as a git diff.
+mkdir -p "$HOME/.claude"
+link "$DOTFILES/claude/settings.json" "$HOME/.claude/settings.json"
+link "$DOTFILES/claude/keybindings.json" "$HOME/.claude/keybindings.json"
+link "$DOTFILES/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
+
 header "Claude skills"
 # Copied, not symlinked: Claude Code's skill discovery doesn't resolve a
 # symlinked skill directory, so a symlink would silently fail to register.

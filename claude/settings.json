@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [],
+    "defaultMode": "default"
+  },
+  "model": "claude-fable-5[1m]",
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {},
+  "effortLevel": "xhigh",
+  "tui": "fullscreen",
+  "theme": "dark",
+  "verbose": true,
+  "switchModelsOnFlag": false,
+  "useAutoModeDuringPlan": true
+}
