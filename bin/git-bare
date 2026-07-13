@@ -64,7 +64,10 @@ cmd_clone() {
 	fi
 
 	BRANCH=$(git -C "$NAME" symbolic-ref --short HEAD)
-	git -C "$NAME" config remote.origin.fetch "+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH"
+	# Fetch into refs/remotes (never refs/heads, which a bare clone would
+	# clobber) for ALL branches, so origin/<branch> exists everywhere and
+	# argless --force-with-lease works
+	git -C "$NAME" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
 	git -C "$NAME" fetch origin
 	git -C "$NAME" worktree add "$BRANCH"
 }
