@@ -11,6 +11,8 @@ export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export HISTFILE="$XDG_STATE_HOME/zsh/history"
 
 # XDG compliance for tools that don't respect it by default
+export BUN_INSTALL_BIN="$XDG_BIN_HOME"
+export BUN_INSTALL_GLOBAL_DIR="$XDG_DATA_HOME/bun/install/global"
 export CARGO_HOME="$XDG_DATA_HOME/cargo"
 export GOPATH="$XDG_DATA_HOME/go"
 export LESSHISTFILE="$XDG_STATE_HOME/less/history"
