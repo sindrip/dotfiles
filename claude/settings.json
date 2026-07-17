@@ -4,9 +4,7 @@
     "defaultMode": "default"
   },
   "model": "claude-fable-5[1m]",
-  "env": {
-    "CLAUDE_CODE_DISABLE_MOUSE": "1"
-  },
+  "env": {},
   "statusLine": {
     "type": "command",
     "command": "bash ~/.claude/statusline-command.sh"
