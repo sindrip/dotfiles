@@ -14,7 +14,7 @@ link() {
     warn "$dest already exists (not a symlink), skipping"
     return
   fi
-  ln -sf "$src" "$dest"
+  ln -sfn "$src" "$dest"
   info "$dest -> $src"
 }
 
@@ -49,25 +49,11 @@ for f in "$DOTFILES/bin/"*; do
   link "$f" "$HOME/.local/bin/$(basename "$f")"
 done
 
-header "Claude config"
-# Symlinked so changes Claude Code writes (e.g. /config, permission grants)
-# land in the repo and show up as a git diff.
-mkdir -p "$HOME/.claude"
-link "$DOTFILES/claude/settings.json" "$HOME/.claude/settings.json"
-link "$DOTFILES/claude/keybindings.json" "$HOME/.claude/keybindings.json"
-link "$DOTFILES/claude/statusline-command.sh" "$HOME/.claude/statusline-command.sh"
-
 header "Claude skills"
-# Copied, not symlinked: Claude Code's skill discovery doesn't resolve a
-# symlinked skill directory, so a symlink would silently fail to register.
-# The repo is the source of truth; this overwrites on every run.
 mkdir -p "$HOME/.claude/skills"
 for skill in "$DOTFILES/claude/skills/"*/; do
   name="$(basename "$skill")"
-  dest="$HOME/.claude/skills/$name"
-  rm -rf "$dest"
-  cp -R "${skill%/}" "$dest"
-  info "skill $name -> $dest"
+  link "${skill%/}" "$HOME/.claude/skills/$name"
 done
 
 header "Directories"
