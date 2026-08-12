@@ -3,9 +3,9 @@ idiomatic_version_file_enable_tools = ["node", "rust"]
 minimum_release_age = "0s"
 
 [tools]
-"github:h4ckf0r0day/obscura" = "0.1.10"
+"github:h4ckf0r0day/obscura" = "0.2.0"
 "npm:corepack" = "0.35.0"
 biome = "2.5.1"
 bun = "1.3.14"
 go = "1.26.5"
-node = "26.5.0"
+node = "26.7.0"
