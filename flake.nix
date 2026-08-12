@@ -105,6 +105,10 @@
               lazydocker
               lazygit
               mise
+              # client only: the daemon stays on the root profile's nix. Needed
+              # until nix-fallback-paths ships a build linking libgit2 >= 1.9.4,
+              # without which flake commands cannot open a relative worktree
+              nixVersions.latest
               ruff
               rustup
               sesh
