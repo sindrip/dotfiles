@@ -94,6 +94,7 @@
               ruff
               rustup
               sesh
+              typescript-go
               ty
               uv
               xdg-ninja

@@ -1,5 +1,8 @@
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 
+# Raise macOS's low per-process file descriptor limit for editors and watchers.
+ulimit -Sn 8192
+
 path=(
   $HOME/.local/bin(N)
   $HOME/.nix-profile/bin(N)

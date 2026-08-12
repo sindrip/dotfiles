@@ -86,7 +86,6 @@ vim.cmd.packadd("nvim.difftool")
 -- External plugins
 vim.pack.add({
   "https://github.com/saghen/blink.lib",
-  -- "https://github.com/sindrets/diffview.nvim",
   "https://github.com/neovim/nvim-lspconfig",
   "https://github.com/MeanderingProgrammer/render-markdown.nvim",
   "https://github.com/stevearc/conform.nvim",
@@ -106,7 +105,7 @@ vim.pack.add({
   "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
   "https://github.com/folke/snacks.nvim",
   "https://github.com/catppuccin/nvim",
-  { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1") },
+  -- { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1") },
   "https://github.com/echasnovski/mini.icons",
   "https://github.com/lewis6991/gitsigns.nvim",
   {
@@ -180,8 +179,6 @@ require("mason-tool-installer").setup({
     "prettier",
     "shfmt",
     "stylua",
-    "tsgo",
-    "vtsls",
   },
 })
 
@@ -286,11 +283,6 @@ require("quicker").setup({
   },
 })
 
--- ---@diagnostic disable-next-line: missing-fields
--- require("tiny-cmdline").setup({
---   on_reposition = require("tiny-cmdline").adapters.blink,
--- })
-
 -- Semantic tokens cause highlights to go out of sync during edits (nvim requests full tokens on every change).
 vim.lsp.semantic_tokens.enable(false)
 vim.lsp.inline_completion.enable(true)
@@ -300,8 +292,7 @@ vim.lsp.enable("copilot")
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
-vim.lsp.enable("tsgo")
-vim.lsp.enable("vtsls")
+vim.lsp.enable("tsc")
 
 vim.keymap.set("i", "<Tab>", function()
   if not vim.lsp.inline_completion.get() then
@@ -315,14 +306,6 @@ end, { desc = "Next inline completion" })
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)
-
-vim.api.nvim_create_user_command("LspInfo", function()
-  vim.cmd.checkhealth("vim.lsp")
-end, { desc = "Show LSP info" })
-
-vim.api.nvim_create_user_command("LspRestart", "lsp restart", {
-  desc = "Restart LSP clients attached to the current buffer",
-})
 
 vim.api.nvim_create_user_command("CopilotToggle", function()
   local enabled = not vim.lsp.is_enabled("copilot")
