@@ -9,10 +9,6 @@ vim.o.relativenumber = true -- Relative line numbers for easy jumping
 vim.o.smoothscroll = true
 
 vim.o.laststatus = 3 -- Single global statusline
--- TEMPORARY: tmux's floating-pane redraw rework (3.7/3.7a) leaves panes blank
--- until an unrelated redraw is forced. Disabling synchronized-output avoids
--- triggering it. Revert once fixed upstream: https://github.com/tmux/tmux/issues/4800
-vim.o.termsync = false
 -- vim.o.winborder = "🭽,▔,🭾,▕,🭿,▁,🭼,▏"
 -- vim.o.winborder = "rounded"
 vim.o.colorcolumn = "100" -- Highlight column 100
@@ -171,8 +167,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
     vim.treesitter.start(args.buf, lang)
     vim.wo[0][0].foldmethod = "expr"
-    vim.wo[0][0].foldexpr = "v:lua.vim.treesitter.foldexpr()"
-    vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    vim.wo[0][0].foldexpr = vim.treesitter.foldexpr
+    vim.bo[args.buf].indentexpr = ts.indentexpr
   end,
 })
 
@@ -324,11 +320,9 @@ vim.api.nvim_create_user_command("LspInfo", function()
   vim.cmd.checkhealth("vim.lsp")
 end, { desc = "Show LSP info" })
 
-vim.api.nvim_create_user_command("LspRestart", function()
-  for _, c in ipairs(vim.lsp.get_clients()) do
-    c:_restart()
-  end
-end, { desc = "Restart LSP clients" })
+vim.api.nvim_create_user_command("LspRestart", "lsp restart", {
+  desc = "Restart LSP clients attached to the current buffer",
+})
 
 vim.api.nvim_create_user_command("CopilotToggle", function()
   local enabled = not vim.lsp.is_enabled("copilot")

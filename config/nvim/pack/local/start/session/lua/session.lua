@@ -8,7 +8,7 @@ local function session_file()
   if vim.v.shell_error == 0 and branch ~= "" then
     key = key .. "@" .. branch
   end
-  return session_dir .. "/" .. key:gsub("/", "%%") .. ".vim"
+  return vim.fs.joinpath(session_dir, vim.fs.slug(key) .. ".vim")
 end
 
 function M.wipe_buftypes(...)
@@ -21,7 +21,7 @@ function M.wipe_buftypes(...)
 end
 
 function M.save()
-  vim.fn.mkdir(session_dir, "p")
+  vim.fs.mkdir(session_dir, { parents = true })
   vim.cmd("mksession! " .. vim.fn.fnameescape(session_file()))
 end
 
