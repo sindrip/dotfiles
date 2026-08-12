@@ -75,6 +75,7 @@
               fd
               fish
               fzf
+              jq
               ripgrep
               starship
               tree-sitter
@@ -84,6 +85,7 @@
               zsh-history-substring-search
 
               # General development tools
+              difftastic
               gh
               (google-cloud-sdk.withExtraComponents [
                 google-cloud-sdk.components.gke-gcloud-auth-plugin
