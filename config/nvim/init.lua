@@ -285,7 +285,6 @@ require("quicker").setup({
 
 -- Semantic tokens cause highlights to go out of sync during edits (nvim requests full tokens on every change).
 vim.lsp.semantic_tokens.enable(false)
-vim.lsp.inline_completion.enable(true)
 
 vim.lsp.enable("copilot")
 
@@ -294,15 +293,31 @@ vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
 vim.lsp.enable("tsc")
 
-vim.keymap.set("i", "<Tab>", function()
+vim.keymap.set("i", "<C-y>", function()
   if not vim.lsp.inline_completion.get() then
-    return "<Tab>"
+    return "<C-y>"
   end
 end, { expr = true, desc = "Accept inline completion" })
 
+-- Copilot ghost text is request-only: <C-e> arms the buffer, InsertLeave
+-- disarms. The completor only requests from insert-mode events, so poke one.
 vim.keymap.set("i", "<C-e>", function()
-  vim.lsp.inline_completion.select()
-end, { desc = "Next inline completion" })
+  local bufnr = vim.api.nvim_get_current_buf()
+  if vim.lsp.inline_completion.is_enabled({ bufnr = bufnr }) then
+    vim.lsp.inline_completion.select()
+    return
+  end
+  vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
+  vim.api.nvim_exec_autocmds("CursorMovedI", { buffer = bufnr })
+end, { desc = "Request inline completion / next candidate" })
+
+vim.api.nvim_create_autocmd("InsertLeave", {
+  callback = function(ev)
+    if vim.lsp.inline_completion.is_enabled({ bufnr = ev.buf }) then
+      vim.lsp.inline_completion.enable(false, { bufnr = ev.buf })
+    end
+  end,
+})
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)
