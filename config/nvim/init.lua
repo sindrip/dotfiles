@@ -333,10 +333,7 @@ end, { desc = "Toggle Copilot" })
 
 -- Keymaps
 
-vim.keymap.set("n", "<leader>r", function()
-  require("session").save()
-  vim.cmd.restart()
-end, { desc = "Restart nvim" })
+vim.keymap.set("n", "<leader>r", "ZR", { desc = "Restart nvim" })
 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
