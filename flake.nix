@@ -69,12 +69,43 @@
           tools = pkgs.buildEnv {
             name = "cli-tools";
             paths = with pkgs; [
+              # Shell and terminal tools
               bat
               eza
               fd
               fish
+              fzf
+              ripgrep
               starship
               tree-sitter
+              zoxide
+              zsh-autosuggestions
+              zsh-fast-syntax-highlighting
+              zsh-history-substring-search
+
+              # General development tools
+              gh
+              (google-cloud-sdk.withExtraComponents [
+                google-cloud-sdk.components.gke-gcloud-auth-plugin
+              ])
+              lazydocker
+              lazygit
+              mise
+              ruff
+              rustup
+              sesh
+              ty
+              uv
+              xdg-ninja
+
+              # Kubernetes tools
+              crossplane-cli
+              flux9s
+              fluxcd
+              fluxcd-operator
+              k9s
+              kubectx
+              kubernetes-helm
             ];
           };
         });

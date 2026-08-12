@@ -1,10 +1,12 @@
-# Zsh plugins, installed via Homebrew (see Brewfile) and sourced here.
+# Zsh plugins, installed in the Nix `tools` profile and sourced here.
 # Order matters (verified against each README): autosuggestions, then
 # fast-syntax-highlighting, then history-substring-search last (after
 # syntax highlighting).
-source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source $HOMEBREW_PREFIX/share/zsh-fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
-source $HOMEBREW_PREFIX/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+_nix_zsh_plugins="$HOME/.nix-profile/share/zsh/plugins"
+source "$_nix_zsh_plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$_nix_zsh_plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+source "$_nix_zsh_plugins/zsh-history-substring-search/zsh-history-substring-search.zsh"
+unset _nix_zsh_plugins
 
 # history-substring-search: dedupe matches, drive from the arrow keys.
 # Bind both normal (^[[A) and application-cursor (^[OA) escapes — the same

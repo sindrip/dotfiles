@@ -2,14 +2,20 @@ eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 
 path=(
   $HOME/.local/bin(N)
+  $HOME/.nix-profile/bin(N)
   $CARGO_HOME/bin(N)
-  $HOMEBREW_PREFIX/share/google-cloud-sdk/bin(N)
   $HOME/.orbstack/bin(N)
   $path
 )
 
+fpath=(
+  $HOME/.nix-profile/share/zsh/site-functions(N)
+  $fpath
+)
+
 typeset -TUx XDG_DATA_DIRS xdg_data_dirs
 xdg_data_dirs=(
+  $HOME/.nix-profile/share
   $HOMEBREW_PREFIX/share
   $xdg_data_dirs
   /usr/local/share

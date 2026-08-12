@@ -66,7 +66,11 @@ export FZF_DEFAULT_OPTS='--height=60% --layout=reverse --border=rounded'
 export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}' --preview-window=right:60%:border-left"
 
 # Shell integrations
-(( $+commands[fzf] )) && source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"  # Ctrl-T/R/Alt-C only; Tab stays native
+if (( $+commands[fzf] )); then
+  _fzf_share="${commands[fzf]:A:h:h}/share/fzf"
+  [[ -r "$_fzf_share/key-bindings.zsh" ]] && source "$_fzf_share/key-bindings.zsh"  # Ctrl-T/R/Alt-C only; Tab stays native
+  unset _fzf_share
+fi
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 (( $+commands[starship] )) && eval "$(starship init zsh)"
