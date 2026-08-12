@@ -10,7 +10,7 @@ Personal dotfiles for macOS.
 
 Portable CLI tools are installed by Nix. Homebrew is reserved for GUI casks,
 `pam-reattach` (which integrates with the macOS PAM configuration), and tools
-with no nixpkgs package (`ghcup`, `omp`).
+with no nixpkgs package (`ghcup`).
 
 Google Cloud CLI components are declared in `flake.nix`; the immutable Nix
 package disables `gcloud components install` and `gcloud components update`.
