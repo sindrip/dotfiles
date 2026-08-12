@@ -299,13 +299,23 @@ require("quicker").setup({
 vim.lsp.semantic_tokens.enable(false)
 vim.lsp.inline_completion.enable(true)
 
-vim.lsp.enable("inline_assist")
+vim.lsp.enable("copilot")
 
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
 vim.lsp.enable("tsgo")
 vim.lsp.enable("vtsls")
+
+vim.keymap.set("i", "<Tab>", function()
+  if not vim.lsp.inline_completion.get() then
+    return "<Tab>"
+  end
+end, { expr = true, desc = "Accept inline completion" })
+
+vim.keymap.set("i", "<C-e>", function()
+  vim.lsp.inline_completion.select()
+end, { desc = "Next inline completion" })
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)
@@ -319,6 +329,13 @@ vim.api.nvim_create_user_command("LspRestart", function()
     c:_restart()
   end
 end, { desc = "Restart LSP clients" })
+
+vim.api.nvim_create_user_command("CopilotToggle", function()
+  local enabled = not vim.lsp.is_enabled("copilot")
+  vim.lsp.enable("copilot", enabled)
+  vim.notify("Copilot: " .. (enabled and "on" or "off"))
+  vim.cmd.redrawstatus()
+end, { desc = "Toggle Copilot" })
 
 -- Keymaps
 
@@ -406,3 +423,5 @@ end, { desc = "Move to right split" })
 vim.keymap.set("n", "<leader>tf", function()
   require("formatter").toggle()
 end, { desc = "Toggle auto format" })
+
+vim.keymap.set("n", "<leader>tc", "<cmd>CopilotToggle<cr>", { desc = "Toggle Copilot" })
