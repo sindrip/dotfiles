@@ -20,14 +20,25 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, neovim-nightly-overlay, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      neovim-nightly-overlay,
+      ...
+    }:
     let
-      forAllSystems = f: builtins.listToAttrs (map
-        (system: { name = system; value = f system; })
-        [ "aarch64-darwin" "aarch64-linux" "x86_64-linux" ]);
+      forAllSystems = nixpkgs.lib.genAttrs [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-linux"
+      ];
     in
     {
-      packages = forAllSystems (system:
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-tree);
+
+      packages = forAllSystems (
+        system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
           # dir names must match the repo basename of the @plugin lines in
@@ -49,7 +60,8 @@
               })
             ];
           };
-        in rec {
+        in
+        rec {
           neovim = neovim-nightly-overlay.packages.${system}.default;
           default = neovim;
 
@@ -111,6 +123,7 @@
               kubernetes-helm
             ];
           };
-        });
+        }
+      );
     };
 }

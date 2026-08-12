@@ -19,3 +19,10 @@ jobs:
       - uses: actions/checkout@v7
       - uses: uncenter/setup-taplo@v2
       - run: taplo check config/mise/config.toml
+
+  nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      - run: nix fmt -- --ci .
