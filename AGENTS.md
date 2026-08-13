@@ -4,7 +4,11 @@ This file provides guidance to coding agents when working with code in this repo
 
 ## Overview
 
-Personal dotfiles for macOS. Manages Homebrew packages, config files (symlinked to `~/.config/`), and scripts (symlinked to `~/.local/bin/`).
+Personal dotfiles for macOS. Package ownership:
+
+- Nix: portable CLI and editor tools, wrapped tmux, and Neovim nightly
+- Homebrew: GUI casks and macOS integration
+- mise: language runtimes and ecosystem tools
 
 ## Setup
 
@@ -12,17 +16,20 @@ Personal dotfiles for macOS. Manages Homebrew packages, config files (symlinked 
 ./install.sh
 ```
 
-`install.sh` symlinks everything in `config/` to `~/.config/`, everything in `bin/` to `~/.local/bin/`, runs `brew bundle`, and applies macOS defaults.
+The installer links tracked configs, scripts, and Claude skills, then installs
+packages and applies macOS defaults.
 
 ## Structure
 
 - `Brewfile` - Homebrew packages and casks
-- `install.sh` - idempotent installer (symlinks, warns on conflicts instead of overwriting)
-- `bin/macos-defaults` - Swift script applying macOS defaults (keyboard, dock, trackpad, hotkeys, Ghostty keybinding)
-- `config/` - XDG config files, mirroring `~/.config/` layout
-- `bin/` - custom scripts exposed as commands (e.g. `git-bare` becomes `git bare`)
+- `flake.nix` - Nix packages
+- `config/` - XDG configs linked to `~/.config/`
+- `bin/` - scripts linked to `~/.local/bin/`
+- `claude/skills/` - versioned Claude skills
+- `install.sh` - idempotent installer
 
 ## Guidelines
 
-- When adding or configuring new tools, consult [xdg-ninja](https://github.com/b3nj5m1n/xdg-ninja) to ensure configs use XDG-compliant paths (`~/.config/`, `~/.local/share/`, etc.) rather than cluttering `~`.
+- Consult [xdg-ninja](https://github.com/b3nj5m1n/xdg-ninja) when configuring tools; prefer XDG paths.
+- Preserve the installer's idempotent behavior; never overwrite non-symlink files.
 - Don't symlink configs that may contain runtime secrets (auth tokens, credentials). Document manual setup in `README.md` instead.

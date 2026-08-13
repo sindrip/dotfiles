@@ -6,11 +6,11 @@ Personal dotfiles for macOS.
 ./install.sh
 ```
 
-`install.sh` symlinks configs to `~/.config/`, scripts to `~/.local/bin/`, runs `brew bundle`, installs Nix packages, and applies macOS defaults (keyboard, dock, trackpad, autocorrect, hotkeys, Ghostty keybinding).
+`install.sh` links tracked configs, scripts, and Claude skills; installs packages;
+updates mise tools; and applies macOS defaults.
 
-Portable CLI tools are installed by Nix. Homebrew is reserved for GUI casks,
-`pam-reattach` (which integrates with the macOS PAM configuration), and tools
-with no nixpkgs package (`ghcup`).
+Portable CLI and editor tools are installed by Nix. Homebrew is reserved for
+GUI casks and macOS integration.
 
 Google Cloud CLI components are declared in `flake.nix`; the immutable Nix
 package disables `gcloud components install` and `gcloud components update`.

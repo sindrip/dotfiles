@@ -91,7 +91,6 @@ vim.pack.add({
   "https://github.com/stevearc/conform.nvim",
   "https://github.com/nvim-lualine/lualine.nvim",
   "https://github.com/folke/which-key.nvim",
-  "https://github.com/mason-org/mason.nvim",
   "https://github.com/folke/lazydev.nvim",
   {
     src = "https://github.com/nvim-treesitter/nvim-treesitter",
@@ -102,7 +101,6 @@ vim.pack.add({
     },
   },
   { src = "https://github.com/saghen/blink.pairs", version = "v0.6.0" },
-  "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
   "https://github.com/folke/snacks.nvim",
   "https://github.com/catppuccin/nvim",
   -- { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1") },
@@ -130,7 +128,6 @@ vim.api.nvim_create_user_command("PackClean", "packdel ++all", { desc = "Delete 
 require("formatter").setup()
 require("statusline").setup()
 require("which-key").setup({})
-require("mason").setup({})
 require("lazydev").setup({})
 
 local blink_pairs = require("blink.pairs")
@@ -169,16 +166,6 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.wo[0][0].foldexpr = vim.treesitter.foldexpr
     vim.bo[args.buf].indentexpr = ts.indentexpr
   end,
-})
-
-require("mason-tool-installer").setup({
-  ensure_installed = {
-    "copilot-language-server",
-    "lua-language-server",
-    "prettier",
-    "shfmt",
-    "stylua",
-  },
 })
 
 require("snacks").setup({

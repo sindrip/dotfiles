@@ -40,7 +40,10 @@
       packages = forAllSystems (
         system:
         let
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfreePredicate = pkg: nixpkgs.lib.getName pkg == "copilot-language-server";
+          };
           # dir names must match the repo basename of the @plugin lines in
           # tmux.conf: that is how tpm looks plugins up
           tmux-plugins = pkgs.buildEnv {
@@ -95,6 +98,14 @@
               zsh-autosuggestions
               zsh-fast-syntax-highlighting
               zsh-history-substring-search
+
+              # Editor tools
+              copilot-language-server
+              gopls
+              lua-language-server
+              prettier
+              shfmt
+              stylua
 
               # General development tools
               difftastic
