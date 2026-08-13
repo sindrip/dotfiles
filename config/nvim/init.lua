@@ -174,7 +174,6 @@ vim.api.nvim_create_autocmd("FileType", {
 require("mason-tool-installer").setup({
   ensure_installed = {
     "copilot-language-server",
-    "gopls",
     "lua-language-server",
     "prettier",
     "shfmt",
