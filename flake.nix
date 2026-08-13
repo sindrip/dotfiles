@@ -85,48 +85,55 @@
             name = "cli-tools";
             paths = with pkgs; [
               # Shell and terminal tools
-              bat
-              eza
-              fd
               fish
-              fzf
-              jq
-              ripgrep
+              sesh
               starship
-              tree-sitter
               zoxide
               zsh-autosuggestions
               zsh-fast-syntax-highlighting
               zsh-history-substring-search
 
+              # CLI utilities
+              bat
+              eza
+              fd
+              fzf
+              jq
+              ripgrep
+              xdg-ninja
+
+              # Git
+              difftastic
+              gh
+              lazygit
+
               # Editor tools
+              biome
               copilot-language-server
               gopls
               lua-language-server
               prettier
               shfmt
               stylua
+              tree-sitter
+              typescript-go
 
-              # General development tools
-              difftastic
-              gh
+              # Toolchain managers
+              mise
+              # Newer client for relative-worktree support; daemon stays system-managed.
+              nixVersions.latest
+              rustup
+
+              # Python tools
+              ruff
+              ty
+              uv
+
+              # Cloud and containers
               (google-cloud-sdk.withExtraComponents [
                 google-cloud-sdk.components.gke-gcloud-auth-plugin
               ])
               lazydocker
-              lazygit
-              mise
-              # client only: the daemon stays on the root profile's nix. Needed
-              # until nix-fallback-paths ships a build linking libgit2 >= 1.9.4,
-              # without which flake commands cannot open a relative worktree
-              nixVersions.latest
-              ruff
-              rustup
-              sesh
-              typescript-go
-              ty
-              uv
-              xdg-ninja
 
               # Kubernetes tools
               crossplane-cli
