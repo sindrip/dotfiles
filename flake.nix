@@ -110,6 +110,7 @@
               # Editor tools
               biome
               copilot-language-server
+              gopls
               lua-language-server
               prettier
               shfmt
