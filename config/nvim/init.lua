@@ -167,7 +167,10 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.treesitter.start(args.buf, lang)
     vim.wo[0][0].foldmethod = "expr"
     vim.wo[0][0].foldexpr = vim.treesitter.foldexpr
-    vim.bo[args.buf].indentexpr = ts.indentexpr
+    -- Without an indents query (asm, make, diff, ...) every line indents to 0
+    if vim.treesitter.query.get(lang, "indents") then
+      vim.bo[args.buf].indentexpr = ts.indentexpr
+    end
   end,
 })
 
