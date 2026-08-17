@@ -1,6 +1,9 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
+-- Detect *.h as C, not cpp, so clangd parses headers as C23
+vim.g.c_syntax_for_h = 1
+
 require("local-plugins")
 
 -- UI
