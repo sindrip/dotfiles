@@ -377,6 +377,11 @@ vim.keymap.set("n", "<leader>gg", function()
   require("snacks").lazygit()
 end, { desc = "Lazygit" })
 
+vim.keymap.set("n", "<leader>gd", "<cmd>CodeDiff<cr>", { desc = "Diff working tree" })
+vim.keymap.set("n", "<leader>gD", "<cmd>CodeDiff main...<cr>", { desc = "Diff vs main (PR-style)" })
+vim.keymap.set("n", "<leader>gf", "<cmd>CodeDiff history %<cr>", { desc = "File history" })
+vim.keymap.set("n", "<leader>gl", "<cmd>CodeDiff history<cr>", { desc = "Repo history" })
+
 vim.keymap.set({ "n", "t" }, "<C-\\>", function()
   require("snacks").terminal.toggle(nil, { win = { position = "bottom", height = 0.3 } })
 end, { desc = "Toggle terminal" })
