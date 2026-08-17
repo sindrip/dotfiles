@@ -34,6 +34,7 @@ function M.setup()
       lua = { "stylua" },
       sh = { "shfmt" },
       bash = { "shfmt" },
+      c = { "clang-format" },
       go = { name = "gopls", lsp_format = "prefer" },
       rust = { name = "rust_analyzer", lsp_format = "prefer" },
       ["_"] = { "trim_whitespace", "trim_newlines" },

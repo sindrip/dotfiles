@@ -109,6 +109,7 @@
 
               # Editor tools
               biome
+              llvmPackages_22.clang-tools
               copilot-language-server
               gopls
               lua-language-server
