@@ -25,6 +25,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
   group = group,
   nested = true,
   callback = function()
+    -- :restart restores its own session; :restart! explicitly wants a fresh start
+    if vim.v.startreason ~= "normal" then
+      return
+    end
     if vim.fn.argc() == 0 then
       require("session").load()
     end
