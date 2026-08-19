@@ -38,7 +38,7 @@
       "src": "https://github.com/catppuccin/nvim"
     },
     "nvim-lspconfig": {
-      "rev": "0662886bc0a4e0c199dec65cee23a4319dd79f55",
+      "rev": "a00eb57db2ef4d1ff2d4ef50ead2029cebd09f01",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
