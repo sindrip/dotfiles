@@ -61,6 +61,9 @@ vim.g.loaded_perl_provider = 0
 vim.g.loaded_python3_provider = 0
 vim.g.loaded_ruby_provider = 0
 
+-- netrw still loads at startup via its packadd shim; dir.lua covers :e . and "-"
+vim.g.loaded_netrwPlugin = 1
+
 -- Plugins
 
 -- Run build hooks (spec.data.build) on install/update; must precede vim.pack.add()
