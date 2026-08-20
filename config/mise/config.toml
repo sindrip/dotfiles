@@ -4,7 +4,7 @@ minimum_release_age = "0s"
 
 [tools]
 # Language runtimes
-bun = "1.3.14"
+bun = "1.4.0"
 go = "1.27rc3"
 node = "26.7.0"
 
