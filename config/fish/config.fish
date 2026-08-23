@@ -12,6 +12,8 @@ if status is-interactive
     command -q zoxide && zoxide init fish | source
     command -q fzf && fzf --fish | source # Ctrl-T/R, Alt-C keybindings
     command -q starship && starship init fish | source
+    # after mise: registered later = runs later, so dev-shell paths win
+    command -q direnv && direnv hook fish | source
 
     # Aliases
     alias ls 'eza --icons=auto --group-directories-first'

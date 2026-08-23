@@ -1,0 +1,2 @@
+# nix-direnv: cached, GC-rooted `use flake` implementation
+source "$HOME/.nix-profile/share/nix-direnv/direnvrc"

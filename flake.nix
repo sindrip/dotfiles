@@ -85,7 +85,9 @@
             name = "cli-tools";
             paths = with pkgs; [
               # Shell and terminal tools
+              direnv
               fish
+              nix-direnv
               sesh
               starship
               zoxide
