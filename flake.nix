@@ -63,19 +63,6 @@
               })
             ];
           };
-          # pinned so the compiler and clangd share a frontend
-          llvm22 = pkgs.llvmPackages_22;
-          # only the C driver is linked out: the wrapper's bin also ships
-          # clang++/cc/ld/as/ar/nm, which would shadow the Xcode toolchain
-          # for every other build on the machine.
-          # the unwrapped driver comes along for cross checks: the wrapper
-          # injects macOS flags and libSystem headers even under a linux
-          # --target, which -Werror catches and -Wno-... would only hide.
-          llvm22-clang = pkgs.runCommand "clang-bin" { } ''
-            mkdir -p $out/bin
-            ln -s ${llvm22.clang}/bin/clang $out/bin/clang
-            ln -s ${llvm22.clang-unwrapped}/bin/clang $out/bin/clang-unwrapped
-          '';
         in
         rec {
           neovim = neovim-nightly-overlay.packages.${system}.default;
@@ -122,11 +109,11 @@
 
               # Editor tools
               biome
-              llvm22-clang
-              llvm22.clang-tools
+              clang-tools
               copilot-language-server
               gopls
               lua-language-server
+              nixfmt
               prettier
               shfmt
               stylua

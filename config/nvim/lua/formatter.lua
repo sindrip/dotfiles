@@ -36,6 +36,7 @@ function M.setup()
       bash = { "shfmt" },
       c = { "clang-format" },
       go = { name = "gopls", lsp_format = "prefer" },
+      nix = { "nixfmt" },
       rust = { name = "rust_analyzer", lsp_format = "prefer" },
       ["_"] = { "trim_whitespace", "trim_newlines" },
     },
