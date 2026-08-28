@@ -138,6 +138,7 @@
                 google-cloud-sdk.components.gke-gcloud-auth-plugin
               ])
               lazydocker
+              openbao
 
               # Kubernetes tools
               crossplane-cli
