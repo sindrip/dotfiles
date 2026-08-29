@@ -119,7 +119,7 @@ header "macOS defaults"
 
 header "Mise"
 mise trust "$HOME/.config/mise/config.toml"
-mise upgrade
+mise -C "$HOME" install
 
 header "Touch ID sudo"
 sudo_local="/etc/pam.d/sudo_local"

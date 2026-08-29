@@ -101,6 +101,7 @@
               fd
               fzf
               jq
+              obscura
               ripgrep
               xdg-ninja
 
@@ -122,7 +123,11 @@
               tree-sitter
               typescript-go
 
-              # Toolchain managers
+              # Language runtimes and toolchains
+              bun
+              go_1_27
+
+              # Toolchain and package managers
               mise
               # Newer client for relative-worktree support; daemon stays system-managed.
               nixVersions.latest

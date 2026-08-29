@@ -6,11 +6,12 @@ Personal dotfiles for macOS.
 ./install.sh
 ```
 
-`install.sh` links tracked configs, scripts, and Claude skills; installs packages;
-updates mise tools; and applies macOS defaults.
+`install.sh` links tracked configs, scripts, and Claude skills; reconciles
+packages and runtimes; and applies macOS defaults.
 
-Portable CLI and editor tools are installed by Nix. Homebrew is reserved for
-GUI casks and macOS integration.
+Portable CLI, editor, and toolchain packages are installed by Nix. Homebrew is
+reserved for GUI casks and macOS integration. Mise handles project-specific
+runtime selection.
 
 Google Cloud CLI components are declared in `flake.nix`; the immutable Nix
 package disables `gcloud components install` and `gcloud components update`.

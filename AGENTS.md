@@ -6,9 +6,10 @@ This file provides guidance to coding agents when working with code in this repo
 
 Personal dotfiles for macOS. Package ownership:
 
-- Nix: portable CLI and editor tools, wrapped tmux, and Neovim nightly
+- Nix: portable CLI, editor, and toolchain packages, wrapped tmux, and Neovim
+  nightly
 - Homebrew: GUI casks and macOS integration
-- mise: language runtimes and ecosystem tools
+- mise: project-specific runtime selection
 
 ## Setup
 
