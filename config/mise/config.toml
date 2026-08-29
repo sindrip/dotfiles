@@ -4,5 +4,5 @@ minimum_release_age = "0s"
 
 [tools]
 # Global Node fallback; project version files can override it.
-node = "26.7.0"
-"npm:corepack" = "0.35.0"
+node = "26.8.1"
+"npm:corepack" = "0.36.0"
