@@ -288,6 +288,7 @@ vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
 vim.lsp.enable("tsc")
 vim.lsp.enable("clangd")
+vim.lsp.enable("expert")
 
 vim.keymap.set("i", "<C-y>", function()
   if not vim.lsp.inline_completion.get() then
