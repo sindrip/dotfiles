@@ -330,7 +330,11 @@ end, { desc = "Toggle Copilot" })
 
 vim.keymap.set("n", "<leader>r", "ZR", { desc = "Restart nvim" })
 
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
+-- Multicursor's default clear key is CTRL-L, which the window mappings below take
+vim.keymap.set("n", "<Esc>", function()
+  vim.cmd.nohlsearch()
+  vim.api.nvim_buf_clear_namespace(0, vim.api.nvim_create_namespace("nvim.multicursor"), 0, -1)
+end, { desc = "Clear search highlight and multicursors" })
 
 vim.keymap.set("n", "<leader>u", "<cmd>Undotree<cr>", { desc = "Undotree" })
 
