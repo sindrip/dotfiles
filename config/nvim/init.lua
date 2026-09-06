@@ -278,9 +278,6 @@ require("quicker").setup({
   },
 })
 
--- Semantic tokens cause highlights to go out of sync during edits (nvim requests full tokens on every change).
-vim.lsp.semantic_tokens.enable(false)
-
 vim.lsp.enable("copilot")
 
 vim.lsp.enable("lua_ls")
