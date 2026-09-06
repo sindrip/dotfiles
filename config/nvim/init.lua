@@ -278,6 +278,9 @@ require("quicker").setup({
   },
 })
 
+-- Treesitter is enough for now; tsc in particular re-requests full tokens on every edit (neovim/neovim#41521)
+vim.lsp.semantic_tokens.enable(false)
+
 vim.lsp.enable("copilot")
 
 vim.lsp.enable("lua_ls")
