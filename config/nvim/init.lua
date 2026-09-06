@@ -296,8 +296,9 @@ vim.keymap.set("i", "<C-y>", function()
   end
 end, { expr = true, desc = "Accept inline completion" })
 
--- Copilot ghost text is request-only: <C-e> arms the buffer, InsertLeave
--- disarms. The completor only requests from insert-mode events, so poke one.
+-- Copilot ghost text is request-only: <C-e> arms the buffer; leaving insert
+-- mode or opening the completion menu disarms it. The completor only requests
+-- from insert-mode events, so poke one.
 vim.keymap.set("i", "<C-e>", function()
   local bufnr = vim.api.nvim_get_current_buf()
   if vim.lsp.inline_completion.is_enabled({ bufnr = bufnr }) then
@@ -308,7 +309,9 @@ vim.keymap.set("i", "<C-e>", function()
   vim.api.nvim_exec_autocmds("CursorMovedI", { buffer = bufnr })
 end, { desc = "Request inline completion / next candidate" })
 
-vim.api.nvim_create_autocmd("InsertLeave", {
+-- ModeChanged rather than InsertLeave: <C-c> skips InsertLeave, and i:ic is the menu opening
+vim.api.nvim_create_autocmd("ModeChanged", {
+  pattern = "i:*",
   callback = function(ev)
     if vim.lsp.inline_completion.is_enabled({ bufnr = ev.buf }) then
       vim.lsp.inline_completion.enable(false, { bufnr = ev.buf })
