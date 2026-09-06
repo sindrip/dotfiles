@@ -35,6 +35,7 @@ function M.setup()
       sh = { "shfmt" },
       bash = { "shfmt" },
       c = { "clang-format" },
+      elixir = { name = "expert", lsp_format = "prefer" },
       go = { name = "gopls", lsp_format = "prefer" },
       nix = { "nixfmt" },
       rust = { name = "rust_analyzer", lsp_format = "prefer" },
