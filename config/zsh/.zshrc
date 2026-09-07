@@ -21,10 +21,13 @@ setopt AUTO_CD
 setopt AUTO_PUSHD
 setopt PUSHD_IGNORE_DUPS
 setopt PUSHD_SILENT
+DIRSTACKSIZE=100
 
 # Behavior
-setopt NO_BEEP # No terminal bell
+setopt NO_BEEP # No line-editor bell
 setopt NUMERIC_GLOB_SORT # Sort globs numerically (file2 before file10)
+setopt INTERACTIVE_COMMENTS # Allow comments at the prompt
+unsetopt FLOW_CONTROL # Prevent Ctrl-S from pausing output in the line editor
 
 # Keybindings
 bindkey -e
