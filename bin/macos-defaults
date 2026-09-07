@@ -2,7 +2,7 @@
 
 import Foundation
 
-func defaults(_ domain: String, _ values: [String: Any]) {
+func defaults(_ domain: String, _ values: [String: Any], host: CFString = kCFPreferencesAnyHost) {
     let cfDomain = domain == "NSGlobalDomain"
         ? kCFPreferencesAnyApplication
         : domain as CFString
@@ -12,10 +12,10 @@ func defaults(_ domain: String, _ values: [String: Any]) {
             value as CFPropertyList,
             cfDomain,
             kCFPreferencesCurrentUser,
-            kCFPreferencesAnyHost
+            host
         )
     }
-    CFPreferencesSynchronize(cfDomain, kCFPreferencesCurrentUser, kCFPreferencesAnyHost)
+    CFPreferencesSynchronize(cfDomain, kCFPreferencesCurrentUser, host)
 }
 
 func disableHotkeys(_ ids: [Int]) {
@@ -41,10 +41,18 @@ enum Hotkey {
 
 // -- Keyboard --
 defaults("NSGlobalDomain", [
+    "com.apple.keyboard.modifiermapping.0-0-0": [[
+        "HIDKeyboardModifierMappingSrc": 0x700000039, // Caps Lock
+        "HIDKeyboardModifierMappingDst": 0x7000000e4, // Right Control
+    ]],
+], host: kCFPreferencesCurrentHost)
+
+defaults("NSGlobalDomain", [
     "KeyRepeat": 2,
     "InitialKeyRepeat": 15,
     "NSAutomaticCapitalizationEnabled": false,
     "NSAutomaticDashSubstitutionEnabled": false,
+    "NSAutomaticInlinePredictionEnabled": false,
     "NSAutomaticPeriodSubstitutionEnabled": false,
     "NSAutomaticQuoteSubstitutionEnabled": false,
     "NSAutomaticSpellingCorrectionEnabled": false,
@@ -61,6 +69,7 @@ defaults("com.apple.dock", [
 
 // -- Trackpad --
 defaults("com.apple.AppleMultitouchTrackpad", [
+    "Clicking": true,
     "TrackpadThreeFingerDrag": true,
 ])
 
