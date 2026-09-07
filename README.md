@@ -36,3 +36,7 @@ The tools profile includes a wrapped zsh that sets `ZSH_PLUGIN_DIR` to its
 Nix-managed autosuggestions, fast-syntax-highlighting, and history-substring-search
 plugins. Interactive zsh loads them through `config/zsh/plugins.zsh`; Up/Down
 search history for the typed substring.
+
+The tmux wrapper selects this packaged zsh for new panes. Panes use non-login
+shells and inherit the terminal's environment; macOS's account shell can remain
+`/bin/zsh`. Existing panes keep their current shell until replaced.

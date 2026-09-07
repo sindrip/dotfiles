@@ -90,7 +90,7 @@
           };
 
           # tmux wrapped so tpm finds itself and the pinned plugins, and so
-          # new panes run the flake-pinned fish (tmux default-shell = $SHELL)
+          # new panes run the packaged zsh (tmux default-shell = $SHELL)
           tmux = pkgs.symlinkJoin {
             name = "tmux";
             paths = [ pkgs.tmux ];
@@ -98,7 +98,7 @@
             postBuild = ''
               wrapProgram $out/bin/tmux \
                 --set TMUX_PLUGIN_MANAGER_PATH ${tmux-plugins}/share/tmux-plugins \
-                --set SHELL ${pkgs.fish}/bin/fish
+                --set SHELL ${zsh}/bin/zsh
             '';
           };
 
@@ -107,7 +107,6 @@
             paths = with pkgs; [
               # Shell and terminal tools
               direnv
-              fish
               nix-direnv
               sesh
               starship
