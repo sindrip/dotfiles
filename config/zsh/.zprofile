@@ -11,11 +11,6 @@ path=(
   $path
 )
 
-fpath=(
-  $HOME/.nix-profile/share/zsh/site-functions(N)
-  $fpath
-)
-
 typeset -TUx XDG_DATA_DIRS xdg_data_dirs
 xdg_data_dirs=(
   $HOME/.nix-profile/share

@@ -11,24 +11,7 @@ setopt HIST_VERIFY
 setopt SHARE_HISTORY
 
 # Completion
-# fpath=(/Applications/OrbStack.app/Contents/Resources/completions/zsh(/N) $fpath)
-# Rebuild the dump (with the security audit) at most once a day; otherwise
-# load it with -C, which skips the audit + new-function scan (~150ms -> ~8ms).
-autoload -Uz compinit
-mkdir -p "$XDG_CACHE_HOME/zsh"
-_zcompdump="$XDG_CACHE_HOME/zsh/zcompdump"
-if [[ -n "$_zcompdump"(#qN.mh+24) ]]; then
-  compinit -i -d "$_zcompdump"
-else
-  compinit -C -d "$_zcompdump"
-fi
-unset _zcompdump
-
-# Completion UX
-setopt COMPLETE_IN_WORD ALWAYS_TO_END LIST_PACKED
-zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
-zstyle ':completion:*' list-colors 'di=1;34' 'ln=1;36' 'so=1;35' 'pi=33' 'ex=1;32' 'bd=1;33' 'cd=1;33' 'or=31' ${(s.:.)LS_COLORS}
+source "$ZDOTDIR/completions.zsh"
 
 # Navigation
 setopt AUTO_CD
@@ -42,7 +25,14 @@ setopt NUMERIC_GLOB_SORT # Sort globs numerically (file2 before file10)
 
 # Keybindings
 bindkey -e
-# ↑/↓ history search is bound in plugins.zsh (history-substring-search)
+# Native history search: match the typed prefix; move within multiline input.
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search
+bindkey '^[OA' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search
+bindkey '^[OB' down-line-or-beginning-search
 
 # Aliases
 alias ls='eza --icons=auto --group-directories-first'
@@ -75,5 +65,6 @@ fi
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 (( $+commands[starship] )) && eval "$(starship init zsh)"
 
-# Plugins (sourced last so syntax highlighting wraps all prior ZLE widgets)
-[[ -r "$ZDOTDIR/plugins.zsh" ]] && source "$ZDOTDIR/plugins.zsh"
+
+# Load approved .envrc files on directory changes and before each prompt.
+(( $+commands[direnv] )) && eval "$(direnv hook zsh)"

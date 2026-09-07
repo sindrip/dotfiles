@@ -91,6 +91,7 @@
               sesh
               starship
               zoxide
+              zsh
               zsh-autosuggestions
               zsh-fast-syntax-highlighting
               zsh-history-substring-search
@@ -151,6 +152,7 @@
               fluxcd
               fluxcd-operator
               k9s
+              kubectl
               kubectx
               kubernetes-helm
             ];
