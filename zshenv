@@ -8,7 +8,6 @@ export XDG_RUNTIME_DIR="$TMPDIR"
 
 # Zsh
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
-export HISTFILE="$XDG_STATE_HOME/zsh/history"
 
 # XDG compliance for tools that don't respect it by default
 export BUN_INSTALL_BIN="$XDG_BIN_HOME"

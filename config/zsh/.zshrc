@@ -1,5 +1,8 @@
 # History
-HISTSIZE=100000
+# Set this after /etc/zshrc, which supplies its own history location on macOS.
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+mkdir -p -m 700 "${HISTFILE:h}"
+HISTSIZE=200000
 SAVEHIST=100000
 setopt EXTENDED_HISTORY
 setopt HIST_EXPIRE_DUPS_FIRST
