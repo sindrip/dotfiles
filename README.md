@@ -31,3 +31,8 @@ all three profiles with:
 ```sh
 nix flake update && nix profile upgrade --all
 ```
+
+The tools profile includes a wrapped zsh that sets `ZSH_PLUGIN_DIR` to its
+Nix-managed autosuggestions, fast-syntax-highlighting, and history-substring-search
+plugins. Interactive zsh loads them through `config/zsh/plugins.zsh`; Up/Down
+search history for the typed substring.

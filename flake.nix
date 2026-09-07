@@ -44,6 +44,15 @@
             inherit system;
             config.allowUnfreePredicate = pkg: nixpkgs.lib.getName pkg == "copilot-language-server";
           };
+          zsh-plugins = pkgs.buildEnv {
+            name = "zsh-plugins";
+            paths = [
+              pkgs.zsh-autosuggestions
+              pkgs.zsh-fast-syntax-highlighting
+              pkgs.zsh-history-substring-search
+            ];
+            pathsToLink = [ "/share/zsh/plugins" ];
+          };
           # dir names must match the repo basename of the @plugin lines in
           # tmux.conf: that is how tpm looks plugins up
           tmux-plugins = pkgs.buildEnv {
@@ -68,6 +77,18 @@
           neovim = neovim-nightly-overlay.packages.${system}.default;
           default = neovim;
 
+          zsh = pkgs.symlinkJoin {
+            name = "zsh";
+            paths = [ pkgs.zsh ];
+            nativeBuildInputs = [ pkgs.makeBinaryWrapper ];
+            postBuild = ''
+              wrapProgram $out/bin/zsh \
+                --inherit-argv0 \
+                --set ZSH_PLUGIN_DIR ${zsh-plugins}/share/zsh/plugins
+            '';
+            meta.mainProgram = "zsh";
+          };
+
           # tmux wrapped so tpm finds itself and the pinned plugins, and so
           # new panes run the flake-pinned fish (tmux default-shell = $SHELL)
           tmux = pkgs.symlinkJoin {
@@ -91,10 +112,7 @@
               sesh
               starship
               zoxide
-              zsh
-              zsh-autosuggestions
-              zsh-fast-syntax-highlighting
-              zsh-history-substring-search
+              zsh # Wrapped package defined above.
 
               # CLI utilities
               bat

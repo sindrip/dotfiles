@@ -25,14 +25,6 @@ setopt NUMERIC_GLOB_SORT # Sort globs numerically (file2 before file10)
 
 # Keybindings
 bindkey -e
-# Native history search: match the typed prefix; move within multiline input.
-autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
-zle -N up-line-or-beginning-search
-zle -N down-line-or-beginning-search
-bindkey '^[[A' up-line-or-beginning-search
-bindkey '^[OA' up-line-or-beginning-search
-bindkey '^[[B' down-line-or-beginning-search
-bindkey '^[OB' down-line-or-beginning-search
 
 # Aliases
 alias ls='eza --icons=auto --group-directories-first'
@@ -64,7 +56,7 @@ fi
 (( $+commands[mise] )) && eval "$(mise activate zsh)"
 (( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
 (( $+commands[starship] )) && eval "$(starship init zsh)"
-
-
-# Load approved .envrc files on directory changes and before each prompt.
 (( $+commands[direnv] )) && eval "$(direnv hook zsh)"
+
+# Load plugins after integrations and custom editor widgets.
+source "$ZDOTDIR/plugins.zsh"

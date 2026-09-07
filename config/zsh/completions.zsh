@@ -44,8 +44,10 @@ bindkey -M menuselect '^[[D' backward-char
 bindkey -M menuselect '^[OD' backward-char
 
 # Keep the list while completing; clear it on other line-editor actions.
+# Remember completion widgets before plugins wrap them as ordinary widgets.
+typeset -ga _completion_widgets=( ${(k)widgets[(R)completion:*]} )
 _clear_completion_list() {
-  [[ ${widgets[$LASTWIDGET]} == completion:* ]] || zle -R -c
+  (( ${_completion_widgets[(Ie)$LASTWIDGET]} )) || zle -R -c
 }
 autoload -Uz add-zle-hook-widget
 add-zle-hook-widget line-pre-redraw _clear_completion_list
