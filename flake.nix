@@ -118,6 +118,7 @@
               eza
               fd
               fzf
+              go-task
               jq
               obscura
               ripgrep
@@ -139,7 +140,7 @@
               shfmt
               stylua
               tree-sitter
-              typescript-go
+              typescript
 
               # Language runtimes and toolchains
               bun
