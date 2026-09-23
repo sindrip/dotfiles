@@ -18,7 +18,7 @@ vim.o.colorcolumn = "100" -- Highlight column 100
 vim.o.scrolloff = 8 -- Keep 8 lines visible above/below cursor
 vim.opt.shortmess:append("u") -- Silence undo/redo messages
 vim.o.list = true -- Show whitespace characters
-vim.opt.listchars = { tab = "→ ", trail = "·", nbsp = "␣" }
+vim.o.listchars = { tab = "→ ", trail = "·", nbsp = "␣" }
 
 -- Editing
 vim.o.expandtab = true -- Spaces instead of tabs
