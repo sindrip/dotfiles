@@ -106,7 +106,7 @@ vim.pack.add({
       end,
     },
   },
-  { src = "https://github.com/saghen/blink.pairs", version = "v0.6.0" },
+  { src = "https://github.com/saghen/blink.pairs", version = "v0.7.1" },
   "https://github.com/folke/snacks.nvim",
   "https://github.com/catppuccin/nvim",
   -- { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1") },
