@@ -109,7 +109,7 @@ vim.pack.add({
   { src = "https://github.com/saghen/blink.pairs", version = "v0.7.1" },
   "https://github.com/folke/snacks.nvim",
   "https://github.com/catppuccin/nvim",
-  -- { src = "https://github.com/saghen/blink.cmp", version = vim.version.range("1") },
+  "https://github.com/saghen/blink.cmp",
   "https://github.com/echasnovski/mini.icons",
   "https://github.com/lewis6991/gitsigns.nvim",
   {
@@ -219,23 +219,25 @@ require("catppuccin").setup({
 })
 vim.cmd.colorscheme("catppuccin-frappe")
 
--- require("blink.cmp").setup({
---   keymap = {
---     preset = "default",
---     ["<M-.>"] = { "show", "show_documentation", "hide_documentation" },
---   },
---   appearance = { nerd_font_variant = "mono" },
---   completion = {
---     documentation = { auto_show = true },
---     menu = { auto_show = false },
---   },
---   sources = { default = { "lsp", "path", "snippets", "buffer" } },
---   signature = { enabled = true },
---   fuzzy = {
---     implementation = "prefer_rust",
---     prebuilt_binaries = { force_version = "v1.*" },
---   },
--- })
+local blink_cmp = require("blink.cmp")
+blink_cmp.build():pwait() -- no-op once built; main has no prebuilt binaries
+blink_cmp.setup({
+  keymap = {
+    preset = "default",
+    ["<M-.>"] = { "show", "show_documentation", "hide_documentation" },
+  },
+  appearance = { nerd_font_variant = "mono" },
+  completion = {
+    documentation = { auto_show = true },
+    menu = { auto_show = true },
+  },
+  sources = { default = { "lsp", "path", "snippets", "buffer" } },
+  signature = {
+    enabled = true,
+    trigger = { show_on_accept = true }, -- accept only re-shows an already open signature otherwise
+  },
+  fuzzy = { implementation = "prefer_rust_with_warning" },
+})
 
 local MiniIcons = require("mini.icons")
 MiniIcons.setup()
@@ -281,8 +283,6 @@ require("quicker").setup({
 -- Treesitter is enough for now; tsc in particular re-requests full tokens on every edit (neovim/neovim#41521)
 vim.lsp.semantic_tokens.enable(false)
 
-vim.lsp.enable("copilot")
-
 vim.lsp.enable("lua_ls")
 vim.lsp.enable("rust_analyzer")
 vim.lsp.enable("gopls")
@@ -290,41 +290,8 @@ vim.lsp.enable("tsc")
 vim.lsp.enable("clangd")
 vim.lsp.enable("expert")
 
-vim.keymap.set("i", "<C-y>", function()
-  if not vim.lsp.inline_completion.get() then
-    return "<C-y>"
-  end
-end, { expr = true, desc = "Accept inline completion" })
-
--- Copilot ghost text is request-only: <C-e> arms the buffer, InsertLeave
--- disarms. The completor only requests from insert-mode events, so poke one.
-vim.keymap.set("i", "<C-e>", function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  if vim.lsp.inline_completion.is_enabled({ bufnr = bufnr }) then
-    vim.lsp.inline_completion.select()
-    return
-  end
-  vim.lsp.inline_completion.enable(true, { bufnr = bufnr })
-  vim.api.nvim_exec_autocmds("CursorMovedI", { buffer = bufnr })
-end, { desc = "Request inline completion / next candidate" })
-
-vim.api.nvim_create_autocmd("InsertLeave", {
-  callback = function(ev)
-    if vim.lsp.inline_completion.is_enabled({ bufnr = ev.buf }) then
-      vim.lsp.inline_completion.enable(false, { bufnr = ev.buf })
-    end
-  end,
-})
-
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)
-
-vim.api.nvim_create_user_command("CopilotToggle", function()
-  local enabled = not vim.lsp.is_enabled("copilot")
-  vim.lsp.enable("copilot", enabled)
-  vim.notify("Copilot: " .. (enabled and "on" or "off"))
-  vim.cmd.redrawstatus()
-end, { desc = "Toggle Copilot" })
 
 -- Keymaps
 
@@ -418,5 +385,3 @@ end, { desc = "Move to right split" })
 vim.keymap.set("n", "<leader>tf", function()
   require("formatter").toggle()
 end, { desc = "Toggle auto format" })
-
-vim.keymap.set("n", "<leader>tc", "<cmd>CopilotToggle<cr>", { desc = "Toggle Copilot" })

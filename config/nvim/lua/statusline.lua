@@ -1,32 +1,6 @@
 local M = {}
 
 function M.setup()
-  local icon_copilot = string.char(0xEF, 0x92, 0xB8)
-  local icon_copilot_err = string.char(0xEF, 0x92, 0xB9)
-
-  local function copilot_status()
-    for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-      if client.name == "copilot" and vim.lsp.is_enabled("copilot") then
-        return icon_copilot
-      end
-    end
-
-    return icon_copilot_err
-  end
-
-  local function copilot_color()
-    for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
-      if client.name == "copilot" and vim.lsp.is_enabled("copilot") then
-        return nil
-      end
-    end
-    return { fg = "#737994" }
-  end
-
-  local function copilot_click()
-    vim.cmd.CopilotToggle()
-  end
-
   vim.o.showmode = false
   require("lualine").setup({
     options = {
@@ -45,8 +19,7 @@ function M.setup()
         "diagnostics",
       },
       lualine_x = {
-        { copilot_status, color = copilot_color, on_click = copilot_click, padding = { left = 1, right = 2 } },
-        { "lsp_status", ignore_lsp = { "copilot" } },
+        "lsp_status",
       },
       lualine_y = { "progress", "location" },
       lualine_z = { "branch" },
