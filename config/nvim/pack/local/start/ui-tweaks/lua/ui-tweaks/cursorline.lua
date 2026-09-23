@@ -1,5 +1,7 @@
 -- Only show the cursorline in the focused window.
 
+vim.o.cursorline = true -- WinEnter doesn't fire for the first window
+
 local group = vim.api.nvim_create_augroup("ui-tweaks.cursorline", { clear = true })
 
 vim.api.nvim_create_autocmd("WinEnter", {
