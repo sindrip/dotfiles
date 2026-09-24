@@ -39,6 +39,7 @@ function M.setup()
       go = { name = "gopls", lsp_format = "prefer" },
       nix = { "nixfmt" },
       rust = { name = "rust_analyzer", lsp_format = "prefer" },
+      swift = { "swift" },
       ["_"] = { "trim_whitespace", "trim_newlines" },
     },
 
