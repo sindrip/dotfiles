@@ -123,7 +123,8 @@ mise -C "$HOME" install
 
 header "Pi extensions"
 mise -C "$HOME" exec -- pi install npm:pi-mcp-adapter
-info "Pi MCP adapter installed; restart Pi and run /mcp setup to configure servers"
+mise -C "$HOME" exec -- pi update npm:pi-mcp-adapter
+info "Pi MCP adapter installed and updated; restart Pi and run /mcp setup to configure servers"
 
 header "Touch ID sudo"
 sudo_local="/etc/pam.d/sudo_local"
