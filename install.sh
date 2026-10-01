@@ -122,12 +122,11 @@ mise trust "$HOME/.config/mise/config.toml"
 mise -C "$HOME" install
 
 header "Pi extensions"
-for pkg in pi-mcp-adapter pi-web-search; do
+for pkg in pi-web-search @sindripetur/pi-provider-corti; do
   mise -C "$HOME" exec -- pi install "npm:$pkg"
   mise -C "$HOME" exec -- pi update "npm:$pkg"
   info "$pkg installed and updated"
 done
-info "Restart Pi to load extensions; run /mcp setup to configure servers"
 
 header "Touch ID sudo"
 sudo_local="/etc/pam.d/sudo_local"
