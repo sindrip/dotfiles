@@ -4,9 +4,9 @@
 
 [url "git@github.com:"]
 	insteadOf = https://github.com/
-[includeIf "hasconfig:remote.*.url:git@github.com:dotcom-dev/**"]
+[includeIf "hasconfig:remote.*.url:git@github.com:corticph/**"]
 	path = work
-[includeIf "hasconfig:remote.*.url:https://github.com/dotcom-dev/**"]
+[includeIf "hasconfig:remote.*.url:https://github.com/corticph/**"]
 	path = work
 [includeIf "hasconfig:remote.*.url:git@github.com:cofixpoint/**"]
 	path = cofixpoint
