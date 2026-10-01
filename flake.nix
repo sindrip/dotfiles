@@ -130,8 +130,6 @@
               lazygit
 
               # AI coding agents
-              omp
-              opencode
               pi-coding-agent
 
               # Editor tools
