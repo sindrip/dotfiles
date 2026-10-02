@@ -129,9 +129,6 @@
               gh
               lazygit
 
-              # AI coding agents
-              pi-coding-agent
-
               # Editor tools
               biome
               clang-tools
