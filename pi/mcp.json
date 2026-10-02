@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "ddg": {
+      "command": "uvx",
+      "args": ["--from", "duckduckgo-mcp-server", "duckduckgo-mcp-server"],
+      "description": "Free DuckDuckGo web search (no API key). Use for general web queries.",
+      "exposure": "direct"
+    }
+  }
+}
