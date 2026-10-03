@@ -129,7 +129,7 @@ for f in "$DOTFILES/pi/"*; do
 done
 
 header "Pi extensions"
-for pkg in @sindripetur/pi-provider-corti; do
+for pkg in pi-web-search @sindripetur/pi-provider-corti; do
   mise -C "$HOME" exec -- pi install "npm:$pkg"
   mise -C "$HOME" exec -- pi update "npm:$pkg"
   info "$pkg installed and updated"
