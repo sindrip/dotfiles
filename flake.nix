@@ -6,6 +6,7 @@
     # No `follows` on purpose: overriding the overlay's nixpkgs would change
     # the derivation hash and miss its binary cache, forcing source builds.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
+    pi.url = "github:earendil-works/pi/stable";
 
     # tpm and tmux plugins, pinned here instead of cloned by tpm at runtime.
     # Inputs are a flat namespace (their second level is the input-spec
@@ -75,6 +76,7 @@
         in
         rec {
           neovim = neovim-nightly-overlay.packages.${system}.default;
+          pi = inputs.pi.packages.${system}.default;
           default = neovim;
 
           zsh = pkgs.symlinkJoin {
@@ -128,6 +130,8 @@
               difftastic
               gh
               lazygit
+
+              inputs.pi.packages.${system}.default
 
               # Editor tools
               biome
