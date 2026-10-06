@@ -1,9 +1,9 @@
 dir_length = 2
 
 [[session]]
-name = "config"
-path = "~/.config"
-startup_command = "nvim"
+name = "agents"
+path = "~"
+startup_command = "exec herdr --session agents"
 
 [[wildcard]]
 pattern = "~/projects/**"

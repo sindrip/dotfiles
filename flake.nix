@@ -111,6 +111,7 @@
               direnv
               nix-direnv
               sesh
+              herdr
               starship
               zoxide
               zsh # Wrapped package defined above.
