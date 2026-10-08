@@ -42,8 +42,8 @@ cmd_clone() {
 	fi
 
 	if command -v gh >/dev/null && ! printf '%s' "$SPEC" | grep -q '^\(git@\|https\?://\)'; then
-		INFO=$(gh repo view "$SPEC" --json sshUrl,isFork,parent,name,owner)
-		URL=$(printf '%s' "$INFO" | jq -r .sshUrl)
+		INFO=$(gh repo view "$SPEC" --json url,isFork,parent,name,owner)
+		URL=$(printf '%s' "$INFO" | jq -r .url)
 		DEFAULT_NAME=$(printf '%s' "$INFO" | jq -r '.owner.login + "/" + .name')
 	else
 		URL="$SPEC"
@@ -59,7 +59,7 @@ cmd_clone() {
 	git -C "$NAME" config worktree.useRelativePaths true
 
 	if [ -n "$INFO" ] && [ "$(printf '%s' "$INFO" | jq -r .isFork)" = "true" ]; then
-		PARENT_URL="git@github.com:$(printf '%s' "$INFO" | jq -r .parent.owner.login)/$(printf '%s' "$INFO" | jq -r .parent.name).git"
+		PARENT_URL="https://github.com/$(printf '%s' "$INFO" | jq -r .parent.owner.login)/$(printf '%s' "$INFO" | jq -r .parent.name).git"
 		git -C "$NAME" remote add upstream "$PARENT_URL"
 	fi
 

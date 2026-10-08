@@ -2,8 +2,6 @@
 	name = Sindri P. Ingimundarson
 	useConfigOnly = true # No global email — forces explicit identity per context
 
-[url "git@github.com:"]
-	insteadOf = https://github.com/
 [includeIf "hasconfig:remote.*.url:git@github.com:corticph/**"]
 	path = work
 [includeIf "hasconfig:remote.*.url:https://github.com/corticph/**"]
