@@ -168,6 +168,7 @@
               ])
               lazydocker
               openbao
+              opentofu
 
               # Kubernetes tools
               crossplane-cli
