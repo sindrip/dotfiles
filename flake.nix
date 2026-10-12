@@ -163,6 +163,7 @@
               uv
 
               # Cloud and containers
+              azure-cli
               (google-cloud-sdk.withExtraComponents [
                 google-cloud-sdk.components.gke-gcloud-auth-plugin
               ])
@@ -178,6 +179,8 @@
               k9s
               kubectl
               kubectx
+              kubelogin
+              kubelogin-oidc
               kubernetes-helm
             ];
           };
