@@ -54,7 +54,7 @@ cmd_clone() {
 
 	ensure_not_exists "$NAME"
 
-	git clone --bare "$URL" "$NAME/.git"
+	git clone --bare --single-branch "$URL" "$NAME/.git"
 	git -C "$NAME" config core.logAllRefUpdates true
 	git -C "$NAME" config worktree.useRelativePaths true
 
@@ -64,12 +64,12 @@ cmd_clone() {
 	fi
 
 	BRANCH=$(git -C "$NAME" symbolic-ref --short HEAD)
-	# Fetch into refs/remotes (never refs/heads, which a bare clone would
-	# clobber) for ALL branches, so origin/<branch> exists everywhere and
-	# argless --force-with-lease works
-	git -C "$NAME" config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
+	# Fetch only the default branch into refs/remotes, keeping local branches separate.
+	git -C "$NAME" config remote.origin.fetch \
+		"+refs/heads/$BRANCH:refs/remotes/origin/$BRANCH"
 	git -C "$NAME" fetch origin
-	git -C "$NAME" worktree add "$BRANCH"
+	git -C "$NAME" branch --set-upstream-to="origin/$BRANCH" "$BRANCH"
+	git -C "$NAME" worktree add "$BRANCH" "$BRANCH"
 }
 
 COMMAND="${1:-}"
