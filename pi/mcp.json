@@ -5,6 +5,11 @@
       "args": ["--from", "duckduckgo-mcp-server", "duckduckgo-mcp-server"],
       "description": "Free DuckDuckGo web search",
       "exposure": "deferred"
+    },
+    "linear": {
+      "url": "https://mcp.linear.app/mcp",
+      "description": "Linear issue tracker: search, create, and update issues",
+      "exposure": "deferred"
     }
   }
 }
