@@ -3,6 +3,8 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    # Previous working unstable revision; newer Fabric/Invoke breaks Azure CLI.
+    nixpkgs-azure.url = "github:NixOS/nixpkgs/f20cd90e28fe0403873f473b29e42662cd86e8c4";
     # No `follows` on purpose: overriding the overlay's nixpkgs would change
     # the derivation hash and miss its binary cache, forcing source builds.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
@@ -163,11 +165,12 @@
               uv
 
               # Cloud and containers
-              azure-cli
+              inputs.nixpkgs-azure.legacyPackages.${system}.azure-cli
               (google-cloud-sdk.withExtraComponents [
                 google-cloud-sdk.components.gke-gcloud-auth-plugin
               ])
               lazydocker
+              docker-compose
               openbao
               opentofu
 
