@@ -8,7 +8,8 @@
     # No `follows` on purpose: overriding the overlay's nixpkgs would change
     # the derivation hash and miss its binary cache, forcing source builds.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
-    pi.url = "github:earendil-works/pi/stable";
+    # `stable` branch lags behind release tags; pin the tag instead.
+    pi.url = "github:earendil-works/pi/v1.5.0";
 
     # tpm and tmux plugins, pinned here instead of cloned by tpm at runtime.
     # Inputs are a flat namespace (their second level is the input-spec
