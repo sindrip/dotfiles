@@ -121,6 +121,7 @@
               fzf
               go-task
               jq
+              yq
               obscura
               ripgrep
               xdg-ninja
