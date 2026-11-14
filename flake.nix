@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     # Previous working unstable revision; newer Fabric/Invoke breaks Azure CLI.
-    nixpkgs-azure.url = "github:NixOS/nixpkgs/f20cd90e28fe0403873f473b29e42662cd86e8c4";
+    nixpkgs-azure.url = "github:NixOS/nixpkgs/ec808ecce96b09cf49ed3d5ce473426b183b59c8";
     # No `follows` on purpose: overriding the overlay's nixpkgs would change
     # the derivation hash and miss its binary cache, forcing source builds.
     neovim-nightly-overlay.url = "github:nix-community/neovim-nightly-overlay";
