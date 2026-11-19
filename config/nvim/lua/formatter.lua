@@ -38,6 +38,7 @@ function M.setup()
       elixir = { name = "expert", lsp_format = "prefer" },
       go = { name = "gopls", lsp_format = "prefer" },
       nix = { "nixfmt" },
+      python = { "ruff_organize_imports", "ruff_format" },
       rust = { name = "rust_analyzer", lsp_format = "prefer" },
       swift = { "swift" },
       ["_"] = { "trim_whitespace", "trim_newlines" },

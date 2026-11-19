@@ -290,6 +290,8 @@ vim.lsp.enable("tsc")
 vim.lsp.enable("clangd")
 vim.lsp.enable("expert")
 vim.lsp.enable("sourcekit")
+vim.lsp.enable("ty")
+vim.lsp.enable("ruff")
 
 -- Code Lens (0.12: renders as virtual lines, grx to run actions)
 -- vim.lsp.codelens.enable(true)
