@@ -1,6 +1,7 @@
 [settings]
 idiomatic_version_file_enable_tools = ["node"]
 minimum_release_age = "0s"
+python.uv_venv_auto = true
 
 [tools]
 # Global Node fallback; project version files can override it.
